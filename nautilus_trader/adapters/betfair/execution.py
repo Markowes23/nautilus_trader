@@ -161,9 +161,7 @@ class BetfairExecutionClient(LiveExecutionClient):
             message_handler=self.handle_order_stream_update,
             certs_dir=config.certs_dir,
         )
-        self._is_reconnecting = (
-            False  # Necessary for coordination, as the clients rely on each other
-        )
+        self._is_reconnecting = False  # Necessary for coordination, as the clients rely on each other
 
         # Async tasks
         self._update_account_task: asyncio.Task | None = None
@@ -305,11 +303,7 @@ class BetfairExecutionClient(LiveExecutionClient):
     # -- EXECUTION REPORTS ------------------------------------------------------------------------
 
     def _market_ids_filter(self) -> set[str] | None:
-        if (
-            self.config.instrument_config
-            and self.config.reconcile_market_ids_only
-            and self.config.instrument_config.market_ids
-        ):
+        if self.config.instrument_config and self.config.reconcile_market_ids_only and self.config.instrument_config.market_ids:
             return set(self.config.instrument_config.market_ids)
         return None
 
@@ -320,9 +314,7 @@ class BetfairExecutionClient(LiveExecutionClient):
         self._log.debug(
             f"Listing current orders for {command.venue_order_id=} {command.client_order_id=}",
         )
-        if not (
-            command.venue_order_id is not None or command.client_order_id is not None
-        ):
+        if not (command.venue_order_id is not None or command.client_order_id is not None):
             raise AssertionError("Require one of venue_order_id or client_order_id")
 
         try:
@@ -345,9 +337,7 @@ class BetfairExecutionClient(LiveExecutionClient):
             return None
 
         # We have a response, check list length and grab first entry
-        assert (
-            len(orders) == 1
-        ), f"More than one order found for {command.venue_order_id=} {command.client_order_id=}"
+        assert len(orders) == 1, f"More than one order found for {command.venue_order_id=} {command.client_order_id=}"
         order: CurrentOrderSummary = orders[0]
         venue_order_id = VenueOrderId(str(order.bet_id))
 
@@ -369,9 +359,7 @@ class BetfairExecutionClient(LiveExecutionClient):
         command: GenerateOrderStatusReports,
     ) -> list[OrderStatusReport]:
         current_orders: list[CurrentOrderSummary] = await self._client.list_current_orders(
-            order_projection=(
-                OrderProjection.EXECUTABLE if command.open_only else OrderProjection.ALL
-            ),
+            order_projection=(OrderProjection.EXECUTABLE if command.open_only else OrderProjection.ALL),
             date_range=TimeRange(from_=command.start, to=command.end),
             market_ids=self._market_ids_filter(),
         )
@@ -759,10 +747,7 @@ class BetfairExecutionClient(LiveExecutionClient):
 
         for report in result.instruction_reports or []:
             venue_order_id = VenueOrderId(str(report.instruction.bet_id))
-            if (
-                report.status == InstructionReportStatus.FAILURE
-                and report.error_code != InstructionReportErrorCode.BET_TAKEN_OR_LAPSED
-            ):
+            if report.status == InstructionReportStatus.FAILURE and report.error_code != InstructionReportErrorCode.BET_TAKEN_OR_LAPSED:
                 reason = f"{report.error_code.name}: {report.error_code.__doc__}"
                 self._log.warning(f"Cancel failed: {reason}")
                 self.generate_order_cancel_rejected(
@@ -854,8 +839,7 @@ class BetfairExecutionClient(LiveExecutionClient):
                                 if not self.config.ignore_external_orders:
                                     venue_order_id = VenueOrderId(str(unmatched_order.id))
                                     self._log.warning(
-                                        f"Failed to find ClientOrderId for {venue_order_id!r} "
-                                        f"after {self.check_order_timeout_secs} seconds",
+                                        f"Failed to find ClientOrderId for {venue_order_id!r} after {self.check_order_timeout_secs} seconds",
                                     )
                                     self._log.warning(
                                         f"Unknown order for this node: {unmatched_order}",
@@ -889,9 +873,7 @@ class BetfairExecutionClient(LiveExecutionClient):
                     order = venue_orders.get(VenueOrderId(str(unmatched_order.id)))
                     if order is None and not self.config.ignore_external_orders:
                         self._log.error(f"Unknown order not in cache: {unmatched_order=} ")
-                matched_orders = [(OrderSide.SELL, lay) for lay in (selection.ml or [])] + [
-                    (OrderSide.BUY, back) for back in (selection.mb or [])
-                ]
+                matched_orders = [(OrderSide.SELL, lay) for lay in (selection.ml or [])] + [(OrderSide.BUY, back) for back in (selection.mb or [])]
                 for side, matched_order in matched_orders:
                     # We don't get much information from Betfair here, try our best to match order
                     price = betfair_float_to_price(matched_order.price)
@@ -899,11 +881,7 @@ class BetfairExecutionClient(LiveExecutionClient):
                     matched = False
                     for order in orders:
                         for event in order.events:
-                            if isinstance(event, OrderFilled) and (
-                                order.side == side
-                                and order.price == price
-                                and quantity <= order.quantity
-                            ):
+                            if isinstance(event, OrderFilled) and (order.side == side and order.price == price and quantity <= order.quantity):
                                 matched = True
                     if not matched and not self.config.ignore_external_orders:
                         self._log.error(f"Unknown fill: {instrument_id=}, {matched_order=}")
@@ -1201,9 +1179,7 @@ class BetfairExecutionClient(LiveExecutionClient):
                     )
                     return prev_price
 
-                price = (new_price - (prev_price * (prev_size / total_size))) / (
-                    new_size / total_size
-                )
+                price = (new_price - (prev_price * (prev_size / total_size))) / (new_size / total_size)
                 self._log.debug(
                     f"Calculating fill price: {prev_price=} {prev_size=} {new_price=} {new_size=} == {price=}",
                 )

@@ -400,16 +400,9 @@ class BybitInstrumentOption(msgspec.Struct):
         )
 
 
-BybitInstrument = (
-    BybitInstrumentSpot | BybitInstrumentLinear | BybitInstrumentInverse | BybitInstrumentOption
-)
+BybitInstrument = BybitInstrumentSpot | BybitInstrumentLinear | BybitInstrumentInverse | BybitInstrumentOption
 
-BybitInstrumentList = (
-    list[BybitInstrumentSpot]
-    | list[BybitInstrumentLinear]
-    | list[BybitInstrumentInverse]
-    | list[BybitInstrumentOption]
-)
+BybitInstrumentList = list[BybitInstrumentSpot] | list[BybitInstrumentLinear] | list[BybitInstrumentInverse] | list[BybitInstrumentOption]
 
 
 class BybitInstrumentsSpotResponse(msgspec.Struct):

@@ -20,7 +20,8 @@ import importlib
 from collections.abc import Callable
 from decimal import Decimal
 from io import StringIO
-from typing import Annotated, Any
+from typing import Annotated
+from typing import Any
 
 import msgspec
 import pandas as pd
@@ -59,7 +60,6 @@ NonNegativeFloat = Annotated[float, Meta(ge=0.0)]
 CUSTOM_ENCODINGS: dict[type, Callable] = {
     pd.DataFrame: lambda x: x.to_json(),
 }
-
 
 CUSTOM_DECODINGS: dict[type, Callable] = {
     pd.DataFrame: lambda x: pd.read_json(StringIO(x)),
@@ -431,11 +431,7 @@ class InstrumentProviderConfig(NautilusConfig, frozen=True):
     """
 
     def __eq__(self, other):
-        return (
-            self.load_all == other.load_all
-            and self.load_ids == other.load_ids
-            and self.filters == other.filters
-        )
+        return self.load_all == other.load_all and self.load_ids == other.load_ids and self.filters == other.filters
 
     def __hash__(self):
         filters = frozenset(self.filters.items()) if self.filters else None

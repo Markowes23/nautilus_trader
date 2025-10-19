@@ -25,7 +25,9 @@ from collections.abc import Generator
 from itertools import groupby
 from os import PathLike
 from pathlib import Path
-from typing import Any, NamedTuple, Union
+from typing import Any
+from typing import NamedTuple
+from typing import Union
 
 import fsspec
 import pandas as pd
@@ -157,11 +159,7 @@ class ParquetDataCatalog(BaseDataCatalog):
         else:
             final_path = str(path)
 
-        if (
-            isinstance(self.fs, MemoryFileSystem)
-            and platform.system() == "Windows"
-            and not final_path.startswith("/")
-        ):
+        if isinstance(self.fs, MemoryFileSystem) and platform.system() == "Windows" and not final_path.startswith("/"):
             final_path = "/" + final_path
 
         self.path = str(final_path)
@@ -688,11 +686,7 @@ class ParquetDataCatalog(BaseDataCatalog):
         for file in parquet_files:
             interval = _parse_filename_timestamps(file)
 
-            if (
-                interval
-                and (used_start is None or used_start.value <= interval[0])
-                and (used_end is None or interval[1] <= used_end.value)
-            ):
+            if interval and (used_start is None or used_start.value <= interval[0]) and (used_end is None or interval[1] <= used_end.value):
                 files_to_consolidate.append(file)
                 intervals.append(interval)
 
@@ -941,7 +935,8 @@ class ParquetDataCatalog(BaseDataCatalog):
             del period_data
 
             # Identify files that are completely covered by this period
-            for file in existing_files[:]:  # Use slice copy to avoid modification during iteration
+            # Use slice copy to avoid modification during iteration
+            for file in existing_files[:]:
                 interval = _parse_filename_timestamps(file)
 
                 if interval and interval[1] <= query_info["query_end"]:
@@ -1010,9 +1005,7 @@ class ParquetDataCatalog(BaseDataCatalog):
 
         for interval_start, interval_end in intervals:
             # Check if interval overlaps with the specified range
-            if (used_start is None or used_start.value <= interval_end) and (
-                used_end is None or interval_start <= used_end.value
-            ):
+            if (used_start is None or used_start.value <= interval_end) and (used_end is None or interval_start <= used_end.value):
                 filtered_intervals.append((interval_start, interval_end))
 
         if not filtered_intervals:
@@ -1419,17 +1412,15 @@ class ParquetDataCatalog(BaseDataCatalog):
             file_start_ns, file_end_ns = interval
 
             # Check if file intersects with deletion range
-            intersects = (delete_start_ns is None or delete_start_ns <= file_end_ns) and (
-                delete_end_ns is None or file_start_ns <= delete_end_ns
-            )
+            intersects = (delete_start_ns is None or delete_start_ns <= file_end_ns) and (delete_end_ns is None or file_start_ns <= delete_end_ns)
 
             if not intersects:
                 continue  # File doesn't intersect with deletion range
 
             # Determine what type of operation is needed
-            file_completely_within_range = (
-                delete_start_ns is None or delete_start_ns <= file_start_ns
-            ) and (delete_end_ns is None or file_end_ns <= delete_end_ns)
+            file_completely_within_range = (delete_start_ns is None or delete_start_ns <= file_start_ns) and (
+                delete_end_ns is None or file_end_ns <= delete_end_ns
+            )
 
             if file_completely_within_range:
                 # File is completely within deletion range - just mark for removal
@@ -1598,15 +1589,9 @@ class ParquetDataCatalog(BaseDataCatalog):
             metadata = kwargs.get("metadata")
 
             if callable(metadata):
-                data = [
-                    CustomData(data_type=DataType(data_cls, metadata=metadata(d)), data=d)
-                    for d in data
-                ]
+                data = [CustomData(data_type=DataType(data_cls, metadata=metadata(d)), data=d) for d in data]
             else:
-                data = [
-                    CustomData(data_type=DataType(data_cls, metadata=metadata), data=d)
-                    for d in data
-                ]
+                data = [CustomData(data_type=DataType(data_cls, metadata=metadata), data=d) for d in data]
 
         return data
 
@@ -1717,14 +1702,7 @@ class ParquetDataCatalog(BaseDataCatalog):
         for file in file_list:
             # Extract identifier from file path and filename to create meaningful table names
             identifier = file.split("/")[-2]
-            safe_sql_identifier = (
-                urisafe_identifier(identifier)
-                .replace(".", "_")
-                .replace("-", "_")
-                .replace(" ", "_")
-                .replace("^", "_")
-                .lower()
-            )
+            safe_sql_identifier = urisafe_identifier(identifier).replace(".", "_").replace("-", "_").replace(" ", "_").replace("^", "_").lower()
             safe_filename = _extract_sql_safe_filename(file)
             table = f"{file_prefix}_{safe_sql_identifier}_{safe_filename}"
             query = self._build_query(
@@ -1796,8 +1774,7 @@ class ParquetDataCatalog(BaseDataCatalog):
             import warnings
 
             warnings.warn(
-                f"Failed to register object store for {catalog_uri}: {e}. "
-                f"Falling back to DataFusion's built-in object store support.",
+                f"Failed to register object store for {catalog_uri}: {e}. Falling back to DataFusion's built-in object store support.",
                 UserWarning,
                 stacklevel=2,
             )
@@ -1907,12 +1884,7 @@ class ParquetDataCatalog(BaseDataCatalog):
 
             # Exact match by default for instrument_ids or bar_types
             exact_match_file_paths = [
-                file_path
-                for file_path in file_paths
-                if any(
-                    safe_identifier == file_path.split("/")[-2]
-                    for safe_identifier in safe_identifiers
-                )
+                file_path for file_path in file_paths if any(safe_identifier == file_path.split("/")[-2] for safe_identifier in safe_identifiers)
             ]
 
             if not exact_match_file_paths and data_cls in [Bar, *Bar.__subclasses__()]:
@@ -1920,21 +1892,14 @@ class ParquetDataCatalog(BaseDataCatalog):
                 file_paths = [
                     file_path
                     for file_path in file_paths
-                    if any(
-                        file_path.split("/")[-2].startswith(f"{safe_identifier}-")
-                        for safe_identifier in safe_identifiers
-                    )
+                    if any(file_path.split("/")[-2].startswith(f"{safe_identifier}-") for safe_identifier in safe_identifiers)
                 ]
             else:
                 file_paths = exact_match_file_paths
 
         used_start: pd.Timestamp | None = time_object_to_dt(start)
         used_end: pd.Timestamp | None = time_object_to_dt(end)
-        file_paths = [
-            file_path
-            for file_path in file_paths
-            if _query_intersects_filename(file_path, used_start, used_end)
-        ]
+        file_paths = [file_path for file_path in file_paths if _query_intersects_filename(file_path, used_start, used_end)]
 
         if self.show_query_paths:
             for file_path in file_paths:
@@ -2443,10 +2408,7 @@ def _query_interval_diff(
     interval_query = P.closed(start, end)
     interval_diff = interval_query - interval_set
 
-    return [
-        (interval.lower, interval.upper if interval.right == P.CLOSED else interval.upper - 1)
-        for interval in interval_diff
-    ]
+    return [(interval.lower, interval.upper if interval.right == P.CLOSED else interval.upper - 1) for interval in interval_diff]
 
 
 # closed_intervals = [(1,2),(4,5), (10,12)]
@@ -2475,10 +2437,4 @@ def _extract_sql_safe_filename(file_path: str) -> str:
 
     filename = file_path.split("/")[-1]
 
-    return (
-        filename.replace(".parquet", "")
-        .replace("-", "_")
-        .replace(":", "_")
-        .replace(".", "_")
-        .lower()
-    )
+    return filename.replace(".parquet", "").replace("-", "_").replace(":", "_").replace(".", "_").lower()

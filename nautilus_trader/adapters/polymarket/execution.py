@@ -372,9 +372,7 @@ class PolymarketExecutionClient(LiveExecutionClient):
                 if maybe_report:
                     reports.append(maybe_report)
 
-            known_venue_order_ids: set[VenueOrderId] = {
-                o.venue_order_id for o in self._cache.orders()
-            }
+            known_venue_order_ids: set[VenueOrderId] = {o.venue_order_id for o in self._cache.orders()}
             known_venue_order_ids.update({r.venue_order_id for r in reports})
 
             # Check fills to generate order reports
@@ -407,11 +405,7 @@ class PolymarketExecutionClient(LiveExecutionClient):
                     )
                     continue
 
-                order_type = (
-                    OrderType.MARKET
-                    if first_fill.liquidity_side == LiquiditySide.TAKER
-                    else OrderType.LIMIT
-                )
+                order_type = OrderType.MARKET if first_fill.liquidity_side == LiquiditySide.TAKER else OrderType.LIMIT
 
                 if order_type == OrderType.LIMIT:
                     price = first_fill.last_px
@@ -667,8 +661,7 @@ class PolymarketExecutionClient(LiveExecutionClient):
 
         if order.is_closed:
             self._log.warning(
-                f"`CancelOrder` command for {command.client_order_id!r} when order already {order.status_string()} "
-                "(will not send to exchange)",
+                f"`CancelOrder` command for {command.client_order_id!r} when order already {order.status_string()} (will not send to exchange)",
             )
             return
 
@@ -815,8 +808,7 @@ class PolymarketExecutionClient(LiveExecutionClient):
 
         if order.time_in_force not in VALID_POLYMARKET_TIME_IN_FORCE:
             self._log.error(
-                f"Order time in force {order.tif_string()} not supported on Polymarket, "
-                "use any of FOK, GTC, GTD, IOC",
+                f"Order time in force {order.tif_string()} not supported on Polymarket, use any of FOK, GTC, GTD, IOC",
             )
             return  # TODO: Change to deny after next release
 
@@ -828,8 +820,7 @@ class PolymarketExecutionClient(LiveExecutionClient):
             await self._submit_limit_order(command, instrument)
         else:
             self._log.error(
-                f"Order type {order.type_string()} not supported on Polymarket, "
-                "use either MARKET, LIMIT",
+                f"Order type {order.type_string()} not supported on Polymarket, use either MARKET, LIMIT",
             )
 
     def _deny_market_order_quantity(self, order: Order, reason: str) -> None:
@@ -854,16 +845,14 @@ class PolymarketExecutionClient(LiveExecutionClient):
             if not order.is_quote_quantity:
                 self._deny_market_order_quantity(
                     order,
-                    "Polymarket market BUY orders require quote-denominated quantities; "
-                    "resubmit with `quote_quantity=True`",
+                    "Polymarket market BUY orders require quote-denominated quantities; resubmit with `quote_quantity=True`",
                 )
                 return
         else:
             if order.is_quote_quantity:
                 self._deny_market_order_quantity(
                     order,
-                    "Polymarket market SELL orders require base-denominated quantities; "
-                    "resubmit with `quote_quantity=False`",
+                    "Polymarket market SELL orders require base-denominated quantities; resubmit with `quote_quantity=False`",
                 )
                 return
 

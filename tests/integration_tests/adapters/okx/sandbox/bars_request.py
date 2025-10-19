@@ -181,9 +181,7 @@ async def main():
         last_ts = ns_to_timestamp(bars_recent[-1].ts_event)
         logger.info(f"bars_recent[0]  = {bars_recent[0]} (time: {first_ts})")
         logger.info(f"bars_recent[-1] = {bars_recent[-1]} (time: {last_ts})")
-        if (
-            first_ts < start_time_recent
-        ):
+        if first_ts < start_time_recent:
             raise AssertionError(f"First bar {first_ts} should be >= {start_time_recent}")
         logger.info(f"bars_recent time range valid: {first_ts} to {last_ts}")
 
@@ -201,24 +199,16 @@ async def main():
         min_expected = int(expected_bars * (1 - tolerance_pct))
         max_expected = int(expected_bars * (1 + tolerance_pct))
 
-        if (
-            len(bars_narrow) < min_expected
-        ):
+        if len(bars_narrow) < min_expected:
             raise AssertionError(f"Expected at least {min_expected} bars for 1-hour range, was {len(bars_narrow)}")
-        if (
-            len(bars_narrow) > max_expected
-        ):
+        if len(bars_narrow) > max_expected:
             raise AssertionError(f"Expected at most {max_expected} bars for 1-hour range, was {len(bars_narrow)}")
 
         # Check time bounds with small tolerance
         time_tolerance = pd.Timedelta(minutes=10)  # Allow 10 min tolerance due to API adjustments
-        if (
-            first_ts < narrow_start - time_tolerance
-        ):
+        if first_ts < narrow_start - time_tolerance:
             raise AssertionError(f"First bar {first_ts} should be >= {narrow_start - time_tolerance}")
-        if (
-            last_ts > narrow_end + time_tolerance
-        ):
+        if last_ts > narrow_end + time_tolerance:
             raise AssertionError(f"Last bar {last_ts} should be <= {narrow_end + time_tolerance}")
 
         logger.info(f"bars_narrow: {len(bars_narrow)} bars in range {first_ts} to {last_ts}")
