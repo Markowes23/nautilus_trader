@@ -59,7 +59,8 @@ class BybitOrderBookDeltaDataLoader:
         pd.DataFrame
 
         """
-        assert is_zipfile(file_path), "depth_file must be zip file provided by ByBit"
+        if not is_zipfile(file_path):
+            raise AssertionError("depth_file must be zip file provided by ByBit")
 
         orderbook_keys = ["a", "b"]
         rows = []

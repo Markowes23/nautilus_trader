@@ -70,7 +70,8 @@ def ensure_plotting(func):
         try:
             import hvplot.pandas
 
-            assert hvplot.pandas
+            if not hvplot.pandas:
+                raise AssertionError
         except ImportError:
             raise ImportError(
                 "Failed to import plotting library - install in notebook via `%pip install hvplot`",

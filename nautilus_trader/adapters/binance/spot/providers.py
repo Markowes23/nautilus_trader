@@ -105,14 +105,12 @@ class BinanceSpotInstrumentProvider(InstrumentProvider):
                 fees_dict: dict[str, BinanceSpotTradeFee] = {fee.symbol: fee for fee in response}
             else:
                 self._log.warning(
-                    "Currently not requesting actual trade fees for the SPOT testnet; "
-                    "all instruments will have zero fees",
+                    "Currently not requesting actual trade fees for the SPOT testnet; all instruments will have zero fees",
                 )
                 fees_dict = {}
         except BinanceClientError as e:
             self._log.error(
-                "Cannot load instruments: API key authentication failed "
-                f"(this is needed to request the applicable account fee tier). {e.message}",
+                f"Cannot load instruments: API key authentication failed (this is needed to request the applicable account fee tier). {e.message}",
             )
             return
 
@@ -146,25 +144,19 @@ class BinanceSpotInstrumentProvider(InstrumentProvider):
             else:
                 fees_dict = {}
                 self._log.warning(
-                    "Currently not requesting actual trade fees for the SPOT testnet; "
-                    "all instruments will have zero fees.",
+                    "Currently not requesting actual trade fees for the SPOT testnet; all instruments will have zero fees.",
                 )
         except BinanceClientError as e:
             self._log.error(
-                "Cannot load instruments: API key authentication failed "
-                f"(this is needed to request the applicable account fee tier): {e.message}",
+                f"Cannot load instruments: API key authentication failed (this is needed to request the applicable account fee tier): {e.message}",
             )
             return
 
         # Extract all symbol strings
-        symbols = [
-            str(BinanceSymbol(instrument_id.symbol.value)) for instrument_id in instrument_ids
-        ]
+        symbols = [str(BinanceSymbol(instrument_id.symbol.value)) for instrument_id in instrument_ids]
         # Get exchange info for all assets
         exchange_info = await self._http_market.query_spot_exchange_info(symbols=symbols)
-        symbol_info_dict: dict[str, BinanceSpotSymbolInfo] = {
-            info.symbol: info for info in exchange_info.symbols
-        }
+        symbol_info_dict: dict[str, BinanceSpotSymbolInfo] = {info.symbol: info for info in exchange_info.symbols}
 
         for symbol in symbols:
             self._parse_instrument(
@@ -189,22 +181,18 @@ class BinanceSpotInstrumentProvider(InstrumentProvider):
                 fees_dict: dict[str, BinanceSpotTradeFee] = {fee.symbol: fee for fee in response}
             else:
                 self._log.warning(
-                    "Currently not requesting actual trade fees for the SPOT testnet; "
-                    "all instruments will have zero fees",
+                    "Currently not requesting actual trade fees for the SPOT testnet; all instruments will have zero fees",
                 )
                 fees_dict = {}
         except BinanceClientError as e:
             self._log.error(
-                "Cannot load instruments: API key authentication failed "
-                f"(this is needed to request the applicable account fee tier): {e}",
+                f"Cannot load instruments: API key authentication failed (this is needed to request the applicable account fee tier): {e}",
             )
             return
 
         # Get exchange info for asset
         exchange_info = await self._http_market.query_spot_exchange_info(symbol=symbol)
-        symbol_info_dict: dict[str, BinanceSpotSymbolInfo] = {
-            info.symbol: info for info in exchange_info.symbols
-        }
+        symbol_info_dict: dict[str, BinanceSpotSymbolInfo] = {info.symbol: info for info in exchange_info.symbols}
 
         self._parse_instrument(
             symbol_info=symbol_info_dict[symbol],
@@ -227,9 +215,7 @@ class BinanceSpotInstrumentProvider(InstrumentProvider):
             instrument_id = InstrumentId(symbol=raw_symbol, venue=self._venue)
 
             # Parse instrument filters
-            filters: dict[BinanceSymbolFilterType, BinanceSymbolFilter] = {
-                f.filterType: f for f in symbol_info.filters
-            }
+            filters: dict[BinanceSymbolFilterType, BinanceSymbolFilter] = {f.filterType: f for f in symbol_info.filters}
             price_filter = filters[BinanceSymbolFilterType.PRICE_FILTER]
             lot_size_filter = filters[BinanceSymbolFilterType.LOT_SIZE]
 
@@ -281,7 +267,8 @@ class BinanceSpotInstrumentProvider(InstrumentProvider):
             maker_fee: Decimal = Decimal(0)
             taker_fee: Decimal = Decimal(0)
             if fee:
-                assert fee.symbol == symbol_info.symbol
+                if fee.symbol != symbol_info.symbol:
+                    raise AssertionError
                 maker_fee = Decimal(fee.makerCommission)
                 taker_fee = Decimal(fee.takerCommission)
 

@@ -167,24 +167,21 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         exec_params = order.exec_algorithm_params
         if not exec_params:
             self.log.error(
-                f"Cannot execute order: "
-                f"`exec_algorithm_params` not found for primary order {order!r}",
+                f"Cannot execute order: `exec_algorithm_params` not found for primary order {order!r}",
             )
             return
 
         horizon_secs = exec_params.get("horizon_secs")
         if not horizon_secs:
             self.log.error(
-                f"Cannot execute order: "
-                f"`horizon_secs` not found in `exec_algorithm_params` {exec_params}",
+                f"Cannot execute order: `horizon_secs` not found in `exec_algorithm_params` {exec_params}",
             )
             return
 
         interval_secs = exec_params.get("interval_secs")
         if not interval_secs:
             self.log.error(
-                f"Cannot execute order: "
-                f"`interval_secs` not found in `exec_algorithm_params` {exec_params}",
+                f"Cannot execute order: `interval_secs` not found in `exec_algorithm_params` {exec_params}",
             )
             return
 
@@ -218,7 +215,8 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         if qty_remainder:
             scheduled_sizes.append(instrument.make_qty(qty_remainder))
 
-        assert sum(scheduled_sizes) == order.quantity
+        if sum(scheduled_sizes) != order.quantity:
+            raise AssertionError
         self.log.info(f"Order execution size schedule: {scheduled_sizes}", LogColor.BLUE)
 
         self._scheduled_sizes[order.client_order_id] = scheduled_sizes
@@ -241,8 +239,7 @@ class TWAPExecAlgorithm(ExecAlgorithm):
             callback=self.on_time_event,
         )
         self.log.info(
-            f"Started TWAP execution for {order.client_order_id}: "
-            f"{horizon_secs=}, {interval_secs=}",
+            f"Started TWAP execution for {order.client_order_id}: {horizon_secs=}, {interval_secs=}",
             LogColor.BLUE,
         )
 

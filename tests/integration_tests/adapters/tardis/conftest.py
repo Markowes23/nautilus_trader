@@ -24,18 +24,9 @@ def get_test_data_path(file_name: str) -> Path:
     """
     Get path to test data file in the tardis test data directory.
     """
-    path = (
-        PACKAGE_ROOT
-        / "crates"
-        / "adapters"
-        / "tardis"
-        / "src"
-        / "tests"
-        / "data"
-        / "csv"
-        / file_name
-    )
-    assert path.exists(), f"Test data file not found: {path}"
+    path = PACKAGE_ROOT / "crates" / "adapters" / "tardis" / "src" / "tests" / "data" / "csv" / file_name
+    if not path.exists():
+        raise AssertionError(f"Test data file not found: {path}")
     return path
 
 

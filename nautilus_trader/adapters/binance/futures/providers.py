@@ -151,15 +151,11 @@ class BinanceFuturesInstrumentProvider(InstrumentProvider):
             PyCondition.equal(instrument_id.venue, self._venue, "instrument_id.venue", "BINANCE")
 
         # Extract all symbol strings
-        symbols = [
-            str(BinanceSymbol(instrument_id.symbol.value)) for instrument_id in instrument_ids
-        ]
+        symbols = [str(BinanceSymbol(instrument_id.symbol.value)) for instrument_id in instrument_ids]
 
         # Get exchange info for all assets
         exchange_info = await self._http_market.query_futures_exchange_info()
-        symbol_info_dict: dict[str, BinanceFuturesSymbolInfo] = {
-            info.symbol: info for info in exchange_info.symbols
-        }
+        symbol_info_dict: dict[str, BinanceFuturesSymbolInfo] = {info.symbol: info for info in exchange_info.symbols}
         account_info = await self._http_account.query_futures_account_info(recv_window=str(5000))
         fee_rates = self._fee_rates[account_info.feeTier]
 
@@ -189,9 +185,7 @@ class BinanceFuturesInstrumentProvider(InstrumentProvider):
 
         # Get exchange info for all assets
         exchange_info = await self._http_market.query_futures_exchange_info()
-        symbol_info_dict: dict[str, BinanceFuturesSymbolInfo] = {
-            info.symbol: info for info in exchange_info.symbols
-        }
+        symbol_info_dict: dict[str, BinanceFuturesSymbolInfo] = {info.symbol: info for info in exchange_info.symbols}
 
         account_info = await self._http_account.query_futures_account_info(recv_window=str(5000))
         fee_rates = self._fee_rates[account_info.feeTier]
@@ -216,10 +210,7 @@ class BinanceFuturesInstrumentProvider(InstrumentProvider):
     ) -> None:
         contract_type_str = symbol_info.contractType
 
-        if (
-            contract_type_str == ""
-            or symbol_info.status == BinanceFuturesContractStatus.PENDING_TRADING
-        ):
+        if contract_type_str == "" or symbol_info.status == BinanceFuturesContractStatus.PENDING_TRADING:
             self._log.debug(f"Instrument not yet defined: {symbol_info.symbol}")
             return  # Not yet defined
 
@@ -237,9 +228,7 @@ class BinanceFuturesInstrumentProvider(InstrumentProvider):
             instrument_id = InstrumentId(symbol=nautilus_symbol, venue=self._venue)
 
             # Parse instrument filters
-            filters: dict[BinanceSymbolFilterType, BinanceSymbolFilter] = {
-                f.filterType: f for f in symbol_info.filters
-            }
+            filters: dict[BinanceSymbolFilterType, BinanceSymbolFilter] = {f.filterType: f for f in symbol_info.filters}
             price_filter: BinanceSymbolFilter = filters.get(BinanceSymbolFilterType.PRICE_FILTER)
             lot_size_filter: BinanceSymbolFilter = filters.get(BinanceSymbolFilterType.LOT_SIZE)
             min_notional_filter: BinanceSymbolFilter = filters.get(
@@ -272,7 +261,8 @@ class BinanceFuturesInstrumentProvider(InstrumentProvider):
             maker_fee = Decimal(0)
             taker_fee = Decimal(0)
             if fee:
-                assert fee.symbol == symbol_info.symbol
+                if fee.symbol != symbol_info.symbol:
+                    raise AssertionError
                 maker_fee = Decimal(fee.makerCommissionRate)
                 taker_fee = Decimal(fee.takerCommissionRate)
 

@@ -317,10 +317,12 @@ class BetfairMarketStreamClient(BetfairStreamClient):
             country_codes,
             race_types,
         )
-        assert any(filters), "Must pass at least one filter"
-        assert any(
+        if not any(filters):
+            raise AssertionError("Must pass at least one filter")
+        if not any(
             (subscribe_book_updates, subscribe_trade_updates),
-        ), "Must subscribe to either book updates or trades"
+        ):
+            raise AssertionError("Must subscribe to either book updates or trades")
         if market_ids is not None:
             # TODO - Log a warning about inefficiencies of specific market ids - Won't receive any updates for new
             #  markets that fit criteria like when using event type / market type etc

@@ -60,8 +60,10 @@ class BybitInstrumentSpot(msgspec.Struct):
         ts_event: int,
         ts_init: int,
     ) -> CurrencyPair:
-        assert base_currency.code == self.baseCoin
-        assert quote_currency.code == self.quoteCoin
+        if base_currency.code != self.baseCoin:
+            raise AssertionError
+        if quote_currency.code != self.quoteCoin:
+            raise AssertionError
         bybit_symbol = BybitSymbol(self.symbol + "-SPOT")
         instrument_id = bybit_symbol.to_instrument_id()
         price_increment = Price.from_str(self.priceFilter.tickSize)
@@ -155,8 +157,10 @@ class BybitInstrumentLinear(msgspec.Struct):
         ts_event: int,
         ts_init: int,
     ) -> CryptoPerpetual:
-        assert base_currency.code == self.baseCoin
-        assert quote_currency.code == self.quoteCoin
+        if base_currency.code != self.baseCoin:
+            raise AssertionError
+        if quote_currency.code != self.quoteCoin:
+            raise AssertionError
         bybit_symbol = BybitSymbol(self.symbol + "-LINEAR")
         instrument_id = bybit_symbol.to_instrument_id()
         if self.settleCoin == self.baseCoin:
@@ -260,8 +264,10 @@ class BybitInstrumentInverse(msgspec.Struct):
         ts_event: int,
         ts_init: int,
     ) -> CryptoPerpetual:
-        assert base_currency.code == self.baseCoin
-        assert quote_currency.code == self.quoteCoin
+        if base_currency.code != self.baseCoin:
+            raise AssertionError
+        if quote_currency.code != self.quoteCoin:
+            raise AssertionError
         bybit_symbol = BybitSymbol(self.symbol + "-INVERSE")
         instrument_id = bybit_symbol.to_instrument_id()
         if self.settleCoin == self.baseCoin:
@@ -356,7 +362,8 @@ class BybitInstrumentOption(msgspec.Struct):
         self,
         quote_currency: Currency,
     ) -> OptionContract:
-        assert quote_currency.code == self.quoteCoin
+        if quote_currency.code != self.quoteCoin:
+            raise AssertionError
         bybit_symbol = BybitSymbol(self.symbol + "-OPTION")
         instrument_id = bybit_symbol.to_instrument_id()
         price_increment = Price.from_str(self.priceFilter.tickSize)
@@ -393,16 +400,9 @@ class BybitInstrumentOption(msgspec.Struct):
         )
 
 
-BybitInstrument = (
-    BybitInstrumentSpot | BybitInstrumentLinear | BybitInstrumentInverse | BybitInstrumentOption
-)
+BybitInstrument = BybitInstrumentSpot | BybitInstrumentLinear | BybitInstrumentInverse | BybitInstrumentOption
 
-BybitInstrumentList = (
-    list[BybitInstrumentSpot]
-    | list[BybitInstrumentLinear]
-    | list[BybitInstrumentInverse]
-    | list[BybitInstrumentOption]
-)
+BybitInstrumentList = list[BybitInstrumentSpot] | list[BybitInstrumentLinear] | list[BybitInstrumentInverse] | list[BybitInstrumentOption]
 
 
 class BybitInstrumentsSpotResponse(msgspec.Struct):

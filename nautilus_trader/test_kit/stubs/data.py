@@ -306,7 +306,8 @@ class TestDataStubs:
         size: float = 100.0,
     ) -> BookOrder:
         instrument = instrument or TestInstrumentProvider.equity()
-        assert instrument
+        if not instrument:
+            raise AssertionError
         return BookOrder(
             price=instrument.make_price(price),
             size=instrument.make_qty(size),
@@ -328,7 +329,8 @@ class TestDataStubs:
         ts_init: int = 0,
     ) -> OrderBook:
         instrument = instrument or TestInstrumentProvider.equity()
-        assert instrument
+        if not instrument:
+            raise AssertionError
         order_book = OrderBook(
             instrument_id=instrument.id,
             book_type=book_type,
@@ -360,9 +362,11 @@ class TestDataStubs:
         ts_init: int = 0,
     ) -> OrderBookDeltas:
         err = "Too many levels generated; orders will be in cross. Increase bid/ask spread or reduce number of levels"
-        assert bid_price < ask_price, err
+        if bid_price >= ask_price:
+            raise AssertionError(err)
         instrument = instrument or TestInstrumentProvider.equity()
-        assert instrument
+        if not instrument:
+            raise AssertionError
         bids = [
             BookOrder(
                 OrderSide.BUY,
@@ -383,10 +387,7 @@ class TestDataStubs:
         ]
 
         deltas = [OrderBookDelta.clear(instrument.id, 0, ts_event, ts_init)]
-        deltas += [
-            OrderBookDelta(instrument.id, BookAction.ADD, order, 0, 0, ts_event, ts_init)
-            for order in bids + asks
-        ]
+        deltas += [OrderBookDelta(instrument.id, BookAction.ADD, order, 0, 0, ts_event, ts_init) for order in bids + asks]
         return OrderBookDeltas(
             instrument_id=instrument.id,
             deltas=deltas,

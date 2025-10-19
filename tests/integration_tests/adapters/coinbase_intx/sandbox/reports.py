@@ -35,7 +35,8 @@ async def run():
 
     instrument = await http_client.request_instrument(symbol)
     http_client.add_instrument(instrument)  # Must be cached for further requests
-    assert http_client.is_initialized()
+    if not http_client.is_initialized():
+        raise AssertionError
 
     resp = await http_client.request_order_status_report(
         account_id,

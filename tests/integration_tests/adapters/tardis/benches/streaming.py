@@ -52,8 +52,10 @@ def fetch_instruments(
     end: pd.Timestamp | None = None,
     active: bool | None = None,
 ) -> list[Instrument]:
-    assert not (venues and instrument_ids), "Only one of venues or instrument_ids can be set"
-    assert venues or instrument_ids, "Either venues or instrument_ids must be set"
+    if venues and instrument_ids:
+        raise AssertionError("Only one of venues or instrument_ids can be set")
+    if not (venues or instrument_ids):
+        raise AssertionError("Either venues or instrument_ids must be set")
 
     if instrument_ids:
         venues_set = {i.venue for i in instrument_ids}
@@ -103,7 +105,6 @@ def fetch_instruments(
 
 
 def bench_data_streaming_iterators():
-
     start_time = time.perf_counter()
 
     date = pd.Timestamp("2025-02-28", tz="UTC")
@@ -182,9 +183,9 @@ def bench_data_streaming_iterators():
     engine.end()
 
     total_time = time.perf_counter() - start_time
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("PERFORMANCE RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Total time (including setup): {total_time:.2f}s")
     print(f"Backtest execution time:      {backtest_time:.2f}s")
     print(f"Setup overhead:               {total_time - backtest_time:.2f}s")

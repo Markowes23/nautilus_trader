@@ -90,13 +90,15 @@ class OrderBookImbalance(Strategy):
     """
 
     def __init__(self, config: OrderBookImbalanceConfig) -> None:
-        assert 0 < config.trigger_imbalance_ratio < 1
+        if not 0 < config.trigger_imbalance_ratio < 1:
+            raise AssertionError
         super().__init__(config)
 
         # Initialized in on_start
         self.instrument: Instrument | None = None
         if self.config.use_quote_ticks:
-            assert self.config.book_type == "L1_MBP"
+            if self.config.book_type != "L1_MBP":
+                raise AssertionError
         self.book_type: BookType = book_type_from_str(self.config.book_type)
         self._last_trigger_timestamp: datetime.datetime | None = None
 
@@ -166,9 +168,7 @@ class OrderBookImbalance(Strategy):
         self.log.info(
             f"Book: {book.best_bid_price()} @ {book.best_ask_price()} ({ratio=:0.2f})",
         )
-        seconds_since_last_trigger = (
-            self.clock.utc_now() - self._last_trigger_timestamp
-        ).total_seconds()
+        seconds_since_last_trigger = (self.clock.utc_now() - self._last_trigger_timestamp).total_seconds()
 
         if larger > self.config.trigger_min_size and ratio < self.config.trigger_imbalance_ratio:
             self.log.info(
