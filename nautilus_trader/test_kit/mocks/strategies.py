@@ -48,38 +48,44 @@ class MockStrategy(Strategy):
 
     def on_start(self) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.register_indicator_for_bars(self.bar_type, self.ema1)
         self.register_indicator_for_bars(self.bar_type, self.ema2)
 
     def on_instrument(self, instrument) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(instrument)
 
     def on_ticker(self, ticker):
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(ticker)
 
     def on_quote_tick(self, tick):
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(tick)
 
     def on_trade_tick(self, tick) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(tick)
 
     def on_bar(self, bar) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(bar)
 
@@ -107,58 +113,68 @@ class MockStrategy(Strategy):
 
     def on_data(self, data) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(data)
 
     def on_signal(self, signal) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(signal)
 
     def on_strategy_data(self, data) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(data)
 
     def on_event(self, event) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(event)
 
     def on_stop(self) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
 
     def on_resume(self) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
 
     def on_reset(self) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
 
     def on_save(self) -> dict[str, bytes]:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         return {"UserState": b"1"}
 
     def on_load(self, state: dict[str, bytes]) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
         self.store.append(state)
 
     def on_dispose(self) -> None:
         current_frame = inspect.currentframe()
-        assert current_frame  # Type checking
+        if not current_frame:
+            raise AssertionError
         self.calls.append(current_frame.f_code.co_name)
 
 

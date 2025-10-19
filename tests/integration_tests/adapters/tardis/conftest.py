@@ -35,7 +35,8 @@ def get_test_data_path(file_name: str) -> Path:
         / "csv"
         / file_name
     )
-    assert path.exists(), f"Test data file not found: {path}"
+    if not path.exists():
+        raise AssertionError(f"Test data file not found: {path}")
     return path
 
 

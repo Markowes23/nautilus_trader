@@ -51,8 +51,10 @@ def compute_effective_deltas(
     """
     deltas: list[OrderBookDelta] = []
     instrument_id = instrument.id
-    assert instrument_id == book_old.instrument_id
-    assert instrument_id == book_new.instrument_id
+    if instrument_id != book_old.instrument_id:
+        raise AssertionError
+    if instrument_id != book_new.instrument_id:
+        raise AssertionError
     ts_event = book_new.ts_event
     ts_init = book_new.ts_init
 

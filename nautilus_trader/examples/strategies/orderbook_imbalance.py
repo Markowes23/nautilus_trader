@@ -90,13 +90,15 @@ class OrderBookImbalance(Strategy):
     """
 
     def __init__(self, config: OrderBookImbalanceConfig) -> None:
-        assert 0 < config.trigger_imbalance_ratio < 1
+        if not 0 < config.trigger_imbalance_ratio < 1:
+            raise AssertionError
         super().__init__(config)
 
         # Initialized in on_start
         self.instrument: Instrument | None = None
         if self.config.use_quote_ticks:
-            assert self.config.book_type == "L1_MBP"
+            if self.config.book_type != "L1_MBP":
+                raise AssertionError
         self.book_type: BookType = book_type_from_str(self.config.book_type)
         self._last_trigger_timestamp: datetime.datetime | None = None
 

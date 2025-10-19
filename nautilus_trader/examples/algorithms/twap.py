@@ -218,7 +218,8 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         if qty_remainder:
             scheduled_sizes.append(instrument.make_qty(qty_remainder))
 
-        assert sum(scheduled_sizes) == order.quantity
+        if sum(scheduled_sizes) != order.quantity:
+            raise AssertionError
         self.log.info(f"Order execution size schedule: {scheduled_sizes}", LogColor.BLUE)
 
         self._scheduled_sizes[order.client_order_id] = scheduled_sizes

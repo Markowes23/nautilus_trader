@@ -194,7 +194,8 @@ class TestExecStubs:
         instrument = instrument or _AUDUSD_SIM
         order = order or TestExecStubs.limit_order(instrument=instrument, **order_kwargs)
         submitted = TestEventStubs.order_submitted(order=order)
-        assert order
+        if not order:
+            raise AssertionError
         order.apply(submitted)
         return order
 
@@ -214,7 +215,8 @@ class TestExecStubs:
             account_id=account_id,
             venue_order_id=venue_order_id,
         )
-        assert order
+        if not order:
+            raise AssertionError
         order.apply(accepted)
         return order
 

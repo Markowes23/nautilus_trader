@@ -281,7 +281,8 @@ class BinanceSpotInstrumentProvider(InstrumentProvider):
             maker_fee: Decimal = Decimal(0)
             taker_fee: Decimal = Decimal(0)
             if fee:
-                assert fee.symbol == symbol_info.symbol
+                if fee.symbol != symbol_info.symbol:
+                    raise AssertionError
                 maker_fee = Decimal(fee.makerCommission)
                 taker_fee = Decimal(fee.takerCommission)
 

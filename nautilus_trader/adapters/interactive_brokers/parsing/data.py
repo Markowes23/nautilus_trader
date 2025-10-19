@@ -61,7 +61,8 @@ def what_to_show(bar_type: BarType) -> str:
 
 def generate_trade_id(ts_event: int, price: float, size: Decimal) -> TradeId:
     trade_id = TradeId(f"{int(nanos_to_secs(ts_event))}-{price}-{size}")
-    assert len(trade_id.value) < 36, f"TradeId too long, was {len(id.value)}"  # type: ignore
+    if len(trade_id.value) >= 36:
+        raise AssertionError(f"TradeId too long, was {len(id.value)}")
 
     return trade_id
 

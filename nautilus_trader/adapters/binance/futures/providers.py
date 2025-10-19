@@ -272,7 +272,8 @@ class BinanceFuturesInstrumentProvider(InstrumentProvider):
             maker_fee = Decimal(0)
             taker_fee = Decimal(0)
             if fee:
-                assert fee.symbol == symbol_info.symbol
+                if fee.symbol != symbol_info.symbol:
+                    raise AssertionError
                 maker_fee = Decimal(fee.makerCommissionRate)
                 taker_fee = Decimal(fee.takerCommissionRate)
 

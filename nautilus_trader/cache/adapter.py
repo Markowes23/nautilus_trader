@@ -166,7 +166,8 @@ class CachePostgresAdapter(CacheDatabaseFacade):
 
     def add_order_snapshot(self, order: Order) -> None:
         snapshot_pyo3 = transform_order_to_snapshot_pyo3(order)
-        assert snapshot_pyo3
+        if not snapshot_pyo3:
+            raise AssertionError
         self._backing.add_order_snapshot(snapshot_pyo3)
 
     def add_position_snapshot(
@@ -175,7 +176,8 @@ class CachePostgresAdapter(CacheDatabaseFacade):
         unrealized_pnl: Money | None = None,
     ) -> None:
         snapshot_pyo3 = transform_position_to_snapshot_pyo3(position, unrealized_pnl)
-        assert snapshot_pyo3
+        if not snapshot_pyo3:
+            raise AssertionError
         self._backing.add_position_snapshot(snapshot_pyo3)
 
     def add_account(self, account: Account):

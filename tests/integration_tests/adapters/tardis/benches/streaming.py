@@ -52,8 +52,10 @@ def fetch_instruments(
     end: pd.Timestamp | None = None,
     active: bool | None = None,
 ) -> list[Instrument]:
-    assert not (venues and instrument_ids), "Only one of venues or instrument_ids can be set"
-    assert venues or instrument_ids, "Either venues or instrument_ids must be set"
+    if (venues and instrument_ids):
+        raise AssertionError("Only one of venues or instrument_ids can be set")
+    if not (venues or instrument_ids):
+        raise AssertionError("Either venues or instrument_ids must be set")
 
     if instrument_ids:
         venues_set = {i.venue for i in instrument_ids}
