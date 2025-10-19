@@ -59,7 +59,8 @@ class TestCommandStubs:
         venue_order_id: VenueOrderId | None = None,
         order: Order | None = None,
     ) -> ModifyOrder:
-        assert price or quantity
+        if not (price or quantity):
+            raise AssertionError
         if order is not None:
             return ModifyOrder(
                 trader_id=TestIdStubs.trader_id(),

@@ -169,8 +169,10 @@ def setup_catalog(
     catalog = ParquetDataCatalog(path=path.as_posix(), fs_protocol=protocol)
     catalog.fs.mkdir(catalog.path, create_parents=True)
 
-    assert catalog.fs.isdir(catalog.path)
-    assert not [fn for fn in catalog.fs.glob(f"{catalog.path}/**") if catalog.fs.isfile(fn)]
+    if not catalog.fs.isdir(catalog.path):
+        raise AssertionError
+    if [fn for fn in catalog.fs.glob(f"{catalog.path}/**") if catalog.fs.isfile(fn)]:
+        raise AssertionError
 
     return catalog
 

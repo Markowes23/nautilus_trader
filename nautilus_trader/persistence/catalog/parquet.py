@@ -350,9 +350,10 @@ class ParquetDataCatalog(BaseDataCatalog):
 
         if not skip_disjoint_check:
             intervals = self._get_directory_intervals(directory)
-            assert _are_intervals_disjoint(
+            if not _are_intervals_disjoint(
                 intervals,
-            ), "Intervals are not disjoint after writing a new file"
+            ):
+                raise AssertionError("Intervals are not disjoint after writing a new file")
 
     def _objects_to_table(self, data: list[Data], data_cls: type) -> pa.Table:
         PyCondition.not_empty(data, "data")
@@ -436,9 +437,10 @@ class ParquetDataCatalog(BaseDataCatalog):
                 break
 
         intervals = self._get_directory_intervals(directory)
-        assert _are_intervals_disjoint(
+        if not _are_intervals_disjoint(
             intervals,
-        ), "Intervals are not disjoint after extending file name"
+        ):
+            raise AssertionError("Intervals are not disjoint after extending file name")
 
     def reset_all_file_names(self) -> None:
         """
@@ -522,9 +524,10 @@ class ParquetDataCatalog(BaseDataCatalog):
             self.fs.rename(file, new_path)
 
         intervals = self._get_directory_intervals(directory)
-        assert _are_intervals_disjoint(
+        if not _are_intervals_disjoint(
             intervals,
-        ), "Intervals are not disjoint after resetting file names"
+        ):
+            raise AssertionError("Intervals are not disjoint after resetting file names")
 
     def _min_max_from_parquet_metadata(self, file_path: str, column_name: str) -> tuple[int, int]:
         parquet_file = pq.ParquetFile(file_path, filesystem=self.fs)
@@ -696,7 +699,8 @@ class ParquetDataCatalog(BaseDataCatalog):
         intervals.sort(key=lambda x: x[0])
 
         if ensure_contiguous_files:
-            assert _are_intervals_contiguous(intervals)
+            if not _are_intervals_contiguous(intervals):
+                raise AssertionError
 
         new_file_name = os.path.join(
             directory,
@@ -1016,10 +1020,11 @@ class ParquetDataCatalog(BaseDataCatalog):
 
         # Check contiguity of filtered intervals if required
         if ensure_contiguous_files:
-            assert _are_intervals_contiguous(filtered_intervals), (
-                "Intervals are not contiguous. When ensure_contiguous_files=True, "
-                "all files in the consolidation range must have contiguous timestamps."
-            )
+            if not _are_intervals_contiguous(filtered_intervals):
+                raise AssertionError(
+                    "Intervals are not contiguous. When ensure_contiguous_files=True, "
+                    "all files in the consolidation range must have contiguous timestamps."
+                )
 
         # Group intervals into contiguous groups to preserve holes between groups
         # but allow consolidation within each contiguous group

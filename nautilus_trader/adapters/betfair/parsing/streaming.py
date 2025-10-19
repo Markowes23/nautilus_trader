@@ -316,12 +316,14 @@ def runner_change_to_order_book_snapshot(
     Convert a RunnerChange to a OrderBookDeltas snapshot.
     """
     # Check for incorrect data types
-    assert not (
+    if (
         rc.bdatb or rc.bdatl
-    ), "Incorrect orderbook data found (best display), should only be `atb` and `atl`"
-    assert not (
+    ):
+        raise AssertionError("Incorrect orderbook data found (best display), should only be `atb` and `atl`")
+    if (
         rc.batb or rc.batl
-    ), "Incorrect orderbook data found (best) should only be `atb` and `atl`"
+    ):
+        raise AssertionError("Incorrect orderbook data found (best) should only be `atb` and `atl`")
 
     deltas: list[OrderBookDelta] = [
         OrderBookDelta.clear(
@@ -406,12 +408,14 @@ def runner_change_to_order_book_deltas(
     """
     Convert a RunnerChange to a list of OrderBookDeltas.
     """
-    assert not (
+    if (
         rc.bdatb or rc.bdatl
-    ), "Incorrect orderbook data found (best display), should only be `atb` and `atl`"
-    assert not (
+    ):
+        raise AssertionError("Incorrect orderbook data found (best display), should only be `atb` and `atl`")
+    if (
         rc.batb or rc.batl
-    ), "Incorrect orderbook data found (best) should only be `atb` and `atl`"
+    ):
+        raise AssertionError("Incorrect orderbook data found (best) should only be `atb` and `atl`")
 
     deltas: list[OrderBookDelta] = []
 

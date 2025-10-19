@@ -182,7 +182,8 @@ class BetfairHttpClient:
         """
         Return specific data about markets.
         """
-        assert 0 < max_results <= 1000
+        if not 0 < max_results <= 1000:
+            raise AssertionError
         resp: ListMarketCatalogue.return_type = await self._post(
             request=ListMarketCatalogue.with_params(
                 filter=filter_,

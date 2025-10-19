@@ -136,14 +136,16 @@ async def quick_tests(http_client, bar_type: nautilus_pyo3.BarType, logger: Logg
     # Latest 5
     latest = await http_client.request_bars(bar_type=bar_type, limit=5)
     logger.info(f"[Quick-1] latest 5 → {len(latest)}")
-    assert 0 < len(latest) <= 5
+    if not 0 < len(latest) <= 5:
+        raise AssertionError
     assert_chronological(latest)
 
     # Fixed start, 10 bars
     start = utc_now() - pd.Timedelta(hours=1)
     fixed = await http_client.request_bars(bar_type=bar_type, start=start, limit=10)
     logger.info(f"[Quick-2] from {start} → {len(fixed)}")
-    assert 0 < len(fixed) <= 10
+    if not 0 < len(fixed) <= 10:
+        raise AssertionError
     assert_chronological(fixed)
 
 
@@ -161,7 +163,8 @@ async def limit_tests(http_client, bar_type: nautilus_pyo3.BarType, logger: Logg
     ]:
         bars = await http_client.request_bars(bar_type=bar_type, start=tgt_start, limit=limit)
         logger.info(f"[Limit {limit}] {label} → {len(bars)}")
-        assert len(bars) <= limit
+        if len(bars) > limit:
+            raise AssertionError
         assert_chronological(bars)
 
 
@@ -192,7 +195,8 @@ async def edge_case_tests(http_client, bar_type: nautilus_pyo3.BarType, logger: 
             limit=5,
         )
         logger.info(f"[Edge-2] future window returned {len(fut)}")
-        assert not fut
+        if fut:
+            raise AssertionError
     except ValueError:
         logger.info("[Edge-2] future window correctly raised ValueError")
 
@@ -201,7 +205,8 @@ async def edge_case_tests(http_client, bar_type: nautilus_pyo3.BarType, logger: 
     pre_end = pre_start + pd.Timedelta(minutes=30)
     pre = await http_client.request_bars(bar_type=bar_type, start=pre_start, end=pre_end, limit=50)
     logger.info(f"[Edge-3] pre-listing → {len(pre)}")
-    assert not pre
+    if pre:
+        raise AssertionError
 
     # Reversed window
     try:

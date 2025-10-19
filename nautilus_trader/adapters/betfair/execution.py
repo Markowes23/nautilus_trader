@@ -320,9 +320,10 @@ class BetfairExecutionClient(LiveExecutionClient):
         self._log.debug(
             f"Listing current orders for {command.venue_order_id=} {command.client_order_id=}",
         )
-        assert (
+        if not (
             command.venue_order_id is not None or command.client_order_id is not None
-        ), "Require one of venue_order_id or client_order_id"
+        ):
+            raise AssertionError("Require one of venue_order_id or client_order_id")
 
         try:
             if command.venue_order_id is not None:
@@ -640,7 +641,8 @@ class BetfairExecutionClient(LiveExecutionClient):
             deleted_bet_id = report.cancel_instruction_report.instruction.bet_id
             self._log.debug(f"{existing_order}, {deleted_bet_id}")
             err = f"{deleted_bet_id} != {existing_order.venue_order_id}"
-            assert existing_order.venue_order_id == VenueOrderId(str(deleted_bet_id)), err
+            if existing_order.venue_order_id != VenueOrderId(str(deleted_bet_id)):
+                raise AssertionError(err)
 
             place_instruction = report.place_instruction_report
             venue_order_id = VenueOrderId(str(place_instruction.bet_id))
@@ -815,7 +817,8 @@ class BetfairExecutionClient(LiveExecutionClient):
         details: AccountDetailsResponse = await self._client.get_account_details()
         currency_code = details.currency_code
         self._log.debug(f"Account {currency_code=}, {self.base_currency.code=}")
-        assert currency_code == self.base_currency.code
+        if currency_code != self.base_currency.code:
+            raise AssertionError
         self._log.debug("Base currency matches client details")
 
     # -- DEBUGGING --------------------------------------------------------------------------------
