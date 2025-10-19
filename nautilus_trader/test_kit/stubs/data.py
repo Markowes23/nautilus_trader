@@ -387,10 +387,7 @@ class TestDataStubs:
         ]
 
         deltas = [OrderBookDelta.clear(instrument.id, 0, ts_event, ts_init)]
-        deltas += [
-            OrderBookDelta(instrument.id, BookAction.ADD, order, 0, 0, ts_event, ts_init)
-            for order in bids + asks
-        ]
+        deltas += [OrderBookDelta(instrument.id, BookAction.ADD, order, 0, 0, ts_event, ts_init) for order in bids + asks]
         return OrderBookDeltas(
             instrument_id=instrument.id,
             deltas=deltas,

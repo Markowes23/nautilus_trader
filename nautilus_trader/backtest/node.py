@@ -187,8 +187,7 @@ class BacktestNode:
                 for instrument_id in used_instrument_ids:
                     if instrument_id.venue not in venue_ids:
                         raise InvalidConfiguration(
-                            f"Venue '{instrument_id.venue}' for {instrument_id} "
-                            f"does not have a `BacktestVenueConfig`",
+                            f"Venue '{instrument_id.venue}' for {instrument_id} does not have a `BacktestVenueConfig`",
                         )
 
             for venue_config in config.venues:
@@ -198,9 +197,7 @@ class BacktestNode:
                 # Check order book data configuration
                 if book_type in (BookType.L2_MBP, BookType.L3_MBO):
                     has_book_data = any(
-                        data_config.instrument_id
-                        and data_config.instrument_id.venue == venue
-                        and data_config.data_type in BOOK_DATA_TYPES
+                        data_config.instrument_id and data_config.instrument_id.venue == venue and data_config.data_type in BOOK_DATA_TYPES
                         for data_config in config.data
                     )
 
@@ -334,8 +331,7 @@ class BacktestNode:
 
         if request_function not in compatible_request_functions:
             self._engines["download"].logger.error(
-                f"{request_function} not supported by BacktestNode.download_data. "
-                f"Please use one of {compatible_request_functions}.",
+                f"{request_function} not supported by BacktestNode.download_data. Please use one of {compatible_request_functions}.",
             )
 
         self._download_actor.clock.set_time(pd.Timestamp.utcnow().value)
@@ -634,11 +630,7 @@ class BacktestNode:
     ) -> CatalogDataResult:
         catalog: ParquetDataCatalog = cls.load_catalog(config)
         used_instrument_ids = get_instrument_ids(config)
-        instruments = (
-            catalog.instruments(instrument_ids=used_instrument_ids)
-            if len(used_instrument_ids) > 0
-            else None
-        )
+        instruments = catalog.instruments(instrument_ids=used_instrument_ids) if len(used_instrument_ids) > 0 else None
 
         if len(used_instrument_ids) > 0 and not instruments:
             return CatalogDataResult(data_cls=config.data_type, data=[])
@@ -717,22 +709,14 @@ def get_instrument_ids(config: BacktestDataConfig) -> list[InstrumentId]:
     instrument_ids = []
 
     if config.instrument_id:
-        instrument_id = (
-            InstrumentId.from_str(config.instrument_id)
-            if type(config.instrument_id) is str
-            else config.instrument_id
-        )
+        instrument_id = InstrumentId.from_str(config.instrument_id) if type(config.instrument_id) is str else config.instrument_id
         instrument_ids = [instrument_id]
     elif config.instrument_ids:
         instrument_ids = [
-            (InstrumentId.from_str(instrument_id) if type(instrument_id) is str else instrument_id)
-            for instrument_id in config.instrument_ids
+            (InstrumentId.from_str(instrument_id) if type(instrument_id) is str else instrument_id) for instrument_id in config.instrument_ids
         ]
     elif config.bar_types:
-        bar_types: list[BarType] = [
-            BarType.from_str(bar_type) if type(bar_type) is str else bar_type
-            for bar_type in config.bar_types
-        ]
+        bar_types: list[BarType] = [BarType.from_str(bar_type) if type(bar_type) is str else bar_type for bar_type in config.bar_types]
         instrument_ids = [bar_type.instrument_id for bar_type in bar_types]
 
     return instrument_ids
@@ -772,11 +756,7 @@ def get_base_currency(config: BacktestVenueConfig) -> Currency | None:
 
 
 def get_leverages(config: BacktestVenueConfig) -> dict[InstrumentId, Decimal]:
-    return (
-        {InstrumentId.from_str(i): Decimal(v) for i, v in config.leverages.items()}
-        if config.leverages
-        else {}
-    )
+    return {InstrumentId.from_str(i): Decimal(v) for i, v in config.leverages.items()} if config.leverages else {}
 
 
 def get_fill_model(config: BacktestVenueConfig) -> FillModel | None:
