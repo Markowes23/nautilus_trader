@@ -76,7 +76,8 @@ class TestCashAccount:
             clock=TestClock(),
         )
 
-    def test_instantiated_accounts_basic_properties(self):
+    @staticmethod
+    def test_instantiated_accounts_basic_properties():
         # Arrange, Act
         account = TestExecStubs.cash_account()
 
@@ -88,14 +89,16 @@ class TestCashAccount:
         assert repr(account) == "CashAccount(id=SIM-000, type=CASH, base=USD)"
         assert isinstance(hash(account), int)
 
-    def test_is_unleveraged_returns_true(self):
+    @staticmethod
+    def test_is_unleveraged_returns_true():
         # Arrange, Act
         account = TestExecStubs.cash_account()
 
         # Assert
         assert account.is_unleveraged(AUDUSD_SIM.id)
 
-    def test_instantiate_single_asset_cash_account(self):
+    @staticmethod
+    def test_instantiate_single_asset_cash_account():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -131,7 +134,8 @@ class TestCashAccount:
         assert account.balances_free() == {USD: Money(1_000_000, USD)}
         assert account.balances_locked() == {USD: Money(0, USD)}
 
-    def test_instantiate_multi_asset_cash_account(self):
+    @staticmethod
+    def test_instantiate_multi_asset_cash_account():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -185,7 +189,8 @@ class TestCashAccount:
             ETH: Money(0.00000000, ETH),
         }
 
-    def test_apply_given_new_state_event_updates_correctly(self):
+    @staticmethod
+    def test_apply_given_new_state_event_updates_correctly():
         # Arrange
         event1 = AccountState(
             account_id=AccountId("SIM-001"),
@@ -252,7 +257,8 @@ class TestCashAccount:
         assert account.balance_free(ETH) == Money(20.00000000, ETH)
         assert account.balance_locked(ETH) == Money(0.00000000, ETH)
 
-    def test_calculate_balance_locked_buy(self):
+    @staticmethod
+    def test_calculate_balance_locked_buy():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-001"),
@@ -286,7 +292,8 @@ class TestCashAccount:
         # Assert
         assert result == Money(800_000.00, USD)  # Notional
 
-    def test_calculate_balance_locked_sell(self):
+    @staticmethod
+    def test_calculate_balance_locked_sell():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-001"),
@@ -320,7 +327,8 @@ class TestCashAccount:
         # Assert
         assert result == Money(1_000_000.00, AUD)  # Notional
 
-    def test_calculate_balance_locked_sell_no_base_currency(self):
+    @staticmethod
+    def test_calculate_balance_locked_sell_no_base_currency():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-001"),
@@ -532,9 +540,8 @@ class TestCashAccount:
         # Assert (does not include commission)
         assert result == [Money(100.000000, ADA), Money(-0.00410000, BTC)]
 
-    def test_calculate_commission_when_given_liquidity_side_none_raises_value_error(
-        self,
-    ):
+    @staticmethod
+    def test_calculate_commission_when_given_liquidity_side_none_raises_value_error():
         # Arrange
         account = TestExecStubs.cash_account()
         instrument = TestInstrumentProvider.xbtusd_bitmex()
@@ -572,7 +579,8 @@ class TestCashAccount:
         # Assert
         assert result == expected
 
-    def test_calculate_commission_for_taker_fx(self):
+    @staticmethod
+    def test_calculate_commission_for_taker_fx():
         # Arrange
         account = TestExecStubs.cash_account()
         instrument = AUDUSD_SIM
@@ -588,7 +596,8 @@ class TestCashAccount:
         # Assert
         assert result == Money(24.02, USD)
 
-    def test_calculate_commission_crypto_taker(self):
+    @staticmethod
+    def test_calculate_commission_crypto_taker():
         # Arrange
         account = TestExecStubs.cash_account()
         instrument = TestInstrumentProvider.xbtusd_bitmex()
@@ -604,7 +613,8 @@ class TestCashAccount:
         # Assert
         assert result == Money(0.00654993, BTC)
 
-    def test_calculate_commission_fx_taker(self):
+    @staticmethod
+    def test_calculate_commission_fx_taker():
         # Arrange
         account = TestExecStubs.cash_account()
         instrument = TestInstrumentProvider.default_fx_ccy("USD/JPY", Venue("IDEALPRO"))
@@ -986,7 +996,8 @@ def test_accounts_manager_update_balance_locked_with_base_currency_multiple_orde
 
 
 class TestCashAccountPurge:
-    def test_purge_account_events_retains_latest_when_all_events_purged(self):
+    @staticmethod
+    def test_purge_account_events_retains_latest_when_all_events_purged():
         # Arrange
         account = TestExecStubs.cash_account()
 
@@ -1066,7 +1077,8 @@ class TestCashAccountPurge:
         # Verify account state reflects the latest event
         assert account.balance_total() == Money(2_000_000.00, USD)
 
-    def test_cash_account_borrowing_disabled_by_default(self):
+    @staticmethod
+    def test_cash_account_borrowing_disabled_by_default():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -1093,7 +1105,8 @@ class TestCashAccountPurge:
         # Assert
         assert account.allow_borrowing is False
 
-    def test_cash_account_with_borrowing_enabled(self):
+    @staticmethod
+    def test_cash_account_with_borrowing_enabled():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -1120,7 +1133,8 @@ class TestCashAccountPurge:
         # Assert
         assert account.allow_borrowing is True
 
-    def test_cash_account_rejects_negative_balance_when_borrowing_disabled(self):
+    @staticmethod
+    def test_cash_account_rejects_negative_balance_when_borrowing_disabled():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -1147,7 +1161,8 @@ class TestCashAccountPurge:
         with pytest.raises(AccountBalanceNegative):
             CashAccount(event, allow_borrowing=False)
 
-    def test_cash_account_accepts_negative_balance_when_borrowing_enabled(self):
+    @staticmethod
+    def test_cash_account_accepts_negative_balance_when_borrowing_enabled():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -1175,7 +1190,8 @@ class TestCashAccountPurge:
         assert account.balance_total() == Money(-100_000, USD)
         assert account.allow_borrowing is True
 
-    def test_cash_account_update_balances_respects_borrowing_setting(self):
+    @staticmethod
+    def test_cash_account_update_balances_respects_borrowing_setting():
         # Arrange
         initial_event = AccountState(
             account_id=AccountId("SIM-000"),

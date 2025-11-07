@@ -16,7 +16,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
 from nautilus_trader.adapters.hyperliquid.constants import HYPERLIQUID_VENUE
 from nautilus_trader.adapters.hyperliquid.enums import DEFAULT_PRODUCT_TYPES
@@ -33,7 +34,8 @@ from nautilus_trader.model.instruments import instruments_from_pyo3
 
 if TYPE_CHECKING:
     # PyO3 types from Rust (temporary namespace qualification)
-    HyperliquidHttpClient = Any  # nautilus_pyo3.HyperliquidHttpClient (stub not yet available)
+    # nautilus_pyo3.HyperliquidHttpClient (stub not yet available)
+    HyperliquidHttpClient = Any
 
 
 class HyperliquidInstrumentProvider(InstrumentProvider):
@@ -53,11 +55,7 @@ class HyperliquidInstrumentProvider(InstrumentProvider):
 
         self._client: HyperliquidHttpClient = client
 
-        resolved_types = (
-            DEFAULT_PRODUCT_TYPES
-            if product_types is None
-            else frozenset(HyperliquidProductType(pt) for pt in product_types)
-        )
+        resolved_types = DEFAULT_PRODUCT_TYPES if product_types is None else frozenset(HyperliquidProductType(pt) for pt in product_types)
         if not resolved_types:
             raise ValueError("product_types must contain at least one entry")
 
@@ -212,8 +210,8 @@ class HyperliquidInstrumentProvider(InstrumentProvider):
     # Internal helpers
     # ------------------------------------------------------------------
 
+    @staticmethod
     def _accept_instrument(
-        self,
         instrument: Instrument,
         filters: dict | None,
     ) -> bool:
@@ -227,11 +225,7 @@ class HyperliquidInstrumentProvider(InstrumentProvider):
                 values: Iterable[str] = [value]
             else:
                 values = value
-            return {
-                (item.lower() if to_lower else item.upper())
-                for item in values
-                if isinstance(item, str)
-            }
+            return {(item.lower() if to_lower else item.upper()) for item in values if isinstance(item, str)}
 
         market_type = "perp" if isinstance(instrument, CryptoPerpetual) else "spot"
         kinds = _normalize(filters.get("market_types") or filters.get("kinds"), to_lower=True)

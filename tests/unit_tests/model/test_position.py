@@ -63,7 +63,8 @@ class TestPosition:
             clock=TestClock(),
         )
 
-    def test_side_from_order_side_given_invalid_value(self) -> None:
+    @staticmethod
+    def test_side_from_order_side_given_invalid_value() -> None:
         """
         Test raises `ValueError`.
         """
@@ -917,10 +918,7 @@ class TestPosition:
         assert position.quantity == Quantity.from_int(19)
         assert position.realized_pnl == Money(36.16858966, USDT)
         assert position.avg_px_open == 99.98003629764065
-        assert (
-            repr(position)
-            == "Position(LONG 19.00000 ETHUSDT.BINANCE, id=P-19700101-000000-000-001-1)"
-        )
+        assert repr(position) == "Position(LONG 19.00000 ETHUSDT.BINANCE, id=P-19700101-000000-000-001-1)"
 
     def test_position_closed_and_reopened(self) -> None:
         # Arrange
@@ -1105,10 +1103,7 @@ class TestPosition:
         assert position.quantity == Quantity.from_int(19)
         assert position.realized_pnl == Money(-415.27137481, USDT)
         assert position.avg_px_open == 9999.88155922039
-        assert (
-            repr(position)
-            == "Position(LONG 19.000000 BTCUSDT.BINANCE, id=P-19700101-000000-000-001-1)"
-        )
+        assert repr(position) == "Position(LONG 19.000000 BTCUSDT.BINANCE, id=P-19700101-000000-000-001-1)"
 
     def test_calculate_pnl_when_given_position_side_flat_returns_zero(self) -> None:
         # Arrange
@@ -1945,7 +1940,8 @@ class TestPosition:
 
         # Assert
         assert position.is_closed
-        assert position.duration_ns == 3_599_000_000_000  # 1 hour - 1 second in nanoseconds
+        # 1 hour - 1 second in nanoseconds
+        assert position.duration_ns == 3_599_000_000_000
         assert position.ts_opened == 1_000_000_000
         assert position.ts_closed == 3_600_000_000_000
 
@@ -2228,10 +2224,8 @@ class TestPosition:
                 instrument=AUDUSD_SIM,
                 position_id=PositionId("P-123456"),
                 strategy_id=StrategyId("S-001"),
-                venue_order_id=(
-                    VenueOrderId("V-001") if i < 2 else VenueOrderId("V-002")
-                ),  # Duplicate first
-                trade_id=TradeId(f"T-00{i+1}"),  # Unique trade IDs
+                venue_order_id=(VenueOrderId("V-001") if i < 2 else VenueOrderId("V-002")),  # Duplicate first
+                trade_id=TradeId(f"T-00{i + 1}"),  # Unique trade IDs
                 last_px=Price.from_str("1.00000"),
             )
             fills.append(fill)

@@ -174,7 +174,8 @@ class TestStrategy:
         self.data_engine.start()
         self.exec_engine.start()
 
-    def test_strategy_to_importable_config_with_no_specific_config(self) -> None:
+    @staticmethod
+    def test_strategy_to_importable_config_with_no_specific_config() -> None:
         # Arrange
         config = StrategyConfig()
 
@@ -201,7 +202,8 @@ class TestStrategy:
             "log_rejected_due_post_only_as_warning": True,
         }
 
-    def test_strategy_to_importable_config(self) -> None:
+    @staticmethod
+    def test_strategy_to_importable_config() -> None:
         # Arrange
         config = StrategyConfig(
             strategy_id="ALPHA-01",
@@ -235,7 +237,8 @@ class TestStrategy:
             "log_rejected_due_post_only_as_warning": True,
         }
 
-    def test_strategy_equality(self) -> None:
+    @staticmethod
+    def test_strategy_equality() -> None:
         # Arrange
         strategy1 = Strategy(config=StrategyConfig(order_id_tag="AUD/USD-001"))
         strategy2 = Strategy(config=StrategyConfig(order_id_tag="AUD/USD-001"))
@@ -246,7 +249,8 @@ class TestStrategy:
         assert strategy1 == strategy2
         assert strategy2 != strategy3
 
-    def test_str_and_repr(self) -> None:
+    @staticmethod
+    def test_str_and_repr() -> None:
         # Arrange
         strategy = Strategy(config=StrategyConfig(order_id_tag="GBP/USD-MM"))
 
@@ -254,7 +258,8 @@ class TestStrategy:
         assert str(strategy) == "Strategy-GBP/USD-MM"
         assert repr(strategy) == "Strategy(Strategy-GBP/USD-MM)"
 
-    def test_id(self) -> None:
+    @staticmethod
+    def test_id() -> None:
         # Arrange
         strategy = Strategy()
 

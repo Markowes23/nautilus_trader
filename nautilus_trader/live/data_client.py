@@ -124,8 +124,8 @@ class LiveDataClient(DataClient):
         self._loop = loop
         self._tasks: WeakSet[asyncio.Task] = WeakSet()
 
+    @staticmethod
     async def run_after_delay(
-        self,
         delay: float,
         coro: Coroutine,
     ) -> None:
@@ -380,8 +380,8 @@ class LiveMarketDataClient(MarketDataClient):
                 "ensure nest_asyncio.apply() is called if running in an async environment like a jupyter notebook",
             )
 
+    @staticmethod
     async def run_after_delay(
-        self,
         delay: float,
         coro: Coroutine,
     ) -> None:

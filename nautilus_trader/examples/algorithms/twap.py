@@ -97,7 +97,8 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         """
         self._scheduled_sizes.clear()
 
-    def on_save(self) -> dict[str, bytes]:
+    @staticmethod
+    def on_save() -> dict[str, bytes]:
         """
         Actions to be performed when the algorithm component is saved.
 
@@ -125,7 +126,8 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         """
         # Optionally implement
 
-    def round_decimal_down(self, amount: Decimal, precision: int) -> Decimal:
+    @staticmethod
+    def round_decimal_down(amount: Decimal, precision: int) -> Decimal:
         return amount.quantize(Decimal(f"1e-{precision}"), rounding=ROUND_DOWN)
 
     def on_order(self, order: Order) -> None:
@@ -167,24 +169,21 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         exec_params = order.exec_algorithm_params
         if not exec_params:
             self.log.error(
-                f"Cannot execute order: "
-                f"`exec_algorithm_params` not found for primary order {order!r}",
+                f"Cannot execute order: `exec_algorithm_params` not found for primary order {order!r}",
             )
             return
 
         horizon_secs = exec_params.get("horizon_secs")
         if not horizon_secs:
             self.log.error(
-                f"Cannot execute order: "
-                f"`horizon_secs` not found in `exec_algorithm_params` {exec_params}",
+                f"Cannot execute order: `horizon_secs` not found in `exec_algorithm_params` {exec_params}",
             )
             return
 
         interval_secs = exec_params.get("interval_secs")
         if not interval_secs:
             self.log.error(
-                f"Cannot execute order: "
-                f"`interval_secs` not found in `exec_algorithm_params` {exec_params}",
+                f"Cannot execute order: `interval_secs` not found in `exec_algorithm_params` {exec_params}",
             )
             return
 
@@ -241,8 +240,7 @@ class TWAPExecAlgorithm(ExecAlgorithm):
             callback=self.on_time_event,
         )
         self.log.info(
-            f"Started TWAP execution for {order.client_order_id}: "
-            f"{horizon_secs=}, {interval_secs=}",
+            f"Started TWAP execution for {order.client_order_id}: {horizon_secs=}, {interval_secs=}",
             LogColor.BLUE,
         )
 

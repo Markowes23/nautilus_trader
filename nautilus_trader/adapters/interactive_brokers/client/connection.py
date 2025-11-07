@@ -82,7 +82,8 @@ class InteractiveBrokersClientConnectionMixin(BaseMixin):
             if self._eclient.wrapper:
                 self._eclient.wrapper.error(NO_VALID_ID, CONNECT_FAIL.code(), CONNECT_FAIL.msg())
 
-    def _msgspec_decoding_hook(self, byte_data: bytes) -> str:
+    @staticmethod
+    def _msgspec_decoding_hook(byte_data: bytes) -> str:
         """
         Decode connection time from the server for possible more languages.
         """
@@ -198,8 +199,7 @@ class InteractiveBrokersClientConnectionMixin(BaseMixin):
 
             retries_remaining -= 1
             self._log.warning(
-                "Failed to receive server version information, "
-                f"retries remaining: {retries_remaining}",
+                f"Failed to receive server version information, retries remaining: {retries_remaining}",
             )
             await asyncio.sleep(1)
 

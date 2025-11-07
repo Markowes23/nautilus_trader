@@ -13,7 +13,6 @@
 #  limitations under the License.
 # -------------------------------------------------------------------------------------------------
 
-
 import pytest
 
 from nautilus_trader.backtest.engine import BacktestDataIterator
@@ -21,7 +20,8 @@ from nautilus_trader.test_kit.stubs.data import MyData
 
 
 class TestBacktestDataIterator:
-    def test_iterate_multiple_streams_sorted(self):
+    @staticmethod
+    def test_iterate_multiple_streams_sorted():
         """
         Test multiple streams; iterate and assert items are merged in non-decreasing
         ts_init order.
@@ -43,7 +43,8 @@ class TestBacktestDataIterator:
         assert len(merged) == 15
         assert all(merged[i].ts_init <= merged[i + 1].ts_init for i in range(len(merged) - 1))
 
-    def test_partial_consumption_then_complete(self):
+    @staticmethod
+    def test_partial_consumption_then_complete():
         """
         Test partial data consumption followed by complete consumption.
         """
@@ -65,7 +66,8 @@ class TestBacktestDataIterator:
         assert remaining == [2, 3]
         assert iterator.is_done()
 
-    def test_all_data_returns_mapping(self):
+    @staticmethod
+    def test_all_data_returns_mapping():
         """
         Test that all_data returns a name-to-list mapping for all streams.
         """
@@ -81,7 +83,8 @@ class TestBacktestDataIterator:
         assert list(mapping.keys()) == ["only"]
         assert mapping["only"] == lst
 
-    def test_remove_stream_effect(self):
+    @staticmethod
+    def test_remove_stream_effect():
         """
         Test removing one stream affects iteration length accordingly.
         """
@@ -104,7 +107,8 @@ class TestBacktestDataIterator:
         # Act & Assert after removal
         assert [x.value for x in iterator2] == [1]
 
-    def test_remove_all_streams_yields_empty(self):
+    @staticmethod
+    def test_remove_all_streams_yields_empty():
         """
         Test removing all streams yields no data on iteration.
         """
@@ -120,7 +124,8 @@ class TestBacktestDataIterator:
         # Assert
         assert list(iterator) == []
 
-    def test_single_data_mode_basic_functionality(self):
+    @staticmethod
+    def test_single_data_mode_basic_functionality():
         """
         Test single-stream mode yields data in order.
         """
@@ -144,7 +149,8 @@ class TestBacktestDataIterator:
         # because the internal closure returns empty data on subsequent calls
         # This is the expected behavior in the new implementation
 
-    def test_append_data_priority_changes_order(self):
+    @staticmethod
+    def test_append_data_priority_changes_order():
         """
         Test two streams with identical ts_init: default append_data=True yields FIFO,
         append_data=False yields reversed insertion priority.
@@ -168,7 +174,8 @@ class TestBacktestDataIterator:
         assert order1 == [0, 1]
         assert order2 == [1, 0]
 
-    def test_set_index_and_data_accessor_and_is_done_empty(self):
+    @staticmethod
+    def test_set_index_and_data_accessor_and_is_done_empty():
         """
         Test is_done on empty iterator, data() accessor, and set_index restart.
         """
@@ -201,7 +208,8 @@ class TestBacktestDataIterator:
         assert remaining == [10, 20, 30]
         assert iterator.is_done()
 
-    def test_all_data_order_and_add_empty_list(self):
+    @staticmethod
+    def test_all_data_order_and_add_empty_list():
         """
         Test that all_data preserves insertion order and ignores empty streams.
         """
@@ -219,7 +227,8 @@ class TestBacktestDataIterator:
         assert keys_before == ["first", "second"]
         assert keys_after == ["first", "second"]
 
-    def test_readding_data_replaces_old(self):
+    @staticmethod
+    def test_readding_data_replaces_old():
         """
         Test adding a stream under an existing name replaces its data.
         """
@@ -241,7 +250,8 @@ class TestBacktestDataIterator:
         second_result = [x.value for x in iterator2]
         assert second_result == [3]
 
-    def test_single_stream_yields_in_order(self):
+    @staticmethod
+    def test_single_stream_yields_in_order():
         """
         Test single stream yields data in chronological order.
         """
@@ -253,7 +263,8 @@ class TestBacktestDataIterator:
         assert list(iterator) == data
         assert iterator.is_done()
 
-    def test_multiple_streams_merge_order(self):
+    @staticmethod
+    def test_multiple_streams_merge_order():
         """
         Test multiple streams are merged in chronological order.
         """
@@ -270,7 +281,8 @@ class TestBacktestDataIterator:
 
         assert observed_order == expected_order
 
-    def test_prepend_priority_with_equal_timestamps(self):
+    @staticmethod
+    def test_prepend_priority_with_equal_timestamps():
         """
         Test prepend streams have priority over append streams for equal timestamps.
         """
@@ -290,7 +302,8 @@ class TestBacktestDataIterator:
         assert first_out.value == 1  # prepend stream wins tie
         assert second_out.value == 0
 
-    def test_remove_data_basic_functionality(self):
+    @staticmethod
+    def test_remove_data_basic_functionality():
         """
         Test removing data and iterator properly handles empty state.
         """
@@ -304,7 +317,8 @@ class TestBacktestDataIterator:
         iterator.remove_data("s1")
         assert iterator.is_done()
 
-    def test_set_index_behavior(self):
+    @staticmethod
+    def test_set_index_behavior():
         """
         Test set_index functionality for repositioning within a stream.
         """
@@ -322,7 +336,8 @@ class TestBacktestDataIterator:
         remaining = [d.ts_init for d in iterator]
         assert remaining == [10, 20, 30]
 
-    def test_init_data_basic_functionality(self):
+    @staticmethod
+    def test_init_data_basic_functionality():
         """
         Test basic init_data functionality with closure-based data loading.
         """
@@ -343,7 +358,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [0, 1, 2]
         assert [d.ts_init for d in result] == [0, 1000, 2000]
 
-    def test_init_data_empty_data_provider(self):
+    @staticmethod
+    def test_init_data_empty_data_provider():
         """
         Test init_data with data provider that returns empty list.
         """
@@ -362,7 +378,8 @@ class TestBacktestDataIterator:
         assert len(result) == 0
         assert iterator.is_done()
 
-    def test_init_data_multiple_streams(self):
+    @staticmethod
+    def test_init_data_multiple_streams():
         """
         Test init_data with multiple streams merged in chronological order.
         """
@@ -385,7 +402,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [1, 2, 3, 4]
         assert [d.ts_init for d in result] == [1000, 2000, 3000, 4000]
 
-    def test_init_data_append_priority(self):
+    @staticmethod
+    def test_init_data_append_priority():
         """
         Test init_data with append_data parameter affecting priority.
         """
@@ -407,7 +425,8 @@ class TestBacktestDataIterator:
         assert len(result) == 2
         assert [d.value for d in result] == [2, 1]
 
-    def test_init_data_replace_existing_stream(self):
+    @staticmethod
+    def test_init_data_replace_existing_stream():
         """
         Test init_data replacing an existing stream with same name.
         """
@@ -433,7 +452,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in first_result] == [1]
         assert [d.value for d in second_result] == [2]
 
-    def test_consecutive_data_addition_single_stream(self):
+    @staticmethod
+    def test_consecutive_data_addition_single_stream():
         """
         Test consecutive data addition using closure that provides data in chunks.
         """
@@ -458,7 +478,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [1, 2, 3, 4]
         assert [d.ts_init for d in result] == [1000, 2000, 3000, 4000]
 
-    def test_consecutive_data_addition_multiple_streams(self):
+    @staticmethod
+    def test_consecutive_data_addition_multiple_streams():
         """
         Test consecutive data addition with multiple streams providing data in chunks.
         """
@@ -484,7 +505,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [10, 20, 30, 40]
         assert [d.ts_init for d in result] == [1000, 2000, 3000, 4000]
 
-    def test_consecutive_data_addition_with_state(self):
+    @staticmethod
+    def test_consecutive_data_addition_with_state():
         """
         Test consecutive data addition where closure maintains state between calls.
         """
@@ -505,7 +527,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [0, 1, 2]
         assert [d.ts_init for d in result] == [1000, 2000, 3000]
 
-    def test_data_update_function_complete_removal(self):
+    @staticmethod
+    def test_data_update_function_complete_removal():
         """
         Test that data update function removes stream when it returns empty data.
         """
@@ -526,7 +549,8 @@ class TestBacktestDataIterator:
         assert "test_stream" not in iterator.all_data()  # Stream should be removed
         assert iterator.is_done()
 
-    def test_data_update_function_with_remove_data(self):
+    @staticmethod
+    def test_data_update_function_with_remove_data():
         """
         Test remove_data with complete_remove parameter for init_data streams.
         """
@@ -552,7 +576,8 @@ class TestBacktestDataIterator:
         assert "test_stream" not in iterator.all_data()
         assert iterator.is_done()
 
-    def test_data_update_function_mixed_with_static_data(self):
+    @staticmethod
+    def test_data_update_function_mixed_with_static_data():
         """
         Test data update function behavior when mixed with static data streams.
         """
@@ -578,7 +603,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [1, 10, 2]
         assert [d.ts_init for d in result] == [1000, 1500, 2000]
 
-    def test_data_update_function_error_handling(self):
+    @staticmethod
+    def test_data_update_function_error_handling():
         """
         Test data update function behavior when provider raises exceptions.
         """
@@ -595,7 +621,8 @@ class TestBacktestDataIterator:
         with pytest.raises(ValueError, match="Provider failed"):
             list(iterator)
 
-    def test_mixed_add_data_and_init_data_basic(self):
+    @staticmethod
+    def test_mixed_add_data_and_init_data_basic():
         """
         Test basic mixed usage of add_data (static) and init_data (dynamic).
         """
@@ -620,7 +647,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [10, 20, 30, 40]
         assert [d.ts_init for d in result] == [1000, 2000, 3000, 4000]
 
-    def test_mixed_add_data_and_init_data_priority(self):
+    @staticmethod
+    def test_mixed_add_data_and_init_data_priority():
         """
         Test priority ordering with mixed add_data and init_data streams.
         """
@@ -646,7 +674,8 @@ class TestBacktestDataIterator:
         assert len(result) == 3
         assert [d.value for d in result] == [2, 1, 3]
 
-    def test_mixed_add_data_and_init_data_single_run_behavior(self):
+    @staticmethod
+    def test_mixed_add_data_and_init_data_single_run_behavior():
         """
         Test single-run behavior with mixed static and dynamic data.
         """
@@ -669,7 +698,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result] == [1, 11]  # Static + dynamic
         assert iterator.is_done()
 
-    def test_mixed_add_data_and_init_data_remove_behavior(self):
+    @staticmethod
+    def test_mixed_add_data_and_init_data_remove_behavior():
         """
         Test remove behavior with mixed static and dynamic data.
         """
@@ -700,7 +730,8 @@ class TestBacktestDataIterator:
         assert [d.value for d in result_after_static_removal] == [2]  # Only dynamic
         assert [d.value for d in result_after_dynamic_removal] == [1]  # Only static
 
-    def test_mixed_add_data_and_init_data_complex_scenario(self):
+    @staticmethod
+    def test_mixed_add_data_and_init_data_complex_scenario():
         """
         Test complex scenario with multiple static and dynamic streams.
         """

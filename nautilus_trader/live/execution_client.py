@@ -134,8 +134,8 @@ class LiveExecutionClient(ExecutionClient):
 
         self.reconciliation_active = False
 
+    @staticmethod
     async def run_after_delay(
-        self,
         delay: float,
         coro: Coroutine,
     ) -> None:
@@ -283,9 +283,7 @@ class LiveExecutionClient(ExecutionClient):
         )
 
     def modify_order(self, command: ModifyOrder) -> None:
-        venue_order_id_str = (
-            " " + repr(command.venue_order_id) if command.venue_order_id is not None else ""
-        )
+        venue_order_id_str = " " + repr(command.venue_order_id) if command.venue_order_id is not None else ""
         self._log.info(f"Modify {command.client_order_id!r}{venue_order_id_str}", LogColor.BLUE)
         self.create_task(
             self._modify_order(command),
@@ -293,9 +291,7 @@ class LiveExecutionClient(ExecutionClient):
         )
 
     def cancel_order(self, command: CancelOrder) -> None:
-        venue_order_id_str = (
-            " " + repr(command.venue_order_id) if command.venue_order_id is not None else ""
-        )
+        venue_order_id_str = " " + repr(command.venue_order_id) if command.venue_order_id is not None else ""
         self._log.info(f"Cancel {command.client_order_id!r}{venue_order_id_str}", LogColor.BLUE)
         self.create_task(
             self._cancel_order(command),

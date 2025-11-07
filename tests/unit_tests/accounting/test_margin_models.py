@@ -28,7 +28,8 @@ USD = TestInstrumentProvider.default_fx_ccy("AUD/USD").quote_currency
 
 
 class TestStandardMarginModel:
-    def test_calculate_margin_init_ignores_leverage(self):
+    @staticmethod
+    def test_calculate_margin_init_ignores_leverage():
         # Arrange
         model = StandardMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -47,7 +48,8 @@ class TestStandardMarginModel:
         # Assert - Should be 3% of notional (80,000 * 0.03 = 2,400)
         assert result == Money(2400.00, USD)
 
-    def test_calculate_margin_maint_ignores_leverage(self):
+    @staticmethod
+    def test_calculate_margin_maint_ignores_leverage():
         # Arrange
         model = StandardMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -69,7 +71,8 @@ class TestStandardMarginModel:
 
 
 class TestLeveragedMarginModel:
-    def test_calculate_margin_init_applies_leverage(self):
+    @staticmethod
+    def test_calculate_margin_init_applies_leverage():
         # Arrange
         model = LeveragedMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -88,7 +91,8 @@ class TestLeveragedMarginModel:
         # Assert - Should be (80,000 / 50) * 0.03 = 48.00
         assert result == Money(48.00, USD)
 
-    def test_calculate_margin_maint_applies_leverage(self):
+    @staticmethod
+    def test_calculate_margin_maint_applies_leverage():
         # Arrange
         model = LeveragedMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -110,7 +114,8 @@ class TestLeveragedMarginModel:
 
 
 class TestMarginAccountWithModels:
-    def test_margin_account_with_standard_model(self):
+    @staticmethod
+    def test_margin_account_with_standard_model():
         # Arrange
         from nautilus_trader.test_kit.stubs.execution import TestExecStubs
 
@@ -132,7 +137,8 @@ class TestMarginAccountWithModels:
         # Assert - Should use standard model (ignore leverage)
         assert result == Money(2400.00, USD)
 
-    def test_margin_account_with_leveraged_model_default(self):
+    @staticmethod
+    def test_margin_account_with_leveraged_model_default():
         # Arrange
         from nautilus_trader.test_kit.stubs.execution import TestExecStubs
 
@@ -154,7 +160,8 @@ class TestMarginAccountWithModels:
         # Assert - Should use leveraged model (current behavior)
         assert result == Money(48.00, USD)
 
-    def test_margin_account_with_standard_model_set(self):
+    @staticmethod
+    def test_margin_account_with_standard_model_set():
         # Arrange
         from nautilus_trader.test_kit.stubs.execution import TestExecStubs
 
@@ -254,7 +261,8 @@ class TestCustomMarginModelConfig:
 
 
 class TestLeveragedMarginModelEdgeCases:
-    def test_calculate_margin_init_zero_leverage_raises_error(self):
+    @staticmethod
+    def test_calculate_margin_init_zero_leverage_raises_error():
         # Arrange
         model = LeveragedMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -273,7 +281,8 @@ class TestLeveragedMarginModelEdgeCases:
                 leverage=leverage,
             )
 
-    def test_calculate_margin_init_negative_leverage_raises_error(self):
+    @staticmethod
+    def test_calculate_margin_init_negative_leverage_raises_error():
         # Arrange
         model = LeveragedMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -292,7 +301,8 @@ class TestLeveragedMarginModelEdgeCases:
                 leverage=leverage,
             )
 
-    def test_calculate_margin_maint_zero_leverage_raises_error(self):
+    @staticmethod
+    def test_calculate_margin_maint_zero_leverage_raises_error():
         # Arrange
         model = LeveragedMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -312,7 +322,8 @@ class TestLeveragedMarginModelEdgeCases:
                 leverage=leverage,
             )
 
-    def test_calculate_margin_maint_negative_leverage_raises_error(self):
+    @staticmethod
+    def test_calculate_margin_maint_negative_leverage_raises_error():
         # Arrange
         model = LeveragedMarginModel()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")

@@ -20,7 +20,8 @@ from nautilus_trader.analysis import WinRate
 
 
 class TestWinRatePortfolioStatistic:
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = WinRate()
 
@@ -30,7 +31,8 @@ class TestWinRatePortfolioStatistic:
         # Assert
         assert result == "Win Rate"
 
-    def test_calculate_given_empty_series_returns_zero(self):
+    @staticmethod
+    def test_calculate_given_empty_series_returns_zero():
         # Arrange
         stat = WinRate()
         data = pd.Series([], dtype=float64)
@@ -41,7 +43,8 @@ class TestWinRatePortfolioStatistic:
         # Assert
         assert result == 0.0
 
-    def test_calculate_given_mix_of_pnls1_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls1_returns_expected():
         # Arrange
         stat = WinRate()
         data = pd.Series([1.0, -1.0], dtype=float64)
@@ -52,7 +55,8 @@ class TestWinRatePortfolioStatistic:
         # Assert
         assert result == 0.5
 
-    def test_calculate_given_mix_of_pnls2_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls2_returns_expected():
         # Arrange
         stat = WinRate()
         data = pd.Series([2.0, 2.0, 1.0, -1.0, -2.0], dtype=float64)

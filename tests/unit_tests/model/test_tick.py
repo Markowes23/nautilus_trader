@@ -35,17 +35,20 @@ AUDUSD_SIM = TestInstrumentProvider.default_fx_ccy("AUD/USD")
 
 
 class TestQuoteTick:
-    def test_pickling_instrument_id_round_trip(self):
+    @staticmethod
+    def test_pickling_instrument_id_round_trip():
         pickled = pickle.dumps(AUDUSD_SIM.id)
         unpickled = pickle.loads(pickled)  # noqa: S301
 
         assert unpickled == AUDUSD_SIM.id
 
-    def test_fully_qualified_name(self):
+    @staticmethod
+    def test_fully_qualified_name():
         # Arrange, Act, Assert
         assert QuoteTick.fully_qualified_name() == "nautilus_trader.model.data:QuoteTick"
 
-    def test_tick_hash_str_and_repr(self):
+    @staticmethod
+    def test_tick_hash_str_and_repr():
         # Arrange
         instrument_id = InstrumentId(Symbol("AUD/USD"), Venue("SIM"))
 
@@ -65,7 +68,8 @@ class TestQuoteTick:
         assert str(quote) == "AUD/USD.SIM,1.00000,1.00001,1,1,3"
         assert repr(quote) == "QuoteTick(AUD/USD.SIM,1.00000,1.00001,1,1,3)"
 
-    def test_extract_price_with_various_price_types_returns_expected_values(self):
+    @staticmethod
+    def test_extract_price_with_various_price_types_returns_expected_values():
         # Arrange
         quote = QuoteTick(
             instrument_id=AUDUSD_SIM.id,
@@ -87,7 +91,8 @@ class TestQuoteTick:
         assert result2 == Price.from_str("1.000005")
         assert result3 == Price.from_str("1.00000")
 
-    def test_extract_size_with_various_price_types_returns_expected_values(self):
+    @staticmethod
+    def test_extract_size_with_various_price_types_returns_expected_values():
         # Arrange
         quote = QuoteTick(
             instrument_id=AUDUSD_SIM.id,
@@ -109,7 +114,8 @@ class TestQuoteTick:
         assert result2 == Quantity.from_int(650_000)  # Average size
         assert result3 == Quantity.from_int(500_000)
 
-    def test_to_dict_returns_expected_dict(self):
+    @staticmethod
+    def test_to_dict_returns_expected_dict():
         # Arrange
         quote = QuoteTick(
             instrument_id=AUDUSD_SIM.id,
@@ -136,7 +142,8 @@ class TestQuoteTick:
             "ts_init": 2,
         }
 
-    def test_from_dict_returns_expected_tick(self):
+    @staticmethod
+    def test_from_dict_returns_expected_tick():
         # Arrange
         quote = QuoteTick(
             instrument_id=AUDUSD_SIM.id,
@@ -154,7 +161,8 @@ class TestQuoteTick:
         # Assert
         assert result == quote
 
-    def test_from_raw_returns_expected_tick(self):
+    @staticmethod
+    def test_from_raw_returns_expected_tick():
         # Arrange, Act
         quote = QuoteTick.from_raw(
             AUDUSD_SIM.id,
@@ -179,7 +187,8 @@ class TestQuoteTick:
         assert quote.ts_event == 1
         assert quote.ts_init == 2
 
-    def test_from_pyo3(self):
+    @staticmethod
+    def test_from_pyo3():
         # Arrange
         pyo3_quote = TestDataProviderPyo3.quote_tick()
 
@@ -189,7 +198,8 @@ class TestQuoteTick:
         # Assert
         assert isinstance(quote, QuoteTick)
 
-    def test_to_pyo3(self):
+    @staticmethod
+    def test_to_pyo3():
         # Arrange
         quote = QuoteTick(
             instrument_id=AUDUSD_SIM.id,
@@ -213,7 +223,8 @@ class TestQuoteTick:
         assert pyo3_quote.ts_event == 1
         assert pyo3_quote.ts_init == 2
 
-    def test_from_pyo3_list(self):
+    @staticmethod
+    def test_from_pyo3_list():
         # Arrange
         pyo3_quotes = [TestDataProviderPyo3.quote_tick()] * 1024
 
@@ -224,7 +235,8 @@ class TestQuoteTick:
         assert len(quotes) == 1024
         assert isinstance(quotes[0], QuoteTick)
 
-    def test_pickling_round_trip_results_in_expected_tick(self):
+    @staticmethod
+    def test_pickling_round_trip_results_in_expected_tick():
         # Arrange
         quote = QuoteTick(
             instrument_id=AUDUSD_SIM.id,
@@ -245,11 +257,13 @@ class TestQuoteTick:
 
 
 class TestTradeTick:
-    def test_fully_qualified_name(self):
+    @staticmethod
+    def test_fully_qualified_name():
         # Arrange, Act, Assert
         assert TradeTick.fully_qualified_name() == "nautilus_trader.model.data:TradeTick"
 
-    def test_hash_str_and_repr(self):
+    @staticmethod
+    def test_hash_str_and_repr():
         # Arrange
         trade = TradeTick(
             instrument_id=AUDUSD_SIM.id,
@@ -266,7 +280,8 @@ class TestTradeTick:
         assert str(trade) == "AUD/USD.SIM,1.00000,50000,BUYER,123456789,1"
         assert repr(trade) == "TradeTick(AUD/USD.SIM,1.00000,50000,BUYER,123456789,1)"
 
-    def test_to_dict_returns_expected_dict(self):
+    @staticmethod
+    def test_to_dict_returns_expected_dict():
         # Arrange
         trade = TradeTick(
             instrument_id=AUDUSD_SIM.id,
@@ -293,7 +308,8 @@ class TestTradeTick:
             "ts_init": 2,
         }
 
-    def test_from_dict_returns_expected_tick(self):
+    @staticmethod
+    def test_from_dict_returns_expected_tick():
         # Arrange
         trade = TradeTick(
             instrument_id=AUDUSD_SIM.id,
@@ -311,7 +327,8 @@ class TestTradeTick:
         # Assert
         assert result == trade
 
-    def test_from_pyo3(self):
+    @staticmethod
+    def test_from_pyo3():
         # Arrange
         pyo3_trade = TestDataProviderPyo3.trade_tick()
 
@@ -321,7 +338,8 @@ class TestTradeTick:
         # Assert
         assert isinstance(trade, TradeTick)
 
-    def test_to_pyo3(self):
+    @staticmethod
+    def test_to_pyo3():
         # Arrange
         trade = TradeTick(
             instrument_id=AUDUSD_SIM.id,
@@ -345,7 +363,8 @@ class TestTradeTick:
         assert pyo3_trade.ts_event == 1
         assert pyo3_trade.ts_init == 2
 
-    def test_from_pyo3_list(self):
+    @staticmethod
+    def test_from_pyo3_list():
         # Arrange
         pyo3_trades = [TestDataProviderPyo3.trade_tick()] * 1024
 
@@ -356,7 +375,8 @@ class TestTradeTick:
         assert len(trades) == 1024
         assert isinstance(trades[0], TradeTick)
 
-    def test_pickling_round_trip_results_in_expected_tick(self):
+    @staticmethod
+    def test_pickling_round_trip_results_in_expected_tick():
         # Arrange
         trade = TradeTick(
             instrument_id=AUDUSD_SIM.id,
@@ -376,7 +396,8 @@ class TestTradeTick:
         assert unpickled == trade
         assert repr(unpickled) == "TradeTick(AUD/USD.SIM,1.00000,50000,BUYER,123456789,1)"
 
-    def test_from_raw_returns_expected_tick(self):
+    @staticmethod
+    def test_from_raw_returns_expected_tick():
         # Arrange, Act
         trade_id = TradeId("123458")
 

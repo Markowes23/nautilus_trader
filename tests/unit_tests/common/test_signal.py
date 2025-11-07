@@ -28,7 +28,8 @@ class TestSignalSerialization:
     Tests for signal serialization functionality.
     """
 
-    def test_generate_signal_class_creates_data_subclass(self):
+    @staticmethod
+    def test_generate_signal_class_creates_data_subclass():
         # Arrange, Act
         SignalClass = generate_signal_class("test_basic", int)
 
@@ -36,7 +37,8 @@ class TestSignalSerialization:
         assert issubclass(SignalClass, Data)
         assert SignalClass.__name__ == "SignalTest_Basic"
 
-    def test_signal_instance_has_required_properties(self):
+    @staticmethod
+    def test_signal_instance_has_required_properties():
         # Arrange
         SignalClass = generate_signal_class("price_prop", float)
         ts_event = 1_000_000_000
@@ -50,7 +52,8 @@ class TestSignalSerialization:
         assert signal.ts_event == ts_event
         assert signal.ts_init == ts_init
 
-    def test_signal_has_serialization_methods(self):
+    @staticmethod
+    def test_signal_has_serialization_methods():
         # Arrange
         SignalClass = generate_signal_class("volume_methods", int)
 
@@ -99,7 +102,8 @@ class TestSignalSerialization:
         assert reconstructed_signal.ts_init == original_signal.ts_init
         assert type(reconstructed_signal).__name__ == type(original_signal).__name__
 
-    def test_signal_to_dict_includes_type_field(self):
+    @staticmethod
+    def test_signal_to_dict_includes_type_field():
         # Arrange
         SignalClass = generate_signal_class("status_type", str)
         signal = SignalClass(value="active", ts_event=1000, ts_init=1001)
@@ -111,7 +115,8 @@ class TestSignalSerialization:
         assert "type" in signal_dict
         assert signal_dict["type"] == "SignalStatus_Type"
 
-    def test_signal_from_dict_ignores_extra_fields(self):
+    @staticmethod
+    def test_signal_from_dict_ignores_extra_fields():
         # Arrange
         SignalClass = generate_signal_class("extra_fields", int)
         signal_dict = {
@@ -131,7 +136,8 @@ class TestSignalSerialization:
         assert signal.ts_init == 1001
         # Extra field should not cause issues
 
-    def test_signal_public_methods_delegate_to_c_methods(self):
+    @staticmethod
+    def test_signal_public_methods_delegate_to_c_methods():
         # Arrange
         SignalClass = generate_signal_class("delegate_test", float)
         signal = SignalClass(value=2.718, ts_event=2000, ts_init=2001)
@@ -152,7 +158,8 @@ class TestSignalSerialization:
         assert signal_from_public.ts_event == signal_from_c.ts_event
         assert signal_from_public.ts_init == signal_from_c.ts_init
 
-    def test_different_signal_types_have_unique_names(self):
+    @staticmethod
+    def test_different_signal_types_have_unique_names():
         # Arrange, Act
         IntSignal = generate_signal_class("unique_price", int)
         FloatSignal = generate_signal_class("unique_volume", float)
@@ -166,7 +173,8 @@ class TestSignalSerialization:
         assert FloatSignal != StrSignal
         assert IntSignal != StrSignal
 
-    def test_signal_serialization_preserves_precision(self):
+    @staticmethod
+    def test_signal_serialization_preserves_precision():
         # Arrange
         SignalClass = generate_signal_class("precise_test", float)
         precise_value = 1.23456789012345
@@ -179,7 +187,8 @@ class TestSignalSerialization:
         # Assert
         assert reconstructed.value == precise_value
 
-    def test_signal_with_zero_timestamps(self):
+    @staticmethod
+    def test_signal_with_zero_timestamps():
         # Arrange
         SignalClass = generate_signal_class("zero_ts", int)
 
@@ -193,7 +202,8 @@ class TestSignalSerialization:
         assert reconstructed.ts_event == 0
         assert reconstructed.ts_init == 0
 
-    def test_signal_with_large_timestamps(self):
+    @staticmethod
+    def test_signal_with_large_timestamps():
         # Arrange
         SignalClass = generate_signal_class("large_ts", str)
         large_ts = 9_223_372_036_854_775_807  # Max int64

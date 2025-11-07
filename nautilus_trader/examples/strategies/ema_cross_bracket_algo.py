@@ -323,7 +323,8 @@ class EMACrossBracketAlgo(Strategy):
         self.fast_ema.reset()
         self.slow_ema.reset()
 
-    def on_save(self) -> dict[str, bytes]:
+    @staticmethod
+    def on_save() -> dict[str, bytes]:
         """
         Actions to be performed when the strategy is saved.
 

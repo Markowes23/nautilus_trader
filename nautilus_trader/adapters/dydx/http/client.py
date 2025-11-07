@@ -99,7 +99,8 @@ class DYDXHttpClient:
         """
         return self._headers
 
-    def _urlencode(self, payload: dict[str, Any]) -> str:
+    @staticmethod
+    def _urlencode(payload: dict[str, Any]) -> str:
         # Booleans are capitalized (True/False) when directly passed to `urlencode`
         payload_list = []
 

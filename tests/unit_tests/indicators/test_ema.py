@@ -13,7 +13,6 @@
 #  limitations under the License.
 # -------------------------------------------------------------------------------------------------
 
-
 import pytest
 
 from nautilus_trader.indicators import ExponentialMovingAverage
@@ -69,7 +68,8 @@ class TestExponentialMovingAverage:
         # Assert
         assert self.ema.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = ExponentialMovingAverage(10, PriceType.MID)
 
@@ -82,7 +82,8 @@ class TestExponentialMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = ExponentialMovingAverage(10)
 
@@ -95,7 +96,8 @@ class TestExponentialMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = ExponentialMovingAverage(10)
 

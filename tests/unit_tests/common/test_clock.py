@@ -268,7 +268,8 @@ class TestTestClock:
         assert self.clock.utc_now() == start_time + timedelta(milliseconds=500)
         assert self.clock.timestamp_ns() == 500_000_000
 
-    def test_instantiate_has_expected_time_and_properties(self):
+    @staticmethod
+    def test_instantiate_has_expected_time_and_properties():
         # Arrange
         initial_ns = 42_000_000
         clock = TestClock()
@@ -277,7 +278,8 @@ class TestTestClock:
         # Act, Assert
         assert clock.timestamp_ns() == initial_ns
 
-    def test_timestamp_returns_expected_datetime(self):
+    @staticmethod
+    def test_timestamp_returns_expected_datetime():
         # Arrange
         clock = TestClock()
         clock.advance_time(1_000_000_000)
@@ -289,7 +291,8 @@ class TestTestClock:
         assert isinstance(result, float)
         assert result == 1.0
 
-    def test_timestamp_ms_returns_expected_datetime(self):
+    @staticmethod
+    def test_timestamp_ms_returns_expected_datetime():
         # Arrange
         clock = TestClock()
         clock.advance_time(1_000_000_000)
@@ -301,7 +304,8 @@ class TestTestClock:
         assert isinstance(result, int)
         assert result == 1000
 
-    def test_timestamp_us_returns_expected_datetime(self):
+    @staticmethod
+    def test_timestamp_us_returns_expected_datetime():
         # Arrange
         clock = TestClock()
         clock.advance_time(1_000_000_000)
@@ -313,7 +317,8 @@ class TestTestClock:
         assert isinstance(result, int)
         assert result == 1_000_000
 
-    def test_timestamp_ns_returns_expected_datetime(self):
+    @staticmethod
+    def test_timestamp_ns_returns_expected_datetime():
         # Arrange
         clock = TestClock()
         clock.advance_time(1_000_000_000)
@@ -325,7 +330,8 @@ class TestTestClock:
         assert isinstance(result, int)
         assert result == 1_000_000_000
 
-    def test_timestamp_returns_expected_double(self):
+    @staticmethod
+    def test_timestamp_returns_expected_double():
         # Arrange
         clock = TestClock()
         clock.set_time(60_000_000_000)
@@ -336,7 +342,8 @@ class TestTestClock:
         # Assert
         assert result == 60
 
-    def test_timestamp_ns_returns_expected_int64(self):
+    @staticmethod
+    def test_timestamp_ns_returns_expected_int64():
         # Arrange
         clock = TestClock()
         clock.set_time(60_000_000_000)
@@ -347,7 +354,8 @@ class TestTestClock:
         # Assert
         assert result == 60_000_000_000
 
-    def test_set_time_changes_time(self):
+    @staticmethod
+    def test_set_time_changes_time():
         # Arrange
         clock = TestClock()
 
@@ -357,7 +365,8 @@ class TestTestClock:
         # Assert
         assert clock.timestamp_ns() == 60_000_000_000
 
-    def test_advance_time_changes_time_produces_empty_list(self):
+    @staticmethod
+    def test_advance_time_changes_time_produces_empty_list():
         # Arrange
         clock = TestClock()
 
@@ -368,7 +377,8 @@ class TestTestClock:
         assert clock.timestamp_ns() == 1_000_000_000
         assert events == []
 
-    def test_advance_time_given_time_in_past_raises_value_error(self):
+    @staticmethod
+    def test_advance_time_given_time_in_past_raises_value_error():
         # Arrange
         clock = TestClock()
         clock.advance_time(1_000_000_000)
@@ -377,7 +387,8 @@ class TestTestClock:
         with pytest.raises(ValueError):
             clock.advance_time(0)
 
-    def test_cancel_timer_when_no_timers_raises_key_error(self):
+    @staticmethod
+    def test_cancel_timer_when_no_timers_raises_key_error():
         # Arrange
         clock = TestClock()
 
@@ -385,7 +396,8 @@ class TestTestClock:
         with pytest.raises(KeyError):
             clock.cancel_timer("BOGUS_ALERT")
 
-    def test_cancel_timers_when_no_timers_does_nothing(self):
+    @staticmethod
+    def test_cancel_timers_when_no_timers_does_nothing():
         # Arrange
         clock = TestClock()
 
@@ -395,7 +407,8 @@ class TestTestClock:
         # Assert
         assert clock.timer_count == 0
 
-    def test_set_time_alert2(self):
+    @staticmethod
+    def test_set_time_alert2():
         # Arrange
         clock = TestClock()
         name = "TEST_ALERT"
@@ -410,7 +423,8 @@ class TestTestClock:
         assert clock.timer_names == ["TEST_ALERT"]
         assert clock.timer_count == 1
 
-    def test_cancel_time_alert_when_timer_removes_timer(self):
+    @staticmethod
+    def test_cancel_time_alert_when_timer_removes_timer():
         # Arrange
         clock = TestClock()
         name = "TEST_ALERT"
@@ -426,7 +440,8 @@ class TestTestClock:
         # Assert
         assert clock.timer_count == 0
 
-    def test_cancel_timers_when_multiple_times_removes_all_timers(self):
+    @staticmethod
+    def test_cancel_timers_when_multiple_times_removes_all_timers():
         # Arrange
         clock = TestClock()
         interval = timedelta(milliseconds=300)
@@ -445,7 +460,8 @@ class TestTestClock:
         # Assert
         assert clock.timer_count == 0
 
-    def test_set_timer2(self):
+    @staticmethod
+    def test_set_timer2():
         # Arrange
         clock = TestClock()
         name = "TEST_TIMER"
@@ -465,7 +481,8 @@ class TestTestClock:
         assert clock.timer_names == ["TEST_TIMER"]
         assert clock.timer_count == 1
 
-    def test_advance_time_with_set_time_alert_triggers_event(self):
+    @staticmethod
+    def test_advance_time_with_set_time_alert_triggers_event():
         # Arrange
         clock = TestClock()
         name = "TEST_ALERT"
@@ -485,7 +502,8 @@ class TestTestClock:
         assert event_handlers[0].event.name == "TEST_ALERT"
         assert clock.timer_count == 0
 
-    def test_advance_time_with_multiple_set_time_alerts_triggers_event(self):
+    @staticmethod
+    def test_advance_time_with_multiple_set_time_alerts_triggers_event():
         # Arrange
         clock = TestClock()
         interval = timedelta(minutes=1)
@@ -507,7 +525,8 @@ class TestTestClock:
         assert "TEST_ALERT3" in event_names
         assert clock.timer_count == 0
 
-    def test_advance_time_with_set_timer_triggers_events(self):
+    @staticmethod
+    def test_advance_time_with_set_timer_triggers_events():
         # Arrange
         clock = TestClock()
         name = "TEST_TIMER"
@@ -531,7 +550,8 @@ class TestTestClock:
         assert clock.timer_names == ["TEST_TIMER"]
         assert clock.timer_count == 1
 
-    def test_advance_time_with_multiple_set_timers_triggers_events(self):
+    @staticmethod
+    def test_advance_time_with_multiple_set_timers_triggers_events():
         # Arrange
         clock = TestClock()
         name1 = "TEST_TIMER1"
@@ -565,7 +585,8 @@ class TestTestClock:
         assert clock.timer_names == ["TEST_TIMER1", "TEST_TIMER2"]
         assert clock.timer_count == 2
 
-    def test_set_timer_with_fire_immediately_true(self):
+    @staticmethod
+    def test_set_timer_with_fire_immediately_true():
         # Arrange
         clock = TestClock()
         name = "TEST_TIMER"
@@ -594,7 +615,8 @@ class TestTestClock:
         assert clock.timer_names == [name]
         assert clock.timer_count == 1
 
-    def test_set_timer_with_fire_immediately_false(self):
+    @staticmethod
+    def test_set_timer_with_fire_immediately_false():
         # Arrange
         clock = TestClock()
         name = "TEST_TIMER"
@@ -622,7 +644,8 @@ class TestTestClock:
         assert clock.timer_names == [name]
         assert clock.timer_count == 1
 
-    def test_cython_validation_prevents_rust_panic_for_time_alert(self):
+    @staticmethod
+    def test_cython_validation_prevents_rust_panic_for_time_alert():
         # Arrange
         clock = TestClock()
         clock.set_time(2000_000_000)  # Set current time to 2 seconds
@@ -640,7 +663,8 @@ class TestTestClock:
         assert "past_alert" in str(exc_info.value)
         assert clock.timer_count == 0  # No timer should be created
 
-    def test_cython_validation_prevents_rust_panic_for_timer_fire_immediately(self):
+    @staticmethod
+    def test_cython_validation_prevents_rust_panic_for_timer_fire_immediately():
         # Arrange
         clock = TestClock()
         clock.register_default_handler(lambda event: None)  # Add default handler
@@ -662,7 +686,8 @@ class TestTestClock:
         assert "past_timer" in str(exc_info.value)
         assert clock.timer_count == 0  # No timer should be created
 
-    def test_cython_validation_prevents_rust_panic_for_timer_next_event_past(self):
+    @staticmethod
+    def test_cython_validation_prevents_rust_panic_for_timer_next_event_past():
         # Arrange
         clock = TestClock()
         clock.register_default_handler(lambda event: None)  # Add default handler
@@ -685,7 +710,8 @@ class TestTestClock:
         assert "past_next_event_timer" in str(exc_info.value)
         assert clock.timer_count == 0  # No timer should be created
 
-    def test_cython_validation_allows_valid_timer_with_past_start_but_future_next_event(self):
+    @staticmethod
+    def test_cython_validation_allows_valid_timer_with_past_start_but_future_next_event():
         # Arrange
         clock = TestClock()
         clock.register_default_handler(lambda event: None)  # Add default handler
@@ -708,7 +734,8 @@ class TestTestClock:
         assert clock.timer_count == 1
         assert "valid_timer" in clock.timer_names
 
-    def test_cython_validation_allows_zero_start_time_regardless_of_allow_past(self):
+    @staticmethod
+    def test_cython_validation_allows_zero_start_time_regardless_of_allow_past():
         # Arrange
         clock = TestClock()
         clock.register_default_handler(lambda event: None)  # Add default handler
@@ -728,7 +755,8 @@ class TestTestClock:
         assert clock.timer_count == 1
         assert "zero_start_timer" in clock.timer_names
 
-    def test_cython_validation_error_message_format(self):
+    @staticmethod
+    def test_cython_validation_error_message_format():
         # Arrange
         clock = TestClock()
         clock.set_time(2000_000_000)  # Set current time to 2 seconds
@@ -1048,7 +1076,8 @@ class TestLiveClock:
         # Assert
         assert len(self.handler) >= 2
 
-    def test_cython_validation_prevents_rust_panic_live_clock_time_alert(self):
+    @staticmethod
+    def test_cython_validation_prevents_rust_panic_live_clock_time_alert():
         # Arrange
         clock = LiveClock()
         clock.register_default_handler(lambda event: None)  # Add default handler
@@ -1069,7 +1098,8 @@ class TestLiveClock:
         assert "past_alert_live" in str(exc_info.value)
         assert clock.timer_count == 0  # No timer should be created
 
-    def test_cython_validation_prevents_rust_panic_live_clock_timer(self):
+    @staticmethod
+    def test_cython_validation_prevents_rust_panic_live_clock_timer():
         # Arrange
         clock = LiveClock()
         clock.register_default_handler(lambda event: None)  # Add default handler
@@ -1092,7 +1122,8 @@ class TestLiveClock:
         assert "past_timer_live" in str(exc_info.value)
         assert clock.timer_count == 0  # No timer should be created
 
-    def test_cython_validation_allows_zero_start_time_live_clock(self):
+    @staticmethod
+    def test_cython_validation_allows_zero_start_time_live_clock():
         # Arrange
         clock = LiveClock()
         clock.register_default_handler(lambda event: None)  # Add default handler

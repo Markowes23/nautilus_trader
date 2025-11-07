@@ -71,22 +71,26 @@ class TestInstrument:
         assert result1 == expected1
         assert result2 == expected2
 
-    def test_str_repr_returns_expected(self):
+    @staticmethod
+    def test_str_repr_returns_expected():
         # Arrange, Act, Assert
         expected = provider.read("binance/btcusdt-instrument-repr.txt").decode()
         assert str(BTCUSDT_BINANCE) + "\n" == expected
         assert repr(BTCUSDT_BINANCE) + "\n" == expected
 
-    def test_hash(self):
+    @staticmethod
+    def test_hash():
         # Arrange, Act, Assert
         assert isinstance(hash(BTCUSDT_BINANCE), int)
         assert hash(BTCUSDT_BINANCE), hash(BTCUSDT_BINANCE)
 
-    def test_symbol_returns_expected_symbol(self):
+    @staticmethod
+    def test_symbol_returns_expected_symbol():
         # Arrange, Act, Assert
         assert BTCUSDT_BINANCE.symbol == BTCUSDT_BINANCE.id.symbol
 
-    def test_base_to_dict_returns_expected_dict(self):
+    @staticmethod
+    def test_base_to_dict_returns_expected_dict():
         # Arrange, Act
         result = Instrument.base_to_dict(BTCUSDT_BINANCE)
 
@@ -121,7 +125,8 @@ class TestInstrument:
             "info": None,
         }
 
-    def test_base_from_dict_returns_expected_instrument(self):
+    @staticmethod
+    def test_base_from_dict_returns_expected_instrument():
         # Arrange
         values = {
             "type": "Instrument",
@@ -159,7 +164,8 @@ class TestInstrument:
         # Assert
         assert result == BTCUSDT_BINANCE
 
-    def test_betting_instrument_to_dict(self):
+    @staticmethod
+    def test_betting_instrument_to_dict():
         # Arrange, Act
         result = BettingInstrument.to_dict(BETTING_INSTRUMENT)
 
@@ -207,7 +213,8 @@ class TestInstrument:
             "tick_scheme_name": None,
         }
 
-    def test_crypto_perpetual_instrument_to_dict(self):
+    @staticmethod
+    def test_crypto_perpetual_instrument_to_dict():
         # Arrange, Act
         result = CryptoPerpetual.to_dict(XBTUSD_BITMEX)
 
@@ -243,7 +250,8 @@ class TestInstrument:
             "tick_scheme_name": None,
         }
 
-    def test_crypto_future_instrument_to_dict(self):
+    @staticmethod
+    def test_crypto_future_instrument_to_dict():
         # Arrange, Act
         result = CryptoFuture.to_dict(BTCUSDT_220325)
 
@@ -281,7 +289,8 @@ class TestInstrument:
             "tick_scheme_name": None,
         }
 
-    def test_equity_instrument_to_dict(self):
+    @staticmethod
+    def test_equity_instrument_to_dict():
         # Arrange, Act
         result = Equity.to_dict(AAPL_EQUITY)
 
@@ -310,7 +319,8 @@ class TestInstrument:
             "tick_scheme_name": None,
         }
 
-    def test_future_instrument_to_dict(self):
+    @staticmethod
+    def test_future_instrument_to_dict():
         # Arrange, Act
         result = FuturesContract.to_dict(ES_FUTURE)
 
@@ -346,7 +356,8 @@ class TestInstrument:
             "tick_scheme_name": None,
         }
 
-    def test_option_instrument_to_dict(self):
+    @staticmethod
+    def test_option_instrument_to_dict():
         # Arrange, Act
         result = OptionContract.to_dict(AAPL_OPTION)
 
@@ -409,7 +420,8 @@ class TestInstrument:
         # Assert
         assert str(price) == expected_str
 
-    def test_make_qty_when_non_zero_value_rounded_to_zero_raises_exception(self):
+    @staticmethod
+    def test_make_qty_when_non_zero_value_rounded_to_zero_raises_exception():
         # Arrange
         onethousandrats = TestInstrumentProvider.onethousandrats_perp_binance()
 
@@ -524,7 +536,8 @@ class TestInstrument:
         # Arrange, Act, Asset
         assert instrument.get_settlement_currency() == expected
 
-    def test_calculate_notional_value(self):
+    @staticmethod
+    def test_calculate_notional_value():
         # Arrange
         instrument = TestInstrumentProvider.btcusdt_binance()
 
@@ -558,7 +571,8 @@ class TestInstrument:
         # Assert
         assert result == expected
 
-    def test_calculate_base_quantity_audusd(self):
+    @staticmethod
+    def test_calculate_base_quantity_audusd():
         # Arrange
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
 
@@ -571,7 +585,8 @@ class TestInstrument:
         # Assert
         assert result == Quantity.from_str("1250")
 
-    def test_next_bid_price_when_no_tick_scheme(self):
+    @staticmethod
+    def test_next_bid_price_when_no_tick_scheme():
         # Arrange, Act
         instrument = TestInstrumentProvider.btcusdt_binance()
 
@@ -584,7 +599,8 @@ class TestInstrument:
             == "No tick scheme for instrument BTCUSDT.BINANCE. You can specify a tick scheme by passing a `tick_scheme_name` at initialization."
         )
 
-    def test_next_ask_price_when_no_tick_scheme(self):
+    @staticmethod
+    def test_next_ask_price_when_no_tick_scheme():
         # Arrange, Act
         instrument = TestInstrumentProvider.btcusdt_binance()
 
@@ -597,7 +613,8 @@ class TestInstrument:
             == "No tick scheme for instrument BTCUSDT.BINANCE. You can specify a tick scheme by passing a `tick_scheme_name` at initialization."
         )
 
-    def test_set_tick_scheme_name_enables_tick_scheme(self):
+    @staticmethod
+    def test_set_tick_scheme_name_enables_tick_scheme():
         # Arrange
         instrument = TestInstrumentProvider.btcusdt_binance()
 
@@ -638,11 +655,13 @@ class TestInstrument:
         expected = Price.from_str(expected)
         assert result == expected
 
-    def test_option_attributes(self):
+    @staticmethod
+    def test_option_attributes():
         assert AAPL_OPTION.underlying == "AAPL"
         assert AAPL_OPTION.option_kind == option_kind_from_str("CALL")
 
-    def test_next_bid_prices_when_no_tick_scheme(self):
+    @staticmethod
+    def test_next_bid_prices_when_no_tick_scheme():
         # Arrange, Act
         instrument = TestInstrumentProvider.btcusdt_binance()
 
@@ -655,7 +674,8 @@ class TestInstrument:
             == "No tick scheme for instrument BTCUSDT.BINANCE. You can specify a tick scheme by passing a `tick_scheme_name` at initialization."
         )
 
-    def test_next_ask_prices_when_no_tick_scheme(self):
+    @staticmethod
+    def test_next_ask_prices_when_no_tick_scheme():
         # Arrange, Act
         instrument = TestInstrumentProvider.btcusdt_binance()
 

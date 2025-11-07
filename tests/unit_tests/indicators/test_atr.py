@@ -55,7 +55,8 @@ class TestAverageTrueRange:
         # Assert
         assert self.atr.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = AverageTrueRange(10)
 
@@ -133,7 +134,8 @@ class TestAverageTrueRange:
         # Assert
         assert self.atr.value == pytest.approx(0.00010)
 
-    def test_floor_with_ten_ones_inputs(self):
+    @staticmethod
+    def test_floor_with_ten_ones_inputs():
         # Arrange
         floor = 0.00005
         floored_atr = AverageTrueRange(10, value_floor=floor)
@@ -144,7 +146,8 @@ class TestAverageTrueRange:
         # Act, Assert
         assert floored_atr.value == 5e-05
 
-    def test_floor_with_exponentially_decreasing_high_inputs(self):
+    @staticmethod
+    def test_floor_with_exponentially_decreasing_high_inputs():
         # Arrange
         floor = 0.00005
         floored_atr = AverageTrueRange(10, value_floor=floor)

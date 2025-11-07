@@ -17,14 +17,16 @@ from nautilus_trader.analysis.statistic import PortfolioStatistic
 
 
 class TestPortfolioStatistic:
-    def test_fully_qualified_name_returns_expected(self):
+    @staticmethod
+    def test_fully_qualified_name_returns_expected():
         # Arrange, Act
         result = PortfolioStatistic.fully_qualified_name()
 
         # Assert
         assert result == "nautilus_trader.analysis.statistic:PortfolioStatistic"
 
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = PortfolioStatistic()
 

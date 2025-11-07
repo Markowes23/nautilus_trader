@@ -26,12 +26,14 @@ from nautilus_trader.model.objects import Quantity
 
 
 class TestQuantity:
-    def test_instantiate_with_nan_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_nan_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Quantity(math.nan, precision=0)
 
-    def test_instantiate_with_none_value_raises_type_error(self):
+    @staticmethod
+    def test_instantiate_with_none_value_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             Quantity(None)
@@ -39,26 +41,31 @@ class TestQuantity:
         with pytest.raises(TypeError):
             Quantity(None, precision=0)
 
-    def test_instantiate_with_negative_precision_raises_overflow_error(self):
+    @staticmethod
+    def test_instantiate_with_negative_precision_raises_overflow_error():
         # Arrange, Act, Assert
         with pytest.raises(OverflowError):
             Quantity(1.0, precision=-1)
 
-    def test_instantiate_with_precision_over_maximum_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_precision_over_maximum_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Quantity(1.0, precision=FIXED_PRECISION + 1)
 
-    def test_instantiate_with_value_exceeding_limit_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_value_exceeding_limit_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Quantity(QUANTITY_MAX + 1, precision=0)
 
-    def test_instantiate_base_decimal_from_int(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_int():
         # Arrange, Act
         Quantity(1, precision=1)
 
-    def test_instantiate_base_decimal_from_float(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_float():
         # Arrange
         value = 1.12300
         precision = 5
@@ -70,14 +77,16 @@ class TestQuantity:
         assert result.raw == convert_to_raw_int(value, precision)
         assert str(result) == "1.12300"
 
-    def test_instantiate_base_decimal_from_decimal(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_decimal():
         # Arrange, Act
         result = Quantity(Decimal("1.23"), precision=1)
 
         # Assert
         assert str(result) == "1.2"
 
-    def test_instantiate_base_decimal_from_str(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_str():
         # Arrange, Act
         result = Quantity.from_str("1.23")
 
@@ -497,7 +506,8 @@ class TestQuantity:
         # Act, Assert
         assert int(decimal1) == expected
 
-    def test_hash(self):
+    @staticmethod
+    def test_hash():
         # Arrange
         decimal1 = Quantity(1.1, 1)
         decimal2 = Quantity(1.1, 1)
@@ -527,7 +537,8 @@ class TestQuantity:
         # Assert
         assert str(decimal_object) == expected
 
-    def test_repr(self):
+    @staticmethod
+    def test_repr():
         # Arrange, Act
         result = repr(Quantity(1.1, 1))
 
@@ -566,14 +577,16 @@ class TestQuantity:
         # Assert
         assert result == expected
 
-    def test_calling_new_returns_an_expected_zero_quantity(self):
+    @staticmethod
+    def test_calling_new_returns_an_expected_zero_quantity():
         # Arrange, Act
         new_qty = Quantity.__new__(Quantity, 1, 1)
 
         # Assert
         assert new_qty == 0
 
-    def test_from_raw_returns_expected_quantity(self):
+    @staticmethod
+    def test_from_raw_returns_expected_quantity():
         # Arrange
         value = 1000
         precision = 3
@@ -588,7 +601,8 @@ class TestQuantity:
         assert str(qty1) == "1000.000"
         assert qty1.precision == precision
 
-    def test_zero_returns_zero_quantity(self):
+    @staticmethod
+    def test_zero_returns_zero_quantity():
         # Arrange, Act
         qty = Quantity.zero()
 
@@ -597,7 +611,8 @@ class TestQuantity:
         assert str(qty) == "0"
         assert qty.precision == 0
 
-    def test_from_int_returns_expected_value(self):
+    @staticmethod
+    def test_from_int_returns_expected_value():
         # Arrange, Act
         qty = Quantity.from_int(1_000)
 
@@ -606,7 +621,8 @@ class TestQuantity:
         assert str(qty) == "1000"
         assert qty.precision == 0
 
-    def test_from_str_returns_expected_value(self):
+    @staticmethod
+    def test_from_str_returns_expected_value():
         # Arrange, Act
         qty = Quantity.from_str("0.511")
 
@@ -691,13 +707,15 @@ class TestQuantity:
         with pytest.raises(Exception):  # Various exceptions can be raised for invalid input
             Quantity.from_str(invalid_input)
 
-    def test_from_str_with_negative_value_raises_value_error(self):
+    @staticmethod
+    def test_from_str_with_negative_value_raises_value_error():
         with pytest.raises(ValueError, match="invalid negative quantity"):
             Quantity.from_str("-1.0")
         with pytest.raises(ValueError, match="invalid negative quantity"):
             Quantity.from_str("-0.001")
 
-    def test_from_str_with_precision_exceeding_max_raises_value_error(self):
+    @staticmethod
+    def test_from_str_with_precision_exceeding_max_raises_value_error():
         if FIXED_PRECISION <= 9:
             # On Windows with 9 decimal max
             with pytest.raises(ValueError, match="invalid `precision` greater than max"):
@@ -707,8 +725,8 @@ class TestQuantity:
             with pytest.raises(ValueError, match="invalid `precision` greater than max"):
                 Quantity.from_str("1." + "0" * 17)  # 17 decimals > 16
 
-    def test_from_str_precision_preservation(self):
-
+    @staticmethod
+    def test_from_str_precision_preservation():
         # Whole numbers should have precision 0
         assert Quantity.from_str("100").precision == 0
         assert Quantity.from_str("1000000").precision == 0
@@ -750,7 +768,8 @@ class TestQuantity:
         qty = Quantity.from_str(input_val)
         assert str(qty) == expected
 
-    def test_from_str_boundary_values(self):
+    @staticmethod
+    def test_from_str_boundary_values():
         # Test values near the boundaries of the Quantity type
 
         # Maximum value (should work)
@@ -790,7 +809,8 @@ class TestQuantity:
         # Arrange, Act, Assert
         assert Quantity.from_str(value).to_formatted_str() == expected
 
-    def test_str_repr(self):
+    @staticmethod
+    def test_str_repr():
         # Arrange
         quantity = Quantity(2100.1666666, 6)
 
@@ -798,7 +818,8 @@ class TestQuantity:
         assert str(quantity) == "2100.166667"
         assert repr(quantity) == "Quantity(2100.166667)"
 
-    def test_pickle_dumps_and_loads(self):
+    @staticmethod
+    def test_pickle_dumps_and_loads():
         # Arrange
         quantity = Quantity(1.2000, 2)
 

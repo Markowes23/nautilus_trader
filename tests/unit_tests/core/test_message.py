@@ -23,7 +23,8 @@ from nautilus_trader.core.uuid import UUID4
 
 
 class TestMessage:
-    def test_command_message_picking(self):
+    @staticmethod
+    def test_command_message_picking():
         # Arrange
         command = Command(
             UUID4(),
@@ -37,7 +38,8 @@ class TestMessage:
         # Assert
         assert command == unpickled
 
-    def test_document_message_picking(self):
+    @staticmethod
+    def test_document_message_picking():
         # Arrange
         doc = Document(
             UUID4(),
@@ -51,7 +53,8 @@ class TestMessage:
         # Assert
         assert doc == unpickled
 
-    def test_request_message_pickling(self):
+    @staticmethod
+    def test_request_message_pickling():
         # Arrange
         req = Request(
             print,
@@ -66,7 +69,8 @@ class TestMessage:
         # Assert
         assert req == unpickled
 
-    def test_response_message_pickling(self):
+    @staticmethod
+    def test_response_message_pickling():
         # Arrange
         res = Response(
             UUID4(),
@@ -81,7 +85,8 @@ class TestMessage:
         # Assert
         assert res == unpickled
 
-    def test_document_message_hash(self):
+    @staticmethod
+    def test_document_message_hash():
         # Arrange
         message = Document(
             document_id=UUID4(),
@@ -91,7 +96,8 @@ class TestMessage:
         # Act, Assert
         assert isinstance(hash(message), int)
 
-    def test_document_message_str_and_repr(self):
+    @staticmethod
+    def test_document_message_str_and_repr():
         # Arrange
         uuid = UUID4()
         message = Document(
@@ -103,7 +109,8 @@ class TestMessage:
         assert str(message) == f"Document(id={uuid}, ts_init=0)"
         assert str(message) == f"Document(id={uuid}, ts_init=0)"
 
-    def test_response_message_str_and_repr(self):
+    @staticmethod
+    def test_response_message_str_and_repr():
         # Arrange
         uuid_id = UUID4()
         uuid_corr = UUID4()

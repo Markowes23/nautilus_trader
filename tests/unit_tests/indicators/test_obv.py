@@ -51,7 +51,8 @@ class TestOnBalanceVolume:
         # Act, Assert
         assert self.obv.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = OnBalanceVolume(100)
 

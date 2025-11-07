@@ -408,9 +408,7 @@ class BybitExecutionClient(LiveExecutionClient):
                         bybit_order.symbol + f"-{product_type.value.upper()}",
                     )
 
-                    client_order_id = (
-                        ClientOrderId(bybit_order.orderLinkId) if bybit_order.orderLinkId else None
-                    )
+                    client_order_id = ClientOrderId(bybit_order.orderLinkId) if bybit_order.orderLinkId else None
                     if client_order_id is None:
                         client_order_id = self._cache.client_order_id(
                             VenueOrderId(bybit_order.orderId),
@@ -564,10 +562,7 @@ class BybitExecutionClient(LiveExecutionClient):
                 self._log.debug(f"Requesting PositionStatusReport for {instrument_id}")
                 bybit_symbol = BybitSymbol(instrument_id.symbol.value)
 
-                if (
-                    self._use_spot_position_reports
-                    and bybit_symbol.product_type == BybitProductType.SPOT
-                ):
+                if self._use_spot_position_reports and bybit_symbol.product_type == BybitProductType.SPOT:
                     # Handle SPOT positions from wallet if enabled
                     spot_reports = await self._generate_spot_position_reports_from_wallet(
                         instrument_id,
@@ -594,8 +589,7 @@ class BybitExecutionClient(LiveExecutionClient):
                 else:
                     # INVERSE or SPOT (without use_spot_position_reports) not supported
                     self._log.debug(
-                        f"No position reports available for {instrument_id} "
-                        f"({bybit_symbol.product_type.value} not supported)",
+                        f"No position reports available for {instrument_id} ({bybit_symbol.product_type.value} not supported)",
                     )
             else:
                 self._log.debug("Requesting PositionStatusReports...")
@@ -622,8 +616,7 @@ class BybitExecutionClient(LiveExecutionClient):
                     else:
                         # INVERSE not supported by position endpoint
                         self._log.debug(
-                            f"Skipping position query for {product_type.value} "
-                            f"(not supported by Bybit position endpoint)",
+                            f"Skipping position query for {product_type.value} (not supported by Bybit position endpoint)",
                         )
         except BybitError as e:
             self._log.error(f"Failed to generate PositionReports: {e}")
@@ -649,9 +642,7 @@ class BybitExecutionClient(LiveExecutionClient):
             for wallet in balances:
                 for coin_balance in wallet.coin:
                     wallet_balance = Decimal(coin_balance.walletBalance or "0")
-                    wallet_by_coin[coin_balance.coin] = (
-                        wallet_by_coin.get(coin_balance.coin, Decimal(0)) + wallet_balance
-                    )
+                    wallet_by_coin[coin_balance.coin] = wallet_by_coin.get(coin_balance.coin, Decimal(0)) + wallet_balance
 
             if instrument_id:
                 instrument = self._cache.instrument(instrument_id)
@@ -730,8 +721,8 @@ class BybitExecutionClient(LiveExecutionClient):
             ts_init=self._clock.timestamp_ns(),
         )
 
+    @staticmethod
     def _get_cached_instrument_id(
-        self,
         symbol: str,
         product_type: BybitProductType,
     ) -> InstrumentId:
@@ -815,11 +806,7 @@ class BybitExecutionClient(LiveExecutionClient):
         # Set Position Mode
         if self._position_mode:
             async with TaskGroup() as tg:
-                [
-                    tg.create_task(self.set_position_mode(symbol=symbol, mode=mode))
-                    for symbol, mode in self._position_mode.items()
-                    if symbol.is_linear
-                ]
+                [tg.create_task(self.set_position_mode(symbol=symbol, mode=mode)) for symbol, mode in self._position_mode.items() if symbol.is_linear]
 
         # Set Margin Mode
         if self._margin_mode:
@@ -840,7 +827,8 @@ class BybitExecutionClient(LiveExecutionClient):
             )
             self._log.info(f"Set symbol `{symbol}` leverage to `{leverage}` result: {res.retMsg}")
         except BybitError as e:
-            if e.code == 110043:  # Set leverage has not been modified. (already set)
+            # Set leverage has not been modified. (already set)
+            if e.code == 110043:
                 self._log.info(
                     f"Set symbol `{symbol}` leverage to `{leverage}` result: {e.message}",
                 )
@@ -860,7 +848,8 @@ class BybitExecutionClient(LiveExecutionClient):
                 mode=mode,
             )
             self._log.info(f"Set symbol `{symbol}` position mode to `{mode}` result: {res.retMsg}")
-        except BybitError as e:  # Position mode has not been modified. (already set)
+        # Position mode has not been modified. (already set)
+        except BybitError as e:
             if e.code == 110025:
                 self._log.info(
                     f"Set symbol `{symbol}` position mode to `{mode}` result: {e.message}",
@@ -1506,11 +1495,7 @@ class BybitExecutionClient(LiveExecutionClient):
             strategy_id = self._cache.strategy_id_for_order(client_order_id)
             trigger_direction = BybitTriggerDirection.NONE
             if execution.stopOrderType != BybitStopOrderType.NONE:
-                trigger_direction = (
-                    BybitTriggerDirection.RISES_TO
-                    if order_side == OrderSide.SELL
-                    else BybitTriggerDirection.FALLS_TO
-                )
+                trigger_direction = BybitTriggerDirection.RISES_TO if order_side == OrderSide.SELL else BybitTriggerDirection.FALLS_TO
 
             order_type = self._enum_parser.parse_bybit_order_type(
                 execution.orderType,
@@ -1543,11 +1528,7 @@ class BybitExecutionClient(LiveExecutionClient):
         is_maker = execution.isMaker
 
         # Check if we have the actual fee to determine if it's a rebate
-        exec_fee = (
-            Decimal(execution.execFee)
-            if isinstance(execution, BybitWsAccountExecution) and execution.execFee
-            else None
-        )
+        exec_fee = Decimal(execution.execFee) if isinstance(execution, BybitWsAccountExecution) and execution.execFee else None
 
         # Use actual fee from execution if available, otherwise calculate
         if exec_fee is not None:
@@ -1616,19 +1597,14 @@ class BybitExecutionClient(LiveExecutionClient):
                     bybit_order.symbol,
                     bybit_order.category,
                 )
-                client_order_id = (
-                    ClientOrderId(bybit_order.orderLinkId) if bybit_order.orderLinkId else None
-                )
+                client_order_id = ClientOrderId(bybit_order.orderLinkId) if bybit_order.orderLinkId else None
                 venue_order_id = VenueOrderId(bybit_order.orderId)
                 if client_order_id is None:
                     client_order_id = self._cache.client_order_id(venue_order_id)
 
                 order_side = self._enum_parser.parse_bybit_order_side(bybit_order.side)
 
-                if (
-                    client_order_id is None
-                    and bybit_order.stopOrderType == BybitStopOrderType.TRAILING_STOP
-                ):
+                if client_order_id is None and bybit_order.stopOrderType == BybitStopOrderType.TRAILING_STOP:
                     for order in self._pending_trailing_stops.values():
                         if order.instrument_id != instrument_id or order.side != order_side:
                             continue
@@ -1734,14 +1710,10 @@ class BybitExecutionClient(LiveExecutionClient):
                         venue_order_id=report.venue_order_id,
                         ts_event=report.ts_last,
                     )
-                elif (
-                    bybit_order.orderStatus == BybitOrderStatus.TRIGGERED
-                    and order.order_type
-                    not in (
-                        OrderType.MARKET_IF_TOUCHED,
-                        OrderType.STOP_MARKET,
-                        OrderType.TRAILING_STOP_MARKET,
-                    )
+                elif bybit_order.orderStatus == BybitOrderStatus.TRIGGERED and order.order_type not in (
+                    OrderType.MARKET_IF_TOUCHED,
+                    OrderType.STOP_MARKET,
+                    OrderType.TRAILING_STOP_MARKET,
                 ):
                     self.generate_order_triggered(
                         strategy_id=strategy_id,
@@ -1898,9 +1870,7 @@ class BybitExecutionClient(LiveExecutionClient):
             orderLinkId=str(order.client_order_id),
             reduceOnly=order.is_reduce_only if order.is_reduce_only else None,
             tpslMode=BybitTpSlMode.FULL if product_type != BybitProductType.SPOT else None,
-            triggerPrice=(
-                str(order.trigger_price) if product_type == BybitProductType.SPOT else None
-            ),
+            triggerPrice=(str(order.trigger_price) if product_type == BybitProductType.SPOT else None),
             triggerDirection=trigger_direction if product_type != BybitProductType.SPOT else None,
             slTriggerBy=trigger_type if product_type != BybitProductType.SPOT else None,
             slOrderType=BybitOrderType.MARKET,

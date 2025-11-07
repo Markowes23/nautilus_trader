@@ -35,27 +35,32 @@ from nautilus_trader.model.objects import Money
 
 
 class TestMoney:
-    def test_instantiate_with_nan_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_nan_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Money(math.nan, currency=USD)
 
-    def test_instantiate_with_none_currency_raises_type_error(self) -> None:
+    @staticmethod
+    def test_instantiate_with_none_currency_raises_type_error() -> None:
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             Money(1.0, None)
 
-    def test_instantiate_with_value_exceeding_positive_limit_raises_value_error(self) -> None:
+    @staticmethod
+    def test_instantiate_with_value_exceeding_positive_limit_raises_value_error() -> None:
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Money(MONEY_MAX + 1, currency=USD)
 
-    def test_instantiate_with_value_exceeding_negative_limit_raises_value_error(self) -> None:
+    @staticmethod
+    def test_instantiate_with_value_exceeding_negative_limit_raises_value_error() -> None:
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Money(MONEY_MIN - 1, currency=USD)
 
-    def test_instantiate_with_none_value_returns_money_with_zero_amount(self) -> None:
+    @staticmethod
+    def test_instantiate_with_none_value_returns_money_with_zero_amount() -> None:
         # Arrange, Act
         money_zero = Money(None, currency=USD)
 
@@ -89,7 +94,8 @@ class TestMoney:
         # Assert
         assert money == expected
 
-    def test_pickling(self):
+    @staticmethod
+    def test_pickling():
         # Arrange
         money = Money(1, USD)
 
@@ -100,7 +106,8 @@ class TestMoney:
         # Assert
         assert unpickled == money
 
-    def test_as_double_returns_expected_result(self) -> None:
+    @staticmethod
+    def test_as_double_returns_expected_result() -> None:
         # Arrange, Act
         amount = 1.0
         money = Money(amount, USD)
@@ -110,7 +117,8 @@ class TestMoney:
         assert money.raw == convert_to_raw_int(amount, USD.precision)
         assert str(money) == "1.00 USD"
 
-    def test_initialized_with_many_decimals_rounds_to_currency_precision(self) -> None:
+    @staticmethod
+    def test_initialized_with_many_decimals_rounds_to_currency_precision() -> None:
         # Arrange, Act
         amount1 = 1000.333
         amount2 = 5005.556666
@@ -125,7 +133,8 @@ class TestMoney:
         assert result1.to_formatted_str() == "1_000.33 USD"
         assert result2.to_formatted_str() == "5_005.56 USD"
 
-    def test_equality_with_different_currencies_raises_value_error(self) -> None:
+    @staticmethod
+    def test_equality_with_different_currencies_raises_value_error() -> None:
         # Arrange
         money1 = Money(1, USD)
         money2 = Money(1, AUD)
@@ -134,7 +143,8 @@ class TestMoney:
         with pytest.raises(ValueError):
             assert money1 != money2
 
-    def test_equality(self) -> None:
+    @staticmethod
+    def test_equality() -> None:
         # Arrange
         money1 = Money(1, USD)
         money2 = Money(1, USD)
@@ -144,7 +154,8 @@ class TestMoney:
         assert money1 == money2
         assert money1 != money3
 
-    def test_hash(self) -> None:
+    @staticmethod
+    def test_hash() -> None:
         # Arrange
         money0 = Money(0, USD)
 
@@ -152,7 +163,8 @@ class TestMoney:
         assert isinstance(hash(money0), int)
         assert hash(money0) == hash(money0)
 
-    def test_str(self) -> None:
+    @staticmethod
+    def test_str() -> None:
         # Arrange
         money0 = Money(0, USD)
         money1 = Money(1, USD)
@@ -164,7 +176,8 @@ class TestMoney:
         assert str(money2) == "1000000.00 USD"
         assert money2.to_formatted_str() == "1_000_000.00 USD"
 
-    def test_repr(self) -> None:
+    @staticmethod
+    def test_repr() -> None:
         # Arrange
         money = Money(1.00, USD)
 
@@ -174,7 +187,8 @@ class TestMoney:
         # Assert
         assert result == "Money(1.00, USD)"
 
-    def test_from_str_when_malformed_raises_value_error(self) -> None:
+    @staticmethod
+    def test_from_str_when_malformed_raises_value_error() -> None:
         # Arrange
         value = "@"
 
@@ -296,7 +310,8 @@ class TestMoney:
         with pytest.raises(Exception):  # Various exceptions can be raised for invalid input
             Money.from_str(invalid_input)
 
-    def test_from_str_precision_handling(self):
+    @staticmethod
+    def test_from_str_precision_handling():
         # Test that precision is correctly handled for different currencies
 
         # USD has 2 decimal places
@@ -337,7 +352,8 @@ class TestMoney:
         # Assert
         assert str(money) == expected
 
-    def test_from_str_boundary_values(self):
+    @staticmethod
+    def test_from_str_boundary_values():
         # Test values near the boundaries of the Money type
 
         # Test reasonable large values
@@ -355,7 +371,8 @@ class TestMoney:
 
 
 class TestAccountBalance:
-    def test_equality(self):
+    @staticmethod
+    def test_equality():
         # Arrange, Act
         balance1 = AccountBalance(
             total=Money(1, USD),
@@ -380,7 +397,8 @@ class TestAccountBalance:
         assert balance1 == balance2
         assert balance1 != balance3
 
-    def test_instantiate_str_repr(self):
+    @staticmethod
+    def test_instantiate_str_repr():
         # Arrange, Act
         balance = AccountBalance(
             total=Money(1_525_000, USD),
@@ -389,18 +407,13 @@ class TestAccountBalance:
         )
 
         # Assert
-        assert (
-            str(balance)
-            == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
-        )
-        assert (
-            repr(balance)
-            == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
-        )
+        assert str(balance) == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
+        assert repr(balance) == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
 
 
 class TestMarginBalance:
-    def test_equality(self):
+    @staticmethod
+    def test_equality():
         # Arrange, Act
         margin1 = MarginBalance(
             initial=Money(5_000, USD),
@@ -420,7 +433,8 @@ class TestMarginBalance:
         assert margin1 == margin2
         assert margin1 != margin3
 
-    def test_instantiate_str_repr_with_instrument_id(self):
+    @staticmethod
+    def test_instantiate_str_repr_with_instrument_id():
         # Arrange, Act
         margin = MarginBalance(
             initial=Money(5_000, USD),
@@ -429,16 +443,11 @@ class TestMarginBalance:
         )
 
         # Assert
-        assert (
-            str(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
-        )
-        assert (
-            repr(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
-        )
+        assert str(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
+        assert repr(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
 
-    def test_instantiate_str_repr_without_instrument_id(self):
+    @staticmethod
+    def test_instantiate_str_repr_without_instrument_id():
         # Arrange, Act
         margin = MarginBalance(
             initial=Money(5_000, USD),
@@ -446,11 +455,5 @@ class TestMarginBalance:
         )
 
         # Assert
-        assert (
-            str(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
-        )
-        assert (
-            repr(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
-        )
+        assert str(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
+        assert repr(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"

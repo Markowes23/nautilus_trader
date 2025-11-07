@@ -14,7 +14,8 @@
 # -------------------------------------------------------------------------------------------------
 
 import abc
-from typing import Any, ClassVar
+from typing import Any
+from typing import ClassVar
 
 import pandas as pd
 import pyarrow as pa
@@ -135,27 +136,15 @@ class OrderBookDeltaDataWranglerV2(WranglerBase):
             df["flags"] = 0
 
         # Process timestamps
-        ts_event = (
-            pd.to_datetime(df["ts_event"], utc=True, format="mixed")
-            .dt.tz_localize(None)
-            .astype("int64")
-        ).to_numpy(dtype="uint64")
+        ts_event = (pd.to_datetime(df["ts_event"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
 
         if "ts_init" in df.columns:
-            ts_init = (
-                pd.to_datetime(df["ts_init"], utc=True, format="mixed")
-                .dt.tz_localize(None)
-                .astype("int64")
-            ).to_numpy(dtype="uint64")
+            ts_init = (pd.to_datetime(df["ts_init"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
         else:
             ts_init = ts_event + ts_init_delta
 
         # Convert prices and sizes to fixed binary
-        price = (
-            (df["price"] * FIXED_SCALAR)
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="big", signed=True))
-            .to_numpy()
-        )
+        price = (df["price"] * FIXED_SCALAR).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="big", signed=True)).to_numpy()
         size = (
             (df["quantity"] if "quantity" in df else df["size"] * FIXED_SCALAR)
             .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="big", signed=False))
@@ -238,7 +227,8 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
         data: bytes = sink.getvalue().to_pybytes()
         return self._inner.process_record_batch_bytes(data)
 
-    def _process_price_column(self, df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
+    @staticmethod
+    def _process_price_column(df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
         """
         Process a price column from the DataFrame.
         """
@@ -254,7 +244,8 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
         else:
             return [default_bytes] * len(df)
 
-    def _process_size_column(self, df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
+    @staticmethod
+    def _process_size_column(df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
         """
         Process a size column from the DataFrame.
         """
@@ -270,7 +261,8 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
         else:
             return [default_bytes] * len(df)
 
-    def _process_count_column(self, df: pd.DataFrame, col_name: str) -> list:
+    @staticmethod
+    def _process_count_column(df: pd.DataFrame, col_name: str) -> list:
         """
         Process a count column from the DataFrame.
         """
@@ -325,18 +317,10 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
             df["sequence"] = df.index
 
         # Process timestamps
-        ts_event = (
-            pd.to_datetime(df["ts_event"], utc=True, format="mixed")
-            .dt.tz_localize(None)
-            .astype("int64")
-        ).to_numpy(dtype="uint64")
+        ts_event = (pd.to_datetime(df["ts_event"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
 
         if "ts_init" in df.columns:
-            ts_init = (
-                pd.to_datetime(df["ts_init"], utc=True, format="mixed")
-                .dt.tz_localize(None)
-                .astype("int64")
-            ).to_numpy(dtype="uint64")
+            ts_init = (pd.to_datetime(df["ts_init"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
         else:
             ts_init = ts_event + ts_init_delta
 
@@ -500,18 +484,10 @@ class QuoteTickDataWranglerV2(WranglerBase):
             df["ask_size"] = default_size
 
         # Process timestamps
-        ts_event = (
-            pd.to_datetime(df["ts_event"], utc=True, format="mixed")
-            .dt.tz_localize(None)
-            .astype("int64")
-        ).to_numpy(dtype="uint64")
+        ts_event = (pd.to_datetime(df["ts_event"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
 
         if "ts_init" in df.columns:
-            ts_init = (
-                pd.to_datetime(df["ts_init"], utc=True, format="mixed")
-                .dt.tz_localize(None)
-                .astype("int64")
-            ).to_numpy(dtype="uint64")
+            ts_init = (pd.to_datetime(df["ts_init"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
         else:
             ts_init = ts_event + ts_init_delta
 
@@ -603,8 +579,8 @@ class TradeTickDataWranglerV2(WranglerBase):
         data: bytes = sink.getvalue().to_pybytes()
         return self._inner.process_record_batch_bytes(data)
 
+    @staticmethod
     def from_json(
-        self,
         data: list[dict[str, Any]],
     ) -> list[nautilus_pyo3.TradeTick]:
         return [nautilus_pyo3.TradeTick.from_dict(d) for d in data]
@@ -642,33 +618,17 @@ class TradeTickDataWranglerV2(WranglerBase):
         df = df.rename(columns=expected_columns)
 
         # Process timestamps
-        ts_event = (
-            pd.to_datetime(df["ts_event"], utc=True, format="mixed")
-            .dt.tz_localize(None)
-            .astype("int64")
-        ).to_numpy(dtype="uint64")
+        ts_event = (pd.to_datetime(df["ts_event"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
 
         if "ts_init" in df.columns:
-            ts_init = (
-                pd.to_datetime(df["ts_init"], utc=True, format="mixed")
-                .dt.tz_localize(None)
-                .astype("int64")
-            ).to_numpy(dtype="uint64")
+            ts_init = (pd.to_datetime(df["ts_init"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
         else:
             ts_init = ts_event + ts_init_delta
 
         # Convert prices and sizes to fixed binary
-        price = (
-            df["price"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
-        )
+        price = df["price"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
 
-        size = (
-            df["size"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=False))
-        )
+        size = df["size"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=False))
 
         aggressor_side = df["aggressor_side"].map(_map_aggressor_side)
         trade_id = df["trade_id"].astype(str)
@@ -783,46 +743,28 @@ class BarDataWranglerV2(WranglerBase):
             df["volume"] = default_volume
 
         # Process timestamps
-        ts_event = (
-            pd.to_datetime(df["ts_event"], utc=True, format="mixed")
-            .dt.tz_localize(None)
-            .astype("int64")
-        ).to_numpy(dtype="uint64")
+        ts_event = (pd.to_datetime(df["ts_event"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
 
         if "ts_init" in df.columns:
-            ts_init = (
-                pd.to_datetime(df["ts_init"], utc=True, format="mixed")
-                .dt.tz_localize(None)
-                .astype("int64")
-            ).to_numpy(dtype="uint64")
+            ts_init = (pd.to_datetime(df["ts_init"], utc=True, format="mixed").dt.tz_localize(None).astype("int64")).to_numpy(dtype="uint64")
         else:
             ts_init = ts_event + ts_init_delta
 
         # Convert prices and sizes to fixed binary
         open_price = (
-            df["open"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
+            df["open"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
         )
         high_price = (
-            df["high"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
+            df["high"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
         )
         low_price = (
-            df["low"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
+            df["low"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
         )
         close_price = (
-            df["close"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
+            df["close"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=True))
         )
         volume = (
-            df["volume"]
-            .apply(lambda x: int(x * FIXED_SCALAR))
-            .apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=False))
+            df["volume"].apply(lambda x: int(x * FIXED_SCALAR)).apply(lambda x: x.to_bytes(FIXED_PRECISION_BYTES, byteorder="little", signed=False))
         )
 
         fields = [

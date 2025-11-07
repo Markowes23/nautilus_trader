@@ -110,8 +110,8 @@ class TestDYDXDataClientBarPartitioning:
             name="DYDX",
         )
 
+    @staticmethod
     def create_request_bars(
-        self,
         bar_type_str: str,
         start_time: datetime,
         end_time: datetime,
@@ -133,8 +133,8 @@ class TestDYDXDataClientBarPartitioning:
             params=None,
         )
 
+    @staticmethod
     def create_mock_candle(
-        self,
         timestamp: datetime,
         price: float = 100.0,
         is_partial: bool = False,
@@ -149,9 +149,7 @@ class TestDYDXDataClientBarPartitioning:
             low=str(price - 1),
             high=str(price + 1),
             open=str(price),
-            close=(
-                str(price + 0.5) if is_partial else str(price)
-            ),  # Partial candles have different close
+            close=(str(price + 0.5) if is_partial else str(price)),  # Partial candles have different close
             baseTokenVolume="1000.0",
             usdVolume="100000.0",
             trades=10,
@@ -227,13 +225,9 @@ class TestDYDXDataClientBarPartitioning:
 
             # Assert
             if expected_bars > 1000:
-                assert (
-                    should_partition is True
-                ), f"Should partition for {timeframe} with {expected_bars} bars"
+                assert should_partition is True, f"Should partition for {timeframe} with {expected_bars} bars"
             else:
-                assert (
-                    should_partition is False
-                ), f"Should not partition for {timeframe} with {expected_bars} bars"
+                assert should_partition is False, f"Should not partition for {timeframe} with {expected_bars} bars"
 
     # =====================================================================================
     # REQUEST SIZE HANDLING TESTS
@@ -549,9 +543,7 @@ class TestDYDXDataClientBarPartitioning:
         start_time = datetime(2024, 1, 1, tzinfo=UTC)
         end_time = datetime(2024, 1, 1, 1, tzinfo=UTC)
 
-        mock_candles = [
-            self.create_mock_candle(start_time + timedelta(minutes=i), 100.0 + i) for i in range(60)
-        ]
+        mock_candles = [self.create_mock_candle(start_time + timedelta(minutes=i), 100.0 + i) for i in range(60)]
 
         mock_response = DYDXCandlesResponse(candles=mock_candles)
 

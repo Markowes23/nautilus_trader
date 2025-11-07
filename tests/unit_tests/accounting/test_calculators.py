@@ -35,7 +35,8 @@ USDJPY_SIM = TestIdStubs.usdjpy_id()
 
 
 class TestExchangeRateCalculator:
-    def test_get_rate_when_from_currency_equals_to_currency_returns_one(self):
+    @staticmethod
+    def test_get_rate_when_from_currency_equals_to_currency_returns_one():
         # Arrange
         bid_rates = {"AUD/USD": 0.80000}
         ask_rates = {"AUD/USD": 0.80010}
@@ -52,7 +53,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result == 1
 
-    def test_get_rate_when_no_currency_rate_returns_zero(self):
+    @staticmethod
+    def test_get_rate_when_no_currency_rate_returns_zero():
         # Arrange
         bid_rates = {"AUD/USD": 0.80000}
         ask_rates = {"AUD/USD": 0.80010}
@@ -69,7 +71,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result is None
 
-    def test_get_rate(self):
+    @staticmethod
+    def test_get_rate():
         # Arrange
         bid_rates = {"AUD/USD": 0.80000}
         ask_rates = {"AUD/USD": 0.80010}
@@ -86,7 +89,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result == 0.80000
 
-    def test_get_rate_when_symbol_has_slash(self):
+    @staticmethod
+    def test_get_rate_when_symbol_has_slash():
         # Arrange
         bid_rates = {"AUD/USD": 0.80000}
         ask_rates = {"AUD/USD": 0.80010}
@@ -103,7 +107,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result == 0.80000
 
-    def test_get_rate_for_inverse1(self):
+    @staticmethod
+    def test_get_rate_for_inverse1():
         # Arrange
         bid_rates = {"BTC/USD": 10501.5}
         ask_rates = {"BTC/USD": 10500.0}
@@ -120,7 +125,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result == 9.522449173927534e-05
 
-    def test_get_rate_for_inverse2(self):
+    @staticmethod
+    def test_get_rate_for_inverse2():
         # Arrange
         bid_rates = {"USD/JPY": 110.100}
         ask_rates = {"USD/JPY": 110.130}
@@ -137,7 +143,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result == 0.009082652134423252
 
-    def test_calculate_exchange_rate_by_inference(self):
+    @staticmethod
+    def test_calculate_exchange_rate_by_inference():
         # Arrange
         bid_rates = {
             "USD/JPY": 110.100,
@@ -169,7 +176,8 @@ class TestExchangeRateCalculator:
         assert result1 == 0.011353315168029066
         assert result2 == 88.115013
 
-    def test_calculate_exchange_rate_for_mid_price_type(self):
+    @staticmethod
+    def test_calculate_exchange_rate_for_mid_price_type():
         # Arrange
         bid_rates = {"USD/JPY": 110.100}
         ask_rates = {"USD/JPY": 110.130}
@@ -186,7 +194,8 @@ class TestExchangeRateCalculator:
         # Assert
         assert result == 0.009081414884438995
 
-    def test_calculate_exchange_rate_for_mid_price_type2(self):
+    @staticmethod
+    def test_calculate_exchange_rate_for_mid_price_type2():
         # Arrange
         bid_rates = {"USD/JPY": 110.100}
         ask_rates = {"USD/JPY": 110.130}

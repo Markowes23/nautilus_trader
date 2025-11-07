@@ -65,7 +65,8 @@ class TestForexSessionFilter:
         # Assert
         assert result == expected
 
-    def test_next_start_on_weekend_returns_expected_datetime_monday(self):
+    @staticmethod
+    def test_next_start_on_weekend_returns_expected_datetime_monday():
         # Arrange, Act
         time_now = dt.datetime(2020, 7, 12, 9, 0, tzinfo=dt.UTC)
         result = nautilus_pyo3.fx_next_start(nautilus_pyo3.ForexSession.TOKYO, time_now)
@@ -73,7 +74,8 @@ class TestForexSessionFilter:
         # Assert
         assert result == dt.datetime(2020, 7, 13, 0, 0, tzinfo=dt.UTC)
 
-    def test_next_in_session_returns_expected_datetime_next_day(self):
+    @staticmethod
+    def test_next_in_session_returns_expected_datetime_next_day():
         # Arrange, Act
         time_now = dt.datetime(2020, 7, 13, 1, 0, tzinfo=dt.UTC)
         result = nautilus_pyo3.fx_next_start(nautilus_pyo3.ForexSession.TOKYO, time_now)
@@ -150,9 +152,7 @@ class TestEconomicNewsEventFilter:
         )
 
         # Act, Assert
-        assert (
-            pd.Timestamp("2008-01-01 10:00:00+0000", tz="UTC") == news_filter.unfiltered_data_start
-        )
+        assert pd.Timestamp("2008-01-01 10:00:00+0000", tz="UTC") == news_filter.unfiltered_data_start
         assert pd.Timestamp("2020-12-31 23:00:00+0000", tz="UTC") == news_filter.unfiltered_data_end
         assert news_filter.currencies == currencies
         assert news_filter.impacts == impacts

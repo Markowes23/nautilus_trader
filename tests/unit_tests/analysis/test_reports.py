@@ -57,7 +57,8 @@ class TestReportProvider:
             clock=TestClock(),
         )
 
-    def test_generate_accounts_report_with_initial_account_state_returns_expected(self):
+    @staticmethod
+    def test_generate_accounts_report_with_initial_account_state_returns_expected():
         # Arrange
         state = AccountState(
             account_id=AccountId("BITMEX-1513111"),
@@ -86,28 +87,32 @@ class TestReportProvider:
         # Assert
         assert len(report) == 1
 
-    def test_generate_orders_report_with_no_order_returns_emtpy_dataframe(self):
+    @staticmethod
+    def test_generate_orders_report_with_no_order_returns_emtpy_dataframe():
         # Arrange, Act
         report = ReportProvider.generate_orders_report([])
 
         # Assert
         assert report.empty
 
-    def test_generate_orders_fills_report_with_no_order_returns_emtpy_dataframe(self):
+    @staticmethod
+    def test_generate_orders_fills_report_with_no_order_returns_emtpy_dataframe():
         # Arrange, Act
         report = ReportProvider.generate_order_fills_report([])
 
         # Assert
         assert report.empty
 
-    def test_generate_fills_report_with_no_fills_returns_emtpy_dataframe(self):
+    @staticmethod
+    def test_generate_fills_report_with_no_fills_returns_emtpy_dataframe():
         # Arrange, Act
         report = ReportProvider.generate_fills_report([])
 
         # Assert
         assert report.empty
 
-    def test_generate_positions_report_with_no_positions_returns_emtpy_dataframe(self):
+    @staticmethod
+    def test_generate_positions_report_with_no_positions_returns_emtpy_dataframe():
         # Arrange, Act
         report = ReportProvider.generate_positions_report([])
 

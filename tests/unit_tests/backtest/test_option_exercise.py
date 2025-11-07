@@ -297,7 +297,8 @@ class TestOptionExerciseModule:
         assert len(self.module.expiry_timers) == 0
         assert len(self.module.processed_expiries) == 0
 
-    def test_process_disabled(self):
+    @staticmethod
+    def test_process_disabled():
         """
         Test processing when auto exercise is disabled.
         """
@@ -447,7 +448,8 @@ class TestOptionExerciseModule:
         )
         assert short_pnl == Money(500.0, USD)  # +$5.00 * 100 multiplier = +$500
 
-    def test_comprehensive_option_expiry_pnl_all_cases(self):
+    @staticmethod
+    def test_comprehensive_option_expiry_pnl_all_cases():
         """
         Comprehensive test for option expiry PnL behavior covering all 8 cases:
 

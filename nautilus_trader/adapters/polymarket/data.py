@@ -228,10 +228,7 @@ class PolymarketDataClient(LiveMarketDataClient):
     async def _subscribe_asset_book(self, instrument_id):
         create_connect_task = False
         # Polymarket only supports 500 subscriptions per client
-        if (
-            self._ws_client_pending_connection is None
-            or len(self._ws_client_pending_connection.asset_subscriptions()) >= 500
-        ):
+        if self._ws_client_pending_connection is None or len(self._ws_client_pending_connection.asset_subscriptions()) >= 500:
             self._ws_client_pending_connection = self._create_websocket_client()
             create_connect_task = True
 
@@ -245,11 +242,7 @@ class PolymarketDataClient(LiveMarketDataClient):
             self._delayed_ws_client_connection_task = self.create_task(
                 self._delayed_ws_client_connection(
                     self._ws_client_pending_connection,
-                    (
-                        self._config.ws_connection_delay_secs
-                        if self._ws_clients
-                        else self._config.ws_connection_initial_delay_secs
-                    ),
+                    (self._config.ws_connection_delay_secs if self._ws_clients else self._config.ws_connection_initial_delay_secs),
                 ),
                 log_msg="Delayed start PolymarketWebSocketClient connection",
                 success_msg="Finished delaying start of PolymarketWebSocketClient connection",
@@ -258,9 +251,7 @@ class PolymarketDataClient(LiveMarketDataClient):
     async def _subscribe_order_book_deltas(self, command: SubscribeOrderBook) -> None:
         if command.book_type == BookType.L3_MBO:
             self._log.error(
-                "Cannot subscribe to order book deltas: "
-                "L3_MBO data is not published by Polymarket. "
-                "Valid book types are L1_MBP, L2_MBP",
+                "Cannot subscribe to order book deltas: L3_MBO data is not published by Polymarket. Valid book types are L1_MBP, L2_MBP",
             )
             return
 
@@ -494,10 +485,7 @@ class PolymarketDataClient(LiveMarketDataClient):
         # Check if local book exists, create if needed
         if instrument.id not in self._local_books:
             # Skip this quote if we're not subscribed to anything for this instrument
-            if (
-                instrument.id not in self.subscribed_quote_ticks()
-                and instrument.id not in self.subscribed_order_book_deltas()
-            ):
+            if instrument.id not in self.subscribed_quote_ticks() and instrument.id not in self.subscribed_order_book_deltas():
                 return
             self._create_local_book(instrument.id)
 
@@ -516,8 +504,7 @@ class PolymarketDataClient(LiveMarketDataClient):
             if bid_price is None or ask_price is None:
                 if self._config.drop_quotes_missing_side:
                     self._log.warning(
-                        f"Dropping QuoteTick for {instrument.id}: "
-                        f"bid_price={bid_price}, ask_price={ask_price}",
+                        f"Dropping QuoteTick for {instrument.id}: bid_price={bid_price}, ask_price={ask_price}",
                     )
                     return
                 else:
@@ -631,8 +618,8 @@ class PolymarketDataClient(LiveMarketDataClient):
                 self._last_quotes[instrument.id] = quote
                 self._handle_data(quote)
 
+    @staticmethod
     def _build_snapshot_from_book(
-        self,
         instrument: BinaryOption,
         change: PolymarketTickSizeChange,
         book: OrderBook,

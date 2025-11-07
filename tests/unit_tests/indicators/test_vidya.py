@@ -74,7 +74,8 @@ class TestVariableIndexDynamicAverage:
         assert self.vida.value == pytest.approx(7.656223577745644, rel=1e-9)
         assert self.vida.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = VariableIndexDynamicAverage(10, PriceType.MID)
         tick = TestDataStubs.quote_tick()
@@ -86,7 +87,8 @@ class TestVariableIndexDynamicAverage:
         assert indicator.has_inputs
         assert indicator.value == 0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = VariableIndexDynamicAverage(10)
         tick = TestDataStubs.trade_tick()
@@ -98,7 +100,8 @@ class TestVariableIndexDynamicAverage:
         assert indicator.has_inputs
         assert indicator.value == 0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = VariableIndexDynamicAverage(10)
         bar = TestDataStubs.bar_5decimal()

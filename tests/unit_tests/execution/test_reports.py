@@ -49,7 +49,8 @@ AUDUSD_IDEALPRO = TestIdStubs.audusd_idealpro_id()
 
 
 class TestExecutionReports:
-    def test_instantiate_order_status_report(self):
+    @staticmethod
+    def test_instantiate_order_status_report():
         # Arrange, Act
         report_id = UUID4()
         report = OrderStatusReport(
@@ -96,7 +97,8 @@ class TestExecutionReports:
         )
         assert report.parent_order_id is None
 
-    def test_instantiate_fill_report(self):
+    @staticmethod
+    def test_instantiate_fill_report():
         # Arrange, Act
         report_id = UUID4()
         report = FillReport(
@@ -126,7 +128,8 @@ class TestExecutionReports:
             == f"FillReport(account_id=SIM-001, instrument_id=AUD/USD.IDEALPRO, client_order_id=O-123456789, venue_order_id=1, venue_position_id=2, trade_id=3, order_side=BUY, last_qty=10_000_000, last_px=100.50, commission=4.50 USD, liquidity_side=TAKER, report_id={report_id}, ts_event=0, ts_init=0)"  # noqa
         )
 
-    def test_instantiate_position_status_report_long_and_short(self):
+    @staticmethod
+    def test_instantiate_position_status_report_long_and_short():
         # Arrange
         report_id1 = UUID4()
         report1 = PositionStatusReport(
@@ -174,7 +177,8 @@ class TestExecutionReports:
             == f"PositionStatusReport(account_id=SIM-001, instrument_id=AUD/USD.IDEALPRO, venue_position_id=2, position_side=SHORT, quantity=1_000_000, avg_px_open=None, signed_decimal_qty=-1000000, report_id={report_id2}, ts_last=0, ts_init=0)"  # noqa
         )
 
-    def test_position_status_report_create_flat(self):
+    @staticmethod
+    def test_position_status_report_create_flat():
         # Arrange
         account_id = AccountId("SIM-001")
         ts_init = 1_000_000
@@ -200,7 +204,8 @@ class TestExecutionReports:
         assert report.ts_last == ts_init
         assert report.ts_init == ts_init
 
-    def test_position_status_report_create_flat_without_report_id(self):
+    @staticmethod
+    def test_position_status_report_create_flat_without_report_id():
         # Arrange
         account_id = AccountId("SIM-001")
         ts_init = 1_000_000
@@ -224,7 +229,8 @@ class TestExecutionReports:
         assert report.ts_last == ts_init
         assert report.ts_init == ts_init
 
-    def test_instantiate_execution_mass_status_report(self):
+    @staticmethod
+    def test_instantiate_execution_mass_status_report():
         # Arrange
         client_id = ClientId("IB")
         account_id = AccountId("IB-U123456789")
@@ -254,7 +260,8 @@ class TestExecutionReports:
             == f"ExecutionMassStatus(client_id=IB, account_id=IB-U123456789, venue=IDEALPRO, order_reports={{}}, fill_reports={{}}, position_reports={{}}, report_id={report_id}, ts_init=0)"  # noqa
         )
 
-    def test_add_order_status_reports(self):
+    @staticmethod
+    def test_add_order_status_reports():
         # Arrange
         report_id1 = UUID4()
         mass_status = ExecutionMassStatus(
@@ -313,7 +320,8 @@ class TestExecutionReports:
             == f"OrderStatusReport(account_id=IB-U123456789, instrument_id=AUD/USD.IDEALPRO, client_order_id=O-123456, order_list_id=1, venue_order_id=2, venue_position_id=None, linked_order_ids=None, parent_order_id=None, order_side=SELL, order_type=STOP_LIMIT, contingency_type=OCO, time_in_force=DAY, expire_time=None, order_status=REJECTED, price=0.90090, trigger_price=0.90100, trigger_type=DEFAULT, limit_offset=None, trailing_offset=0.00010, trailing_offset_type=PRICE, quantity=1_000_000, filled_qty=0, leaves_qty=1_000_000, display_qty=None, avg_px=None, post_only=True, reduce_only=False, cancel_reason=SOME_REASON, report_id={report_id2}, ts_accepted=1000000, ts_triggered=0, ts_last=2000000, ts_init=3000000)"  # noqa
         )
 
-    def test_add_fill_reports(self):
+    @staticmethod
+    def test_add_fill_reports():
         report_id1 = UUID4()
         mass_status = ExecutionMassStatus(
             client_id=ClientId("IB"),
@@ -365,7 +373,8 @@ class TestExecutionReports:
         # Assert
         assert mass_status.fill_reports[VenueOrderId("1")] == [report1, report2]
 
-    def test_add_position_state_reports(self):
+    @staticmethod
+    def test_add_position_state_reports():
         report_id1 = UUID4()
         mass_status = ExecutionMassStatus(
             client_id=ClientId("IB"),
@@ -401,7 +410,8 @@ class TestExecutionReports:
             == f"PositionStatusReport(account_id=IB-U123456789, instrument_id=AUD/USD.IDEALPRO, venue_position_id=1, position_side=LONG, quantity=1_000_000, avg_px_open=None, signed_decimal_qty=1000000, report_id={report_id2}, ts_last=0, ts_init=0)"  # noqa
         )
 
-    def test_order_status_report_serialization(self):
+    @staticmethod
+    def test_order_status_report_serialization():
         # Arrange
         report_id = UUID4()
         report = OrderStatusReport(
@@ -429,7 +439,8 @@ class TestExecutionReports:
         assert deserialized == report
         assert str(deserialized) == str(report)
 
-    def test_fill_report_serialization(self):
+    @staticmethod
+    def test_fill_report_serialization():
         # Arrange
         report_id = UUID4()
         report = FillReport(
@@ -457,7 +468,8 @@ class TestExecutionReports:
         assert deserialized == report
         assert str(deserialized) == str(report)
 
-    def test_position_status_report_serialization(self):
+    @staticmethod
+    def test_position_status_report_serialization():
         # Arrange
         report_id = UUID4()
         report = PositionStatusReport(
@@ -485,7 +497,8 @@ class TestExecutionReports:
         assert deserialized.ts_init == report.ts_init
         assert deserialized.venue_position_id == report.venue_position_id
 
-    def test_execution_mass_status_serialization(self):
+    @staticmethod
+    def test_execution_mass_status_serialization():
         # Arrange
         report_id = UUID4()
         mass_status = ExecutionMassStatus(
@@ -561,7 +574,8 @@ class TestExecutionReports:
         assert VenueOrderId("2") in deserialized.fill_reports
         assert AUDUSD_IDEALPRO in deserialized.position_reports
 
-    def test_order_status_report_from_pyo3_with_all_fields(self):
+    @staticmethod
+    def test_order_status_report_from_pyo3_with_all_fields():
         # Arrange
         pyo3_report = nautilus_pyo3.OrderStatusReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -629,7 +643,8 @@ class TestExecutionReports:
         assert report.ts_last == 2_000_000_000
         assert report.ts_init == 3_000_000_000
 
-    def test_order_status_report_from_pyo3_with_minimal_fields(self):
+    @staticmethod
+    def test_order_status_report_from_pyo3_with_minimal_fields():
         # Arrange
         pyo3_report = nautilus_pyo3.OrderStatusReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -671,7 +686,8 @@ class TestExecutionReports:
         assert report.cancel_reason is None
         assert report.ts_triggered == 0
 
-    def test_fill_report_from_pyo3_with_all_fields(self):
+    @staticmethod
+    def test_fill_report_from_pyo3_with_all_fields():
         # Arrange
         pyo3_report = nautilus_pyo3.FillReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -708,7 +724,8 @@ class TestExecutionReports:
         assert report.ts_event == 1_000_000_000
         assert report.ts_init == 2_000_000_000
 
-    def test_fill_report_from_pyo3_without_venue_position_id(self):
+    @staticmethod
+    def test_fill_report_from_pyo3_without_venue_position_id():
         # Arrange
         pyo3_report = nautilus_pyo3.FillReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -732,7 +749,8 @@ class TestExecutionReports:
         assert report.venue_position_id is None
         assert report.venue_order_id == VenueOrderId("V999")
 
-    def test_position_status_report_from_pyo3(self):
+    @staticmethod
+    def test_position_status_report_from_pyo3():
         # Arrange
         pyo3_report = nautilus_pyo3.PositionStatusReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -758,7 +776,8 @@ class TestExecutionReports:
         assert report.ts_last == 1_000_000_000
         assert report.ts_init == 2_000_000_000
 
-    def test_position_status_report_from_pyo3_short_position(self):
+    @staticmethod
+    def test_position_status_report_from_pyo3_short_position():
         # Arrange
         pyo3_report = nautilus_pyo3.PositionStatusReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -777,7 +796,8 @@ class TestExecutionReports:
         assert report.quantity == Quantity.from_str("50000")
         assert report.signed_decimal_qty == Decimal("-50000")
 
-    def test_position_status_report_with_avg_px_open(self):
+    @staticmethod
+    def test_position_status_report_with_avg_px_open():
         # Arrange
         report_id = UUID4()
         report = PositionStatusReport(
@@ -797,7 +817,8 @@ class TestExecutionReports:
         assert "avg_px_open=1.25000" in str(report)
         assert "avg_px_open=1.25000" in repr(report)
 
-    def test_position_status_report_avg_px_open_none(self):
+    @staticmethod
+    def test_position_status_report_avg_px_open_none():
         # Arrange
         report = PositionStatusReport(
             account_id=AccountId("SIM-001"),
@@ -814,7 +835,8 @@ class TestExecutionReports:
         assert report.avg_px_open is None
         assert "avg_px_open=None" in str(report)
 
-    def test_position_status_report_with_avg_px_open_serialization(self):
+    @staticmethod
+    def test_position_status_report_with_avg_px_open_serialization():
         # Arrange
         report = PositionStatusReport(
             account_id=AccountId("SIM-001"),
@@ -835,7 +857,8 @@ class TestExecutionReports:
         assert deserialized.avg_px_open == Price.from_str("0.75500")
         assert deserialized.avg_px_open == report.avg_px_open
 
-    def test_position_status_report_avg_px_open_from_pyo3(self):
+    @staticmethod
+    def test_position_status_report_avg_px_open_from_pyo3():
         # Arrange
         pyo3_report = nautilus_pyo3.PositionStatusReport(
             account_id=nautilus_pyo3.AccountId("SIM-001"),
@@ -854,7 +877,8 @@ class TestExecutionReports:
         # Assert
         assert report.avg_px_open == Price.from_str("1.35000")
 
-    def test_position_status_report_different_avg_px_open_values(self):
+    @staticmethod
+    def test_position_status_report_different_avg_px_open_values():
         # Arrange
         report1 = PositionStatusReport(
             account_id=AccountId("SIM-001"),
@@ -882,7 +906,8 @@ class TestExecutionReports:
         assert report1.avg_px_open == Price.from_str("1.25000")
         assert report2.avg_px_open == Price.from_str("1.30000")
 
-    def test_order_status_report_leaves_qty_clamped_to_zero_when_overfilled(self):
+    @staticmethod
+    def test_order_status_report_leaves_qty_clamped_to_zero_when_overfilled():
         # Arrange, Act: filled quantity exceeds original quantity
         report = OrderStatusReport(
             account_id=AccountId("SIM-001"),
@@ -903,7 +928,8 @@ class TestExecutionReports:
         # Assert: leaves_qty is clamped to zero (non-negative)
         assert report.leaves_qty == Quantity.zero(0)
 
-    def test_execution_mass_status_to_from_dict(self):
+    @staticmethod
+    def test_execution_mass_status_to_from_dict():
         # Arrange
         mass_status = ExecutionMassStatus(
             client_id=ClientId("IB"),
@@ -926,7 +952,8 @@ class TestExecutionReports:
         assert mass_status_from_dict.fill_reports == {}
         assert mass_status_from_dict.position_reports == {}
 
-    def test_position_status_report_flat_position(self):
+    @staticmethod
+    def test_position_status_report_flat_position():
         # Arrange
         report = PositionStatusReport(
             account_id=AccountId("SIM-001"),
@@ -943,7 +970,8 @@ class TestExecutionReports:
         assert report.quantity == Quantity.zero(0)
         assert report.signed_decimal_qty == Decimal("0")
 
-    def test_fill_report_with_zero_commission(self):
+    @staticmethod
+    def test_fill_report_with_zero_commission():
         # Arrange
         report = FillReport(
             account_id=AccountId("SIM-001"),
@@ -965,7 +993,8 @@ class TestExecutionReports:
         assert report.commission == Money(0, USD)
         assert report.commission.as_decimal() == Decimal("0")
 
-    def test_order_status_report_with_trigger_price_but_not_triggered(self):
+    @staticmethod
+    def test_order_status_report_with_trigger_price_but_not_triggered():
         # Arrange
         report = OrderStatusReport(
             account_id=AccountId("SIM-001"),

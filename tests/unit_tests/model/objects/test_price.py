@@ -27,12 +27,14 @@ from nautilus_trader.model.objects import Price
 
 
 class TestPrice:
-    def test_instantiate_with_nan_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_nan_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Price(math.nan, precision=0)
 
-    def test_instantiate_with_none_value_raises_type_error(self):
+    @staticmethod
+    def test_instantiate_with_none_value_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             Price(None)
@@ -40,27 +42,32 @@ class TestPrice:
         with pytest.raises(TypeError):
             Price(None, precision=0)
 
-    def test_instantiate_with_negative_precision_raises_overflow_error(self):
+    @staticmethod
+    def test_instantiate_with_negative_precision_raises_overflow_error():
         # Arrange, Act, Assert
         with pytest.raises(OverflowError):
             Price(1.0, precision=-1)
 
-    def test_instantiate_with_precision_over_maximum_raises_overflow_error(self):
+    @staticmethod
+    def test_instantiate_with_precision_over_maximum_raises_overflow_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Price(1.0, precision=FIXED_PRECISION + 1)
 
-    def test_instantiate_with_value_exceeding_positive_limit_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_value_exceeding_positive_limit_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Price(PRICE_MAX + 1, precision=0)
 
-    def test_instantiate_with_value_exceeding_negative_limit_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_with_value_exceeding_negative_limit_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Price(PRICE_MIN - 1, precision=0)
 
-    def test_instantiate_base_decimal_from_int(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_int():
         # Arrange, Act
         value = 1.0
         precision = 1
@@ -72,7 +79,8 @@ class TestPrice:
         assert result.raw == convert_to_raw_int(value, precision)
         assert str(result) == "1.0"
 
-    def test_instantiate_base_decimal_from_float(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_float():
         # Arrange
         value = 1.12300
         precision = 5
@@ -84,14 +92,16 @@ class TestPrice:
         assert result.raw == convert_to_raw_int(value, precision)
         assert str(result) == "1.12300"
 
-    def test_instantiate_base_decimal_from_decimal(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_decimal():
         # Arrange, Act
         result = Price(Decimal("1.23"), precision=1)
 
         # Assert
         assert str(result) == "1.2"
 
-    def test_instantiate_base_decimal_from_str(self):
+    @staticmethod
+    def test_instantiate_base_decimal_from_str():
         # Arrange, Act
         result = Price.from_str("1.23")
 
@@ -544,7 +554,8 @@ class TestPrice:
         # Act, Assert
         assert int(decimal1) == expected
 
-    def test_hash(self):
+    @staticmethod
+    def test_hash():
         # Arrange
         decimal1 = Price(1.1, 1)
         decimal2 = Price(1.1, 1)
@@ -576,7 +587,8 @@ class TestPrice:
         # Assert
         assert str(decimal_object) == expected
 
-    def test_repr(self):
+    @staticmethod
+    def test_repr():
         # Arrange, Act
         result = repr(Price(1.1, 1))
 
@@ -617,14 +629,16 @@ class TestPrice:
         # Assert
         assert result == expected
 
-    def test_calling_new_returns_an_expected_zero_price(self):
+    @staticmethod
+    def test_calling_new_returns_an_expected_zero_price():
         # Arrange, Act
         new_price = Price.__new__(Price, 1, 1)
 
         # Assert
         assert new_price == 0
 
-    def test_from_raw_returns_expected_price(self):
+    @staticmethod
+    def test_from_raw_returns_expected_price():
         # Arrange
         value = 1000
         precision = 3
@@ -640,7 +654,8 @@ class TestPrice:
         assert price1.precision == precision
         assert Price.from_raw(price1.raw, precision) == price1
 
-    def test_equality(self):
+    @staticmethod
+    def test_equality():
         # Arrange, Act
         price1 = Price(1.0, precision=1)
         price2 = Price(1.5, precision=1)
@@ -650,7 +665,8 @@ class TestPrice:
         assert price1 != price2
         assert price2 > price1
 
-    def test_from_int_returns_expected_value(self):
+    @staticmethod
+    def test_from_int_returns_expected_value():
         # Arrange, Act
         price = Price.from_int(100)
 
@@ -751,7 +767,8 @@ class TestPrice:
         with pytest.raises(Exception):  # Various exceptions can be raised for invalid input
             Price.from_str(invalid_input)
 
-    def test_from_str_with_precision_exceeding_max_raises_value_error(self):
+    @staticmethod
+    def test_from_str_with_precision_exceeding_max_raises_value_error():
         if FIXED_PRECISION <= 9:
             # On Windows with 9 decimal max
             with pytest.raises(ValueError, match="invalid `precision` greater than max"):
@@ -761,8 +778,8 @@ class TestPrice:
             with pytest.raises(ValueError, match="invalid `precision` greater than max"):
                 Price.from_str("1." + "0" * 17)  # 17 decimals > 16
 
-    def test_from_str_precision_preservation(self):
-
+    @staticmethod
+    def test_from_str_precision_preservation():
         # Whole numbers should have precision 0
         assert Price.from_str("100").precision == 0
         assert Price.from_str("1000000").precision == 0
@@ -828,7 +845,8 @@ class TestPrice:
         assert str(price) == expected_str
         assert price.as_double() == 0
 
-    def test_str_repr(self):
+    @staticmethod
+    def test_str_repr():
         # Arrange, Act
         price = Price(1.00000, precision=5)
 
@@ -836,7 +854,8 @@ class TestPrice:
         assert str(price) == "1.00000"
         assert repr(price) == "Price(1.00000)"
 
-    def test_pickle_dumps_and_loads(self):
+    @staticmethod
+    def test_pickle_dumps_and_loads():
         # Arrange
         price = Price(1.2000, 2)
 

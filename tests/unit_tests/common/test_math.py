@@ -60,14 +60,18 @@ class TestQuadraticInterpolation:
             ],
         )
 
-    def test_below(self, xs, ys):
+    @staticmethod
+    def test_below(xs, ys):
         assert quadratic_interpolation(0.01, xs, ys) == pytest.approx(0.0459)
 
-    def test_above(self, xs, ys):
+    @staticmethod
+    def test_above(xs, ys):
         assert quadratic_interpolation(40.0, xs, ys) == pytest.approx(0.0433)
 
-    def test_at_point(self, xs, ys):
+    @staticmethod
+    def test_at_point(xs, ys):
         assert quadratic_interpolation(10.0, xs, ys) == pytest.approx(0.0417)
 
-    def test_interpolation(self, xs, ys):
+    @staticmethod
+    def test_interpolation(xs, ys):
         assert quadratic_interpolation(0.75, xs, ys) == pytest.approx(0.0429, abs=1e-4)

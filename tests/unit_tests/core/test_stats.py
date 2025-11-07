@@ -25,7 +25,8 @@ from nautilus_trader.core.stats import fast_std_with_mean
 
 
 class TestStats:
-    def test_fast_mean_with_empty_list_returns_zero(self):
+    @staticmethod
+    def test_fast_mean_with_empty_list_returns_zero():
         # Arrange
         values = np.asarray([], dtype=np.float64)
 
@@ -35,7 +36,8 @@ class TestStats:
         # Assert
         assert result == 0
 
-    def test_fast_mean_with_values(self):
+    @staticmethod
+    def test_fast_mean_with_values():
         # Arrange
         values = np.asarray([0.0, 1.1, 2.2, 3.3, 4.4, 5.5], dtype=np.float64)
 
@@ -46,7 +48,8 @@ class TestStats:
         assert result == 2.75
         assert np.mean(values) == 2.75
 
-    def test_fast_mean_iterated_with_empty_list_returns_zero(self):
+    @staticmethod
+    def test_fast_mean_iterated_with_empty_list_returns_zero():
         # Arrange
         values = np.asarray([], dtype=np.float64)
 
@@ -56,7 +59,8 @@ class TestStats:
         # Assert
         assert result == 0
 
-    def test_fast_mean_iterated_with_values(self):
+    @staticmethod
+    def test_fast_mean_iterated_with_values():
         # Arrange
         values1 = np.asarray([0.0, 1.1, 2.2], dtype=np.float64)
         values2 = np.asarray([0.0, 1.1, 2.2, 3.3, 4.4], dtype=np.float64)
@@ -69,7 +73,8 @@ class TestStats:
         assert result1 == np.mean([0.0, 1.1, 2.2])
         assert result2 == 3.3000000000000003
 
-    def test_std_dev_with_mean(self):
+    @staticmethod
+    def test_std_dev_with_mean():
         # Arrange
         values = np.asarray([0.0, 1.1, 2.2, 3.3, 4.4, 8.1, 9.9, -3.0], dtype=np.float64)
         mean = fast_mean(values)
@@ -84,7 +89,8 @@ class TestStats:
         assert result1 == 3.943665807342199
         assert result2 == 3.943665807342199
 
-    def test_mean_absolute_deviation_with_mean(self):
+    @staticmethod
+    def test_mean_absolute_deviation_with_mean():
         # Arrange
         values = np.asarray([0.0, 1.1, 2.2, 3.3, 4.4, 8.1, 9.9, -3.0], dtype=np.float64)
         mean = fast_mean(values)
@@ -98,7 +104,8 @@ class TestStats:
         assert result1 == 3.175
         assert result2 == 3.175
 
-    def test_basis_points_as_percentage(self):
+    @staticmethod
+    def test_basis_points_as_percentage():
         # Arrange, Act
         result1 = basis_points_as_percentage(0)
         result2 = basis_points_as_percentage(0.020)

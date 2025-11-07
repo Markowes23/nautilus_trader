@@ -38,7 +38,8 @@ USDJPY_SIM = TestInstrumentProvider.default_fx_ccy("USD/JPY")
 
 
 class TestSimulationModules:
-    def create_engine(self, modules: list) -> BacktestEngine:
+    @staticmethod
+    def create_engine(modules: list) -> BacktestEngine:
         engine = BacktestEngine(BacktestEngineConfig(logging=LoggingConfig(bypass_logging=True)))
         engine.add_venue(
             venue=Venue("SIM"),

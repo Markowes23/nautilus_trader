@@ -7,7 +7,9 @@ from ibapi.client import EClient
 from nautilus_trader.adapters.interactive_brokers.client.client import InteractiveBrokersClient
 from nautilus_trader.adapters.interactive_brokers.client.wrapper import InteractiveBrokersEWrapper
 from nautilus_trader.adapters.interactive_brokers.common import IBContract
-from nautilus_trader.adapters.interactive_brokers.parsing.instruments import ib_contract_to_instrument_id
+from nautilus_trader.adapters.interactive_brokers.parsing.instruments import (
+    ib_contract_to_instrument_id,
+)
 from nautilus_trader.common.enums import LogColor
 from tests.integration_tests.adapters.interactive_brokers.test_kit import IBTestContractStubs
 
@@ -27,7 +29,8 @@ class MockEClient(EClient):
         super().__init__(*args, **kwargs)
         self._next_valid_counter = 0
 
-    def _handle_task(self, handler: Callable, **kwargs):
+    @staticmethod
+    def _handle_task(handler: Callable, **kwargs):
         loop = asyncio.get_event_loop()
         if loop.is_running():
             loop.create_task(handler(**kwargs))  # noqa: RUF006

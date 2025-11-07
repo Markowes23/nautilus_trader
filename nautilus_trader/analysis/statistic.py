@@ -130,11 +130,13 @@ class PortfolioStatistic:
         """
         # Override in implementation
 
-    def _check_valid_returns(self, returns: pd.Series) -> bool:
+    @staticmethod
+    def _check_valid_returns(returns: pd.Series) -> bool:
         if returns is None or returns.empty or returns.isna().all():
             return False
         else:
             return True
 
-    def _downsample_to_daily_bins(self, returns: pd.Series) -> pd.Series:
+    @staticmethod
+    def _downsample_to_daily_bins(returns: pd.Series) -> pd.Series:
         return returns.dropna().resample("1D").sum()

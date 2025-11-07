@@ -60,7 +60,8 @@ class TestLogLevel:
 
 
 class TestLoggerTests:
-    def test_name(self):
+    @staticmethod
+    def test_name():
         # Arrange
         name = "TEST_LOGGER"
         logger = Logger(name=name)
@@ -68,7 +69,8 @@ class TestLoggerTests:
         # Act, Assert
         assert logger.name == name
 
-    def test_log_debug_messages_to_console(self):
+    @staticmethod
+    def test_log_debug_messages_to_console():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 
@@ -78,7 +80,8 @@ class TestLoggerTests:
         # Assert
         assert True  # No exceptions raised
 
-    def test_log_info_messages_to_console(self):
+    @staticmethod
+    def test_log_info_messages_to_console():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 
@@ -88,7 +91,8 @@ class TestLoggerTests:
         # Assert
         assert True  # No exceptions raised
 
-    def test_log_info_messages_to_console_with_blue_colour(self):
+    @staticmethod
+    def test_log_info_messages_to_console_with_blue_colour():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 
@@ -98,7 +102,8 @@ class TestLoggerTests:
         # Assert
         assert True  # No exceptions raised
 
-    def test_log_info_messages_to_console_with_green_colour(self):
+    @staticmethod
+    def test_log_info_messages_to_console_with_green_colour():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 
@@ -108,7 +113,8 @@ class TestLoggerTests:
         # Assert
         assert True  # No exceptions raised
 
-    def test_log_warning_messages_to_console(self):
+    @staticmethod
+    def test_log_warning_messages_to_console():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 
@@ -118,7 +124,8 @@ class TestLoggerTests:
         # Assert
         assert True  # No exceptions raised
 
-    def test_log_error_messages_to_console(self):
+    @staticmethod
+    def test_log_error_messages_to_console():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 
@@ -128,7 +135,8 @@ class TestLoggerTests:
         # Assert
         assert True  # No exceptions raised
 
-    def test_log_exception_messages_to_console(self):
+    @staticmethod
+    def test_log_exception_messages_to_console():
         # Arrange
         logger = Logger(name="TEST_LOGGER")
 

@@ -21,7 +21,8 @@ from nautilus_trader.examples.strategies.ema_cross import EMACross
 
 
 class TestStrategyFactory:
-    def test_create_from_path(self):
+    @staticmethod
+    def test_create_from_path():
         # Arrange
         config = {
             "instrument_id": "AUD/USD.SIM",
@@ -42,12 +43,12 @@ class TestStrategyFactory:
         # Assert
         assert isinstance(strategy, EMACross)
         assert (
-            repr(config)
-            == "{'instrument_id': 'AUD/USD.SIM', 'bar_type': 'AUD/USD.SIM-15-MINUTE-BID-EXTERNAL',"
+            repr(config) == "{'instrument_id': 'AUD/USD.SIM', 'bar_type': 'AUD/USD.SIM-15-MINUTE-BID-EXTERNAL',"
             " 'trade_size': 1000000, 'fast_ema_period': 10, 'slow_ema_period': 20}"
         )
 
-    def test_create_from_raw(self):
+    @staticmethod
+    def test_create_from_raw():
         # Arrange
         raw = msgspec.json.encode(
             {

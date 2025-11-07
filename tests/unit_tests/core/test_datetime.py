@@ -260,26 +260,30 @@ class TestDatetimeFunctions:
         # Assert
         assert result == pytest.approx(expected, 100)  # 100 nanoseconds
 
-    def test_is_datetime_utc_given_tz_naive_datetime_returns_false(self):
+    @staticmethod
+    def test_is_datetime_utc_given_tz_naive_datetime_returns_false():
         # Arrange
         dt = datetime(2013, 1, 1, 1, 0)
 
         # Act, Assert
         assert is_datetime_utc(dt) is False
 
-    def test_is_datetime_utc_given_utc_datetime_returns_true(self):
+    @staticmethod
+    def test_is_datetime_utc_given_utc_datetime_returns_true():
         # Arrange
         dt = datetime(2013, 1, 1, 1, 0, tzinfo=pytz.utc)
 
         # Act, Assert
         assert is_datetime_utc(dt) is True
 
-    def test_is_tz_awareness_given_unrecognized_type_raises_exception(self):
+    @staticmethod
+    def test_is_tz_awareness_given_unrecognized_type_raises_exception():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             is_tz_aware("hello")
 
-    def test_is_tz_awareness_with_various_aware_objects_returns_true(self):
+    @staticmethod
+    def test_is_tz_awareness_with_various_aware_objects_returns_true():
         # Arrange
         time_object1 = UNIX_EPOCH
         time_object2 = pd.Timestamp(UNIX_EPOCH)
@@ -298,7 +302,8 @@ class TestDatetimeFunctions:
         assert is_tz_naive(time_object2) is False
         assert is_tz_naive(time_object3) is False
 
-    def test_is_tz_awareness_with_various_objects_returns_false(self):
+    @staticmethod
+    def test_is_tz_awareness_with_various_objects_returns_false():
         # Arrange
         time_object1 = datetime(1970, 1, 1, 0, 0, 0, 0)
         time_object2 = pd.Timestamp(datetime(1970, 1, 1, 0, 0, 0, 0))
@@ -309,7 +314,8 @@ class TestDatetimeFunctions:
         assert is_tz_naive(time_object1) is True
         assert is_tz_naive(time_object2) is True
 
-    def test_format_iso8601(self):
+    @staticmethod
+    def test_format_iso8601():
         # Arrange
         dt1 = UNIX_EPOCH
         dt2 = UNIX_EPOCH + timedelta(microseconds=1)
@@ -346,7 +352,8 @@ class TestDatetimeFunctions:
         # Assert
         assert result == expected
 
-    def test_datetime_and_pd_timestamp_equality(self):
+    @staticmethod
+    def test_datetime_and_pd_timestamp_equality():
         # Arrange
         timestamp1 = datetime(1970, 1, 1, 0, 0, 0, 0)
         timestamp2 = pd.Timestamp(1970, 1, 1, 0, 0, 0, 0)
@@ -365,7 +372,8 @@ class TestDatetimeFunctions:
         assert timestamp2.tz is None
         assert timestamp5 == timestamp6
 
-    def test_as_utc_timestamp_given_tz_naive_datetime(self):
+    @staticmethod
+    def test_as_utc_timestamp_given_tz_naive_datetime():
         # Arrange
         timestamp = datetime(2013, 2, 1, 0, 0, 0, 0)
 
@@ -376,7 +384,8 @@ class TestDatetimeFunctions:
         assert result == pd.Timestamp("2013-02-01 00:00:00+00:00")
         assert result.tzinfo == pytz.utc
 
-    def test_as_utc_timestamp_given_tz_naive_pandas_timestamp(self):
+    @staticmethod
+    def test_as_utc_timestamp_given_tz_naive_pandas_timestamp():
         # Arrange
         timestamp = pd.Timestamp(2013, 2, 1, 0, 0, 0, 0)
 
@@ -387,7 +396,8 @@ class TestDatetimeFunctions:
         assert result == pd.Timestamp("2013-02-01 00:00:00+00:00")
         assert result.tzinfo == pytz.utc
 
-    def test_as_utc_timestamp_given_tz_aware_datetime(self):
+    @staticmethod
+    def test_as_utc_timestamp_given_tz_aware_datetime():
         # Arrange
         timestamp = datetime(2013, 2, 1, 0, 0, 0, 0, tzinfo=pytz.utc)
 
@@ -398,7 +408,8 @@ class TestDatetimeFunctions:
         assert result == pd.Timestamp("2013-02-01 00:00:00+00:00")
         assert result.tzinfo == pytz.utc
 
-    def test_as_utc_timestamp_given_tz_aware_pandas(self):
+    @staticmethod
+    def test_as_utc_timestamp_given_tz_aware_pandas():
         # Arrange
         timestamp = pd.Timestamp(2013, 2, 1, 0, 0, 0, 0).tz_localize("UTC")
 
@@ -409,7 +420,8 @@ class TestDatetimeFunctions:
         assert result == pd.Timestamp("2013-02-01 00:00:00+00:00")
         assert result.tzinfo == pytz.utc
 
-    def test_as_utc_timestamp_equality(self):
+    @staticmethod
+    def test_as_utc_timestamp_equality():
         # Arrange
         timestamp1 = datetime(1970, 1, 1, 0, 0, 0, 0)
         timestamp2 = UNIX_EPOCH
@@ -427,7 +439,8 @@ class TestDatetimeFunctions:
         assert timestamp2_converted == timestamp3_converted
         assert timestamp3_converted == timestamp4_converted
 
-    def test_as_utc_index_given_empty_dataframe_returns_empty_dataframe(self):
+    @staticmethod
+    def test_as_utc_index_given_empty_dataframe_returns_empty_dataframe():
         # Arrange
         data = pd.DataFrame()
 
@@ -437,7 +450,8 @@ class TestDatetimeFunctions:
         # Assert
         assert result.empty
 
-    def test_with_utc_index_given_tz_unaware_dataframe(self):
+    @staticmethod
+    def test_with_utc_index_given_tz_unaware_dataframe():
         # Arrange
         data = pd.DataFrame(
             {"timestamp": ["2019-05-21T12:00:00+00:00", "2019-05-21T12:15:00+00:00"]},
@@ -451,7 +465,8 @@ class TestDatetimeFunctions:
         # Assert
         assert result.index.tz == pytz.utc
 
-    def test_with_utc_index_given_tz_aware_dataframe(self):
+    @staticmethod
+    def test_with_utc_index_given_tz_aware_dataframe():
         # Arrange
         data = pd.DataFrame(
             {"timestamp": ["2019-05-21T12:00:00+00:00", "2019-05-21T12:15:00+00:00"]},
@@ -465,7 +480,8 @@ class TestDatetimeFunctions:
         # Assert
         assert result.index.tz == pytz.utc
 
-    def test_with_utc_index_given_tz_aware_different_timezone_dataframe(self):
+    @staticmethod
+    def test_with_utc_index_given_tz_aware_different_timezone_dataframe():
         # Arrange
         data1 = pd.DataFrame({"timestamp": ["2019-05-21 12:00:00", "2019-05-21 12:15:00"]})
         data1.set_index("timestamp")
@@ -490,14 +506,16 @@ class TestDatetimeFunctions:
         assert result1.index[0] == result2.index[0]
         assert result1.index.tz == result2.index.tz
 
-    def test_ensure_pydatetime_utc_given_none_returns_none(self):
+    @staticmethod
+    def test_ensure_pydatetime_utc_given_none_returns_none():
         # Arrange, Act
         result = ensure_pydatetime_utc(None)
 
         # Assert
         assert result is None
 
-    def test_ensure_pydatetime_utc_unix_epoch(self):
+    @staticmethod
+    def test_ensure_pydatetime_utc_unix_epoch():
         # Arrange
         timestamp = UNIX_EPOCH
 
@@ -514,7 +532,8 @@ class TestDatetimeFunctions:
         assert result.minute == 0
         assert result.second == 0
 
-    def test_ensure_pydatetime_utc_given_utc_timestamp_returns_pydatetime(self):
+    @staticmethod
+    def test_ensure_pydatetime_utc_given_utc_timestamp_returns_pydatetime():
         # Arrange
         timestamp = pd.Timestamp("2023-01-15 14:30:00", tz="UTC")
 
@@ -531,7 +550,8 @@ class TestDatetimeFunctions:
         assert result.minute == 30
         assert result.second == 0
 
-    def test_ensure_pydatetime_utc_given_non_utc_timestamp_converts_to_utc(self):
+    @staticmethod
+    def test_ensure_pydatetime_utc_given_non_utc_timestamp_converts_to_utc():
         # Arrange
         est = pytz.timezone("US/Eastern")
         timestamp = pd.Timestamp("2023-06-15 10:30:00", tz=est)
@@ -546,7 +566,8 @@ class TestDatetimeFunctions:
         assert result.hour == 14
         assert result.minute == 30
 
-    def test_ensure_pydatetime_utc_given_naive_timestamp_raises_error(self):
+    @staticmethod
+    def test_ensure_pydatetime_utc_given_naive_timestamp_raises_error():
         # Arrange
         timestamp = pd.Timestamp("2023-01-15 14:30:00")
 

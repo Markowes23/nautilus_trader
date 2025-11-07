@@ -116,7 +116,8 @@ class TestBacktestEngine:
         self.engine.reset()
         self.engine.dispose()
 
-    def test_initialization(self):
+    @staticmethod
+    def test_initialization():
         engine = BacktestEngine(BacktestEngineConfig(logging=LoggingConfig(bypass_logging=True)))
 
         # Arrange, Act, Assert
@@ -359,7 +360,8 @@ class TestBacktestEngineCashAccount:
             BacktestEngineConfig(logging=LoggingConfig(bypass_logging=True)),
         )
 
-    def create_engine(self, config: BacktestEngineConfig | None = None) -> BacktestEngine:
+    @staticmethod
+    def create_engine(config: BacktestEngineConfig | None = None) -> BacktestEngine:
         engine = BacktestEngine(config)
         engine.add_venue(
             venue=Venue("SIM"),
@@ -449,7 +451,8 @@ class TestBacktestEngineData:
         # Assert
         assert len(self.engine.data) == 5
 
-    def test_add_instrument_when_no_venue_raises_exception(self):
+    @staticmethod
+    def test_add_instrument_when_no_venue_raises_exception():
         # Arrange
         engine = BacktestEngine(BacktestEngineConfig(logging=LoggingConfig(bypass_logging=True)))
 
@@ -1015,7 +1018,8 @@ class TestBacktestEngineStreaming:
             fill_model=FillModel(),
         )
 
-    def create_data_iterator(self, name: str, start_ts: int, count: int, interval: int):
+    @staticmethod
+    def create_data_iterator(name: str, start_ts: int, count: int, interval: int):
         """
         Create a data iterator with specified characteristics.
         """
@@ -1031,7 +1035,8 @@ class TestBacktestEngineStreaming:
 
         return data_generator()
 
-    def create_sparse_iterator(self, name: str, start_ts: int, count: int):
+    @staticmethod
+    def create_sparse_iterator(name: str, start_ts: int, count: int):
         """
         Create an iterator with sparse, irregular timing.
         """
@@ -1051,7 +1056,8 @@ class TestBacktestEngineStreaming:
 
         return sparse_generator()
 
-    def create_dense_iterator(self, name: str, start_ts: int, count: int):
+    @staticmethod
+    def create_dense_iterator(name: str, start_ts: int, count: int):
         """
         Create an iterator with very dense timing (1ms intervals).
         """
@@ -1271,9 +1277,7 @@ class TestBacktestEngineStreaming:
 
         # Run 3 iterations with different data patterns (reduced for efficiency)
         for iteration in range(3):
-            start_ts = base_start_ts + (
-                iteration * 86_400_000_000_000
-            )  # Each iteration is 1 day later
+            start_ts = base_start_ts + (iteration * 86_400_000_000_000)  # Each iteration is 1 day later
 
             # Create different data patterns for each iteration
             if iteration % 2 == 0:
@@ -1356,9 +1360,7 @@ class TestBacktestEngineStreaming:
             def ultra_sparse_generator():
                 for chunk in range(chunks):
                     chunk_data = []
-                    base_ts = start_ts + (
-                        chunk * chunk_size * 3_600_000_000_000
-                    )  # 1 hour per chunk
+                    base_ts = start_ts + (chunk * chunk_size * 3_600_000_000_000)  # 1 hour per chunk
                     for i in range(chunk_size):
                         chunk_data.append(
                             MyData(

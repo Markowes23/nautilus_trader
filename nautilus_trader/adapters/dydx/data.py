@@ -171,7 +171,8 @@ class DYDXDataClient(LiveMarketDataClient):
         self._topic_bar_type: dict[str, BarType] = {}
 
         self._update_instruments_interval_mins: int | None = config.update_instruments_interval_mins
-        self._update_orderbook_interval_secs: int = 60  # Once every 60 seconds (hardcoded for now)
+        # Once every 60 seconds (hardcoded for now)
+        self._update_orderbook_interval_secs: int = 60
         self._update_instruments_task: asyncio.Task | None = None
         self._fetch_orderbook_task: asyncio.Task | None = None
         self._last_quotes: dict[InstrumentId, QuoteTick] = {}
@@ -931,12 +932,14 @@ class DYDXDataClient(LiveMarketDataClient):
         candles_resolution = get_interval_from_bar_type(command.bar_type)
         await self._ws_client.unsubscribe_klines(dydx_symbol.raw_symbol, candles_resolution)
 
-    def _get_cached_instrument_id(self, symbol: str) -> InstrumentId:
+    @staticmethod
+    def _get_cached_instrument_id(symbol: str) -> InstrumentId:
         dydx_symbol = DYDXSymbol(symbol)
         nautilus_instrument_id: InstrumentId = dydx_symbol.to_instrument_id()
         return nautilus_instrument_id
 
-    def _should_partition_bars_request(self, request: RequestBars, max_bars: int) -> bool:
+    @staticmethod
+    def _should_partition_bars_request(request: RequestBars, max_bars: int) -> bool:
         bar_timedelta = request.bar_type.spec.timedelta
         total_duration = request.end - request.start
         expected_bars = int(total_duration / bar_timedelta)
@@ -1009,11 +1012,7 @@ class DYDXDataClient(LiveMarketDataClient):
         all_bars = []
 
         # Check if we need to partition the request
-        if (
-            request.start is not None
-            and request.end is not None
-            and self._should_partition_bars_request(request, max_bars)
-        ):
+        if request.start is not None and request.end is not None and self._should_partition_bars_request(request, max_bars):
             # Partition into multiple requests
             self._log.info(
                 f"Expected bars exceed limit of {max_bars}, partitioning into multiple requests",

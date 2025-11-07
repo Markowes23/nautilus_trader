@@ -17,7 +17,8 @@ from nautilus_trader.core.data import Data
 
 
 class TestCoreData:
-    def test_fully_qualified_name_returns_expected(self):
+    @staticmethod
+    def test_fully_qualified_name_returns_expected():
         # Arrange, Act
         result = Data.fully_qualified_name()
 

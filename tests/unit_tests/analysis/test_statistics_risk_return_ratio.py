@@ -21,7 +21,8 @@ from tests.unit_tests.analysis.conftest import convert_series_to_dict
 
 
 class TestRiskReturnRatioPortfolioStatistic:
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = RiskReturnRatio()
 
@@ -31,7 +32,8 @@ class TestRiskReturnRatioPortfolioStatistic:
         # Assert
         assert result == "Risk Return Ratio"
 
-    def test_calculate_given_empty_series_returns_nan(self):
+    @staticmethod
+    def test_calculate_given_empty_series_returns_nan():
         # Arrange
         stat = RiskReturnRatio()
         data = pd.Series([], dtype=float64)
@@ -42,7 +44,8 @@ class TestRiskReturnRatioPortfolioStatistic:
         # Assert
         assert pd.isna(result)
 
-    def test_calculate_given_mix_of_pnls1_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls1_returns_expected():
         # Arrange
         stat = RiskReturnRatio()
         data = pd.Series([1.0, -1.0], dtype=float64)
@@ -53,7 +56,8 @@ class TestRiskReturnRatioPortfolioStatistic:
         # Assert
         assert result == 0.0
 
-    def test_calculate_given_mix_of_pnls2_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls2_returns_expected():
         # Arrange
         stat = RiskReturnRatio()
         data = pd.Series([2.0, 2.0, 1.0, -1.0, -2.0], dtype=float64)

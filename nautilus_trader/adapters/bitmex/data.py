@@ -197,7 +197,8 @@ class BitmexDataClient(LiveMarketDataClient):
         )
         self._ws_client_futures.clear()
 
-    def _determine_ws_url(self, config: BitmexDataClientConfig) -> str:
+    @staticmethod
+    def _determine_ws_url(config: BitmexDataClientConfig) -> str:
         if config.base_url_ws:
             return config.base_url_ws
         elif config.testnet:
@@ -231,9 +232,7 @@ class BitmexDataClient(LiveMarketDataClient):
 
         if command.depth not in (0, 25):
             self._log.error(
-                "Cannot subscribe to order book deltas: "
-                f"invalid `depth`, was {command.depth}; "
-                "valid depths are 0 (default full book), or 25",
+                f"Cannot subscribe to order book deltas: invalid `depth`, was {command.depth}; valid depths are 0 (default full book), or 25",
             )
             return
 
@@ -253,9 +252,7 @@ class BitmexDataClient(LiveMarketDataClient):
 
         if command.depth not in (0, 10):
             self._log.error(
-                "Cannot subscribe to order book snapshots: "
-                f"invalid `depth`, was {command.depth}; "
-                "valid depths are 0 (default 10), or 10",
+                f"Cannot subscribe to order book snapshots: invalid `depth`, was {command.depth}; valid depths are 0 (default 10), or 10",
             )
             return
 
@@ -401,10 +398,7 @@ class BitmexDataClient(LiveMarketDataClient):
     async def _request_bars(self, request: RequestBars) -> None:
         bar_type = request.bar_type
 
-        if (
-            bar_type.is_internally_aggregated()
-            or bar_type.aggregation_source != AggregationSource.EXTERNAL
-        ):
+        if bar_type.is_internally_aggregated() or bar_type.aggregation_source != AggregationSource.EXTERNAL:
             self._log.error(
                 f"Cannot request {bar_type} bars: BitMEX only provides EXTERNAL aggregation",
             )

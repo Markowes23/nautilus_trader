@@ -21,7 +21,8 @@ from nautilus_trader.adapters.binance.common.symbol import BinanceSymbols
 
 
 class TestBinanceCoreFunctions:
-    def test_format_symbol(self):
+    @staticmethod
+    def test_format_symbol():
         # Arrange
         symbol = "ethusdt-perp"
 
@@ -31,7 +32,8 @@ class TestBinanceCoreFunctions:
         # Assert
         assert result == "ETHUSDT"
 
-    def test_convert_symbols_list_to_json_array(self):
+    @staticmethod
+    def test_convert_symbols_list_to_json_array():
         # Arrange
         symbols = ["BTCUSDT", "ETHUSDT-PERP", " XRDUSDT"]
 

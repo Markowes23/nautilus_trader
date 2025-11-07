@@ -13,7 +13,6 @@
 #  limitations under the License.
 # -------------------------------------------------------------------------------------------------
 
-
 import pandas as pd
 
 from nautilus_trader.common.component import TestClock
@@ -38,7 +37,8 @@ class TestQuoteTickDataWrangler:
         # Fixture Setup
         self.clock = TestClock()
 
-    def test_tick_data(self):
+    @staticmethod
+    def test_tick_data():
         # Arrange, Act
         provider = TestDataProvider()
         ticks = provider.read_csv_ticks("truefx/usdjpy-ticks.csv")
@@ -46,7 +46,8 @@ class TestQuoteTickDataWrangler:
         # Assert
         assert len(ticks) == 1000
 
-    def test_process_tick_data(self):
+    @staticmethod
+    def test_process_tick_data():
         # Arrange
         usdjpy = TestInstrumentProvider.default_fx_ccy("USD/JPY")
 
@@ -69,7 +70,8 @@ class TestQuoteTickDataWrangler:
         assert ticks[0].ts_event == 1357077600295000000
         assert ticks[0].ts_init == 1357077600295000000
 
-    def test_process_tick_data_with_delta(self):
+    @staticmethod
+    def test_process_tick_data_with_delta():
         # Arrange
         usdjpy = TestInstrumentProvider.default_fx_ccy("USD/JPY")
 
@@ -93,7 +95,8 @@ class TestQuoteTickDataWrangler:
         assert ticks[0].ts_event == 1357077600295000000
         assert ticks[0].ts_init == 1357077600296000500  # <-- delta diff
 
-    def test_process_handles_nanosecond_timestamps(self):
+    @staticmethod
+    def test_process_handles_nanosecond_timestamps():
         # Arrange
         usdjpy = TestInstrumentProvider.default_fx_ccy("USD/JPY")
         wrangler = QuoteTickDataWrangler(instrument=usdjpy)
@@ -112,7 +115,8 @@ class TestQuoteTickDataWrangler:
         # Assert
         assert ticks[0].ts_event == 1672876741642000000
 
-    def test_pre_process_bar_data_with_delta(self):
+    @staticmethod
+    def test_pre_process_bar_data_with_delta():
         # Arrange
         usdjpy = TestInstrumentProvider.default_fx_ccy("USD/JPY")
         provider = TestDataProvider()
@@ -139,7 +143,8 @@ class TestQuoteTickDataWrangler:
         assert ticks[0].ts_event == 1359676799700000000
         assert ticks[0].ts_init == 1359676799701000500  # <-- delta diff
 
-    def test_pre_process_bar_data_with_random_seed(self):
+    @staticmethod
+    def test_pre_process_bar_data_with_random_seed():
         # Arrange
         usdjpy = TestInstrumentProvider.default_fx_ccy("USD/JPY")
         provider = TestDataProvider()
@@ -172,14 +177,16 @@ class TestTradeTickDataWrangler:
         # Fixture Setup
         self.clock = TestClock()
 
-    def test_tick_data(self):
+    @staticmethod
+    def test_tick_data():
         # Arrange, Act
         ticks = TestDataProvider().read_csv_ticks("binance/ethusdt-trades.csv")[:100]
 
         # Assert
         assert len(ticks) == 100
 
-    def test_process(self):
+    @staticmethod
+    def test_process():
         # Arrange
         ethusdt = TestInstrumentProvider.ethusdt_binance()
         wrangler = TradeTickDataWrangler(instrument=ethusdt)
@@ -197,7 +204,8 @@ class TestTradeTickDataWrangler:
         assert ticks[0].ts_event == 1597399200223000000
         assert ticks[0].ts_init == 1597399200223000000
 
-    def test_process_with_delta(self):
+    @staticmethod
+    def test_process_with_delta():
         # Arrange
         ethusdt = TestInstrumentProvider.ethusdt_binance()
         wrangler = TradeTickDataWrangler(instrument=ethusdt)
@@ -218,7 +226,8 @@ class TestTradeTickDataWrangler:
         assert ticks[0].ts_event == 1597399200223000000
         assert ticks[0].ts_init == 1597399200224000500  # <-- delta diff
 
-    def test_process_handles_nanosecond_timestamps(self):
+    @staticmethod
+    def test_process_handles_nanosecond_timestamps():
         # Arrange
         usdjpy = TestInstrumentProvider.default_fx_ccy("USD/JPY")
         wrangler = TradeTickDataWrangler(instrument=usdjpy)

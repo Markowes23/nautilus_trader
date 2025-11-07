@@ -71,7 +71,6 @@ DEFAULT_FEE = Fee(
     gas_limit=1000000,
 )
 
-
 from_string = partial(ecdsa.SigningKey.from_string, curve=ecdsa.SECP256k1, hashfunc=hashlib.sha256)
 
 
@@ -180,7 +179,8 @@ class TransactionBuilder:
         """
         return Coin(amount=str(amount), denom=self.denomination)
 
-    def fee(self, gas_limit: int, *amount: list[Coin]) -> Fee:
+    @staticmethod
+    def fee(gas_limit: int, *amount: list[Coin]) -> Fee:
         """
         Determine the fee for the transaction.
         """

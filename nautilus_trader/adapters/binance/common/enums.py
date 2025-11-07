@@ -626,8 +626,8 @@ class BinanceEnumParser:
             "Cannot parse binance trigger type (not implemented).",  # pragma: no cover
         )
 
+    @staticmethod
     def parse_position_id_to_binance_futures_position_side(
-        self,
         position_id: PositionId,
     ) -> BinanceFuturesPositionSide:
         if position_id.value.endswith("LONG"):  # Position Long

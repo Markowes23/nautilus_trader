@@ -135,7 +135,8 @@ class BinanceHttpClient:
         """
         return self._headers
 
-    def _prepare_params(self, params: dict[str, Any]) -> str:
+    @staticmethod
+    def _prepare_params(params: dict[str, Any]) -> str:
         # Encode a dict into a URL query string
         return urllib.parse.urlencode(params)
 

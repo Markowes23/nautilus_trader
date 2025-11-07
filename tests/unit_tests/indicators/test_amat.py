@@ -48,7 +48,8 @@ class TestArcherMovingAveragesTrends:
         # Assert
         assert self.amat.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = ArcherMovingAveragesTrends(5, 10, 5)
 

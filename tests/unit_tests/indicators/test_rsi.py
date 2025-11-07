@@ -59,7 +59,8 @@ class TestRelativeStrengthIndex:
         # Act, Assert
         assert self.rsi.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = RelativeStrengthIndex(10)
 

@@ -56,7 +56,6 @@ from nautilus_trader.model.identifiers import ClientId
 if TYPE_CHECKING:
     from typing import Any
 
-
 # -------------------------------------------------------------------------------------------------
 # Helper Functions
 # -------------------------------------------------------------------------------------------------
@@ -142,7 +141,8 @@ class HyperliquidDataClient(LiveMarketDataClient):
         self._ws_client = nautilus_pyo3.HyperliquidWebSocketClient(url=ws_url)  # type: ignore[attr-defined]
         self._ws_client_futures: set[asyncio.Future] = set()
 
-    def _determine_ws_url(self, config: HyperliquidDataClientConfig) -> str:
+    @staticmethod
+    def _determine_ws_url(config: HyperliquidDataClientConfig) -> str:
         """
         Determine the WebSocket URL based on configuration.
         """

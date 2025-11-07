@@ -122,9 +122,7 @@ class OKXExecutionClient(LiveExecutionClient):
         self._instrument_provider: OKXInstrumentProvider = instrument_provider
 
         instrument_types = [i.name.upper() for i in config.instrument_types]
-        contract_types = (
-            [c.name.upper() for c in config.contract_types] if config.contract_types else None
-        )
+        contract_types = [c.name.upper() for c in config.contract_types] if config.contract_types else None
 
         # Configuration
         self._config = config
@@ -179,8 +177,8 @@ class OKXExecutionClient(LiveExecutionClient):
     def okx_instrument_provider(self) -> OKXInstrumentProvider:
         return self._instrument_provider
 
+    @staticmethod
     def _derive_account_type(
-        self,
         instrument_provider: OKXInstrumentProvider,
         config: OKXExecClientConfig,
     ) -> AccountType:
@@ -189,8 +187,8 @@ class OKXExecutionClient(LiveExecutionClient):
             return AccountType.CASH
         return AccountType.MARGIN
 
+    @staticmethod
     def _derive_trade_mode(
-        self,
         account_type: AccountType,
         config: OKXExecClientConfig,
     ) -> OKXTradeMode:
@@ -335,9 +333,7 @@ class OKXExecutionClient(LiveExecutionClient):
             await self._cache_instruments()
 
         self._log.debug(
-            f"Requesting OrderStatusReports "
-            f"{repr(command.instrument_id) if command.instrument_id else ''}"
-            "...",
+            f"Requesting OrderStatusReports {repr(command.instrument_id) if command.instrument_id else ''}...",
         )
 
         pyo3_reports: list[nautilus_pyo3.OrderStatusReport] = []
@@ -419,11 +415,9 @@ class OKXExecutionClient(LiveExecutionClient):
         canonical_requested_id: ClientOrderId | None = None
 
         try:
-            pyo3_reports: list[nautilus_pyo3.OrderStatusReport] = (
-                await self._http_client.request_order_status_reports(
-                    account_id=self.pyo3_account_id,
-                    instrument_id=pyo3_instrument_id,
-                )
+            pyo3_reports: list[nautilus_pyo3.OrderStatusReport] = await self._http_client.request_order_status_reports(
+                account_id=self.pyo3_account_id,
+                instrument_id=pyo3_instrument_id,
             )
 
             if not pyo3_reports:
@@ -439,11 +433,9 @@ class OKXExecutionClient(LiveExecutionClient):
                 report = OrderStatusReport.from_pyo3(pyo3_report)
                 self._apply_client_order_alias(report)
                 canonical_report_id = self._canonical_client_order_id(report.client_order_id)
-                if (
-                    canonical_requested_id
-                    and canonical_report_id is not None
-                    and canonical_report_id == canonical_requested_id
-                ) or (command.venue_order_id and report.venue_order_id == command.venue_order_id):
+                if (canonical_requested_id and canonical_report_id is not None and canonical_report_id == canonical_requested_id) or (
+                    command.venue_order_id and report.venue_order_id == command.venue_order_id
+                ):
                     self._log.debug(f"Received {report}", LogColor.MAGENTA)
                     return report
         except ValueError as exc:
@@ -648,9 +640,7 @@ class OKXExecutionClient(LiveExecutionClient):
             await self._cache_instruments()
 
         self._log.debug(
-            f"Requesting PositionStatusReports"
-            f" {repr(command.instrument_id) if command.instrument_id else ''}"
-            " ...",
+            f"Requesting PositionStatusReports {repr(command.instrument_id) if command.instrument_id else ''} ...",
         )
 
         pyo3_reports: list[nautilus_pyo3.PositionStatusReport] = []
@@ -759,20 +749,12 @@ class OKXExecutionClient(LiveExecutionClient):
             if self._config.use_spot_margin:
                 # Use CROSS or ISOLATED margin mode for spot margin trading
                 # Note: SPOT_ISOLATED is only available for copy traders
-                return (
-                    OKXTradeMode.CROSS
-                    if self._config.margin_mode == OKXMarginMode.CROSS
-                    else OKXTradeMode.ISOLATED
-                )
+                return OKXTradeMode.CROSS if self._config.margin_mode == OKXMarginMode.CROSS else OKXTradeMode.ISOLATED
             else:
                 return OKXTradeMode.CASH
         else:
             # Derivatives trading
-            return (
-                OKXTradeMode.CROSS
-                if self._config.margin_mode == OKXMarginMode.CROSS
-                else OKXTradeMode.ISOLATED
-            )
+            return OKXTradeMode.CROSS if self._config.margin_mode == OKXMarginMode.CROSS else OKXTradeMode.ISOLATED
 
     async def _query_account(self, _command: QueryAccount) -> None:
         # TODO: Specific account ID (sub account) not yet supported
@@ -817,15 +799,9 @@ class OKXExecutionClient(LiveExecutionClient):
         pyo3_order_type = order_type_to_pyo3(order.order_type)
         pyo3_quantity = nautilus_pyo3.Quantity.from_str(str(order.quantity))
         pyo3_price = nautilus_pyo3.Price.from_str(str(order.price)) if order.has_price else None
-        pyo3_trigger_price = (
-            nautilus_pyo3.Price.from_str(str(order.trigger_price))
-            if order.has_trigger_price
-            else None
-        )
+        pyo3_trigger_price = nautilus_pyo3.Price.from_str(str(order.trigger_price)) if order.has_trigger_price else None
 
-        pyo3_time_in_force = (
-            time_in_force_to_pyo3(order.time_in_force) if order.time_in_force else None
-        )
+        pyo3_time_in_force = time_in_force_to_pyo3(order.time_in_force) if order.time_in_force else None
 
         td_mode = self._get_trade_mode_for_order(order.instrument_id, command.params)
 
@@ -867,13 +843,9 @@ class OKXExecutionClient(LiveExecutionClient):
         pyo3_quantity = nautilus_pyo3.Quantity.from_str(str(order.quantity))
         pyo3_trigger_price = nautilus_pyo3.Price.from_str(str(order.trigger_price))
 
-        pyo3_limit_price = (
-            nautilus_pyo3.Price.from_str(str(order.price)) if order.has_price else None
-        )
+        pyo3_limit_price = nautilus_pyo3.Price.from_str(str(order.price)) if order.has_price else None
 
-        pyo3_trigger_type = (
-            trigger_type_to_pyo3(order.trigger_type) if hasattr(order, "trigger_type") else None
-        )
+        pyo3_trigger_type = trigger_type_to_pyo3(order.trigger_type) if hasattr(order, "trigger_type") else None
 
         td_mode = self._get_trade_mode_for_order(order.instrument_id, command.params)
 
@@ -917,8 +889,7 @@ class OKXExecutionClient(LiveExecutionClient):
 
         if order.is_closed:
             self._log.warning(
-                f"`ModifyOrder` command for {command.client_order_id!r} when order already {order.status_string()} "
-                "(will not send to exchange)",
+                f"`ModifyOrder` command for {command.client_order_id!r} when order already {order.status_string()} (will not send to exchange)",
             )
             return
 
@@ -932,20 +903,10 @@ class OKXExecutionClient(LiveExecutionClient):
             f"{self._canonical_client_order_id(command.client_order_id)!r}, "
             f"requested {command.client_order_id!r})",
         )
-        pyo3_client_order_id = (
-            nautilus_pyo3.ClientOrderId(resolved_client_order_id.value)
-            if resolved_client_order_id is not None
-            else None
-        )
-        pyo3_venue_order_id = (
-            nautilus_pyo3.VenueOrderId(command.venue_order_id.value)
-            if command.venue_order_id
-            else None
-        )
+        pyo3_client_order_id = nautilus_pyo3.ClientOrderId(resolved_client_order_id.value) if resolved_client_order_id is not None else None
+        pyo3_venue_order_id = nautilus_pyo3.VenueOrderId(command.venue_order_id.value) if command.venue_order_id else None
         pyo3_price = nautilus_pyo3.Price.from_str(str(command.price)) if command.price else None
-        pyo3_quantity = (
-            nautilus_pyo3.Quantity.from_str(str(command.quantity)) if command.quantity else None
-        )
+        pyo3_quantity = nautilus_pyo3.Quantity.from_str(str(command.quantity)) if command.quantity else None
 
         try:
             await self._ws_client.modify_order(
@@ -975,8 +936,7 @@ class OKXExecutionClient(LiveExecutionClient):
 
         if order.is_closed:
             self._log.warning(
-                f"`CancelOrder` command for {command.client_order_id!r} when order already {order.status_string()} "
-                "(will not send to exchange)",
+                f"`CancelOrder` command for {command.client_order_id!r} when order already {order.status_string()} (will not send to exchange)",
             )
             return
 
@@ -988,8 +948,7 @@ class OKXExecutionClient(LiveExecutionClient):
             algo_id = self._algo_order_ids.get(alias_lookup_key)
             if algo_id:
                 self._log.debug(
-                    f"Cancelling OKX algo order using algo_id {algo_id} "
-                    f"for canonical {alias_lookup_key!r} (requested {command.client_order_id!r})",
+                    f"Cancelling OKX algo order using algo_id {algo_id} for canonical {alias_lookup_key!r} (requested {command.client_order_id!r})",
                 )
                 pyo3_instrument_id = nautilus_pyo3.InstrumentId.from_str(
                     command.instrument_id.value,
@@ -1003,12 +962,7 @@ class OKXExecutionClient(LiveExecutionClient):
                     message = str(exc)
                     alias_text = str(alias_lookup_key) if alias_lookup_key is not None else ""
                     client_text = str(command.client_order_id) if command.client_order_id else ""
-                    if (
-                        "already canceled" not in message
-                        and algo_id not in message
-                        and alias_text not in message
-                        and client_text not in message
-                    ):
+                    if "already canceled" not in message and algo_id not in message and alias_text not in message and client_text not in message:
                         raise
                 if alias_lookup_key is not None:
                     del self._algo_order_ids[alias_lookup_key]
@@ -1027,16 +981,8 @@ class OKXExecutionClient(LiveExecutionClient):
                     f"{resolved_client_order_id!r} (canonical {canonical_client_order_id!r}, "
                     f"requested {command.client_order_id!r})",
                 )
-                pyo3_client_order_id = (
-                    nautilus_pyo3.ClientOrderId(resolved_client_order_id.value)
-                    if resolved_client_order_id is not None
-                    else None
-                )
-                pyo3_venue_order_id = (
-                    nautilus_pyo3.VenueOrderId(command.venue_order_id.value)
-                    if command.venue_order_id
-                    else None
-                )
+                pyo3_client_order_id = nautilus_pyo3.ClientOrderId(resolved_client_order_id.value) if resolved_client_order_id is not None else None
+                pyo3_venue_order_id = nautilus_pyo3.VenueOrderId(command.venue_order_id.value) if command.venue_order_id else None
 
                 await self._ws_client.cancel_order(
                     trader_id=pyo3_trader_id,
@@ -1190,9 +1136,7 @@ class OKXExecutionClient(LiveExecutionClient):
         reason = event.reason or ""
         canonical = self._canonical_client_order_id(event.client_order_id)
         canonical_repr = repr(canonical) if canonical is not None else ""
-        duplicate_reason = reason.endswith(repr(event.client_order_id)) or (
-            canonical_repr and reason.endswith(canonical_repr)
-        )
+        duplicate_reason = reason.endswith(repr(event.client_order_id)) or (canonical_repr and reason.endswith(canonical_repr))
         if duplicate_reason:
             return
         order = self._cache.order(event.client_order_id)
@@ -1212,8 +1156,7 @@ class OKXExecutionClient(LiveExecutionClient):
         pyo3_report: nautilus_pyo3.OrderStatusReport,
     ) -> None:
         self._log.debug(
-            f"Received order status report: {pyo3_report.client_order_id!r}, "
-            f"status={pyo3_report.order_status}, is_connected={self.is_connected}",
+            f"Received order status report: {pyo3_report.client_order_id!r}, status={pyo3_report.order_status}, is_connected={self.is_connected}",
             LogColor.MAGENTA,
         )
 
@@ -1233,9 +1176,7 @@ class OKXExecutionClient(LiveExecutionClient):
             return
 
         order = self._cache.order(report.client_order_id)
-        canonical_client_order_id = (
-            self._canonical_client_order_id(report.client_order_id) or report.client_order_id
-        )
+        canonical_client_order_id = self._canonical_client_order_id(report.client_order_id) or report.client_order_id
         algo_id_for_client = self._algo_order_ids.get(canonical_client_order_id)
         if order is None:
             self._log.error(
@@ -1250,17 +1191,8 @@ class OKXExecutionClient(LiveExecutionClient):
         # The venue_order_id is actually the algo_id for algo orders
         if order.order_type in (OrderType.STOP_MARKET, OrderType.STOP_LIMIT):
             child = self._client_id_children.get(report.client_order_id)
-            venue_changed = (
-                order.venue_order_id is not None
-                and report.venue_order_id is not None
-                and order.venue_order_id != report.venue_order_id
-            )
-            if (
-                (child is None or child == report.client_order_id)
-                and report.venue_order_id
-                and report.client_order_id
-                and not venue_changed
-            ):
+            venue_changed = order.venue_order_id is not None and report.venue_order_id is not None and order.venue_order_id != report.venue_order_id
+            if (child is None or child == report.client_order_id) and report.venue_order_id and report.client_order_id and not venue_changed:
                 self._algo_order_ids[canonical_client_order_id] = str(report.venue_order_id)
                 self._algo_order_instruments[canonical_client_order_id] = order.instrument_id
 
@@ -1278,16 +1210,9 @@ class OKXExecutionClient(LiveExecutionClient):
         elif report.order_status == OrderStatus.ACCEPTED:
             if order.status in (OrderStatus.FILLED, OrderStatus.CANCELED, OrderStatus.EXPIRED):
                 return
-            venue_changed = (
-                order.venue_order_id is not None
-                and report.venue_order_id is not None
-                and order.venue_order_id != report.venue_order_id
-            )
+            venue_changed = order.venue_order_id is not None and report.venue_order_id is not None and order.venue_order_id != report.venue_order_id
             venue_is_original_algo = bool(
-                venue_changed
-                and algo_id_for_client
-                and report.venue_order_id is not None
-                and str(report.venue_order_id) == str(algo_id_for_client),
+                venue_changed and algo_id_for_client and report.venue_order_id is not None and str(report.venue_order_id) == str(algo_id_for_client),
             )
             if venue_changed and not venue_is_original_algo:
                 self.generate_order_updated(
@@ -1296,9 +1221,7 @@ class OKXExecutionClient(LiveExecutionClient):
                     client_order_id=report.client_order_id,
                     venue_order_id=report.venue_order_id,
                     quantity=report.quantity or order.quantity,
-                    price=(
-                        report.price if report.price is not None else getattr(order, "price", None)
-                    ),
+                    price=(report.price if report.price is not None else getattr(order, "price", None)),
                     trigger_price=report.trigger_price or getattr(order, "trigger_price", None),
                     ts_event=report.ts_last,
                     venue_order_id_modified=True,
@@ -1315,9 +1238,7 @@ class OKXExecutionClient(LiveExecutionClient):
                     client_order_id=report.client_order_id,
                     venue_order_id=report.venue_order_id,
                     quantity=report.quantity or order.quantity,
-                    price=(
-                        report.price if report.price is not None else getattr(order, "price", None)
-                    ),
+                    price=(report.price if report.price is not None else getattr(order, "price", None)),
                     trigger_price=report.trigger_price or getattr(order, "trigger_price", None),
                     ts_event=report.ts_last,
                 )
@@ -1355,20 +1276,14 @@ class OKXExecutionClient(LiveExecutionClient):
             self._algo_order_ids.pop(canonical_client_order_id, None)
             self._algo_order_instruments.pop(canonical_client_order_id, None)
         elif report.order_status == OrderStatus.TRIGGERED:
-            if (
-                order.venue_order_id is not None
-                and report.venue_order_id is not None
-                and order.venue_order_id != report.venue_order_id
-            ):
+            if order.venue_order_id is not None and report.venue_order_id is not None and order.venue_order_id != report.venue_order_id:
                 self.generate_order_updated(
                     strategy_id=order.strategy_id,
                     instrument_id=report.instrument_id,
                     client_order_id=report.client_order_id,
                     venue_order_id=report.venue_order_id,
                     quantity=report.quantity or order.quantity,
-                    price=(
-                        report.price if report.price is not None else getattr(order, "price", None)
-                    ),
+                    price=(report.price if report.price is not None else getattr(order, "price", None)),
                     trigger_price=report.trigger_price or getattr(order, "trigger_price", None),
                     ts_event=report.ts_last,
                     venue_order_id_modified=True,
@@ -1426,11 +1341,7 @@ class OKXExecutionClient(LiveExecutionClient):
             return
 
         updated_event = None
-        if (
-            order.venue_order_id is not None
-            and report.venue_order_id is not None
-            and order.venue_order_id != report.venue_order_id
-        ):
+        if order.venue_order_id is not None and report.venue_order_id is not None and order.venue_order_id != report.venue_order_id:
             updated_event = OrderUpdated(
                 trader_id=self.trader_id,
                 strategy_id=order.strategy_id,
@@ -1469,9 +1380,7 @@ class OKXExecutionClient(LiveExecutionClient):
             liquidity_side=report.liquidity_side,
             ts_event=report.ts_event,
         )
-        canonical_client_order_id = (
-            self._canonical_client_order_id(order.client_order_id) or order.client_order_id
-        )
+        canonical_client_order_id = self._canonical_client_order_id(order.client_order_id) or order.client_order_id
         self._algo_order_ids.pop(canonical_client_order_id, None)
         self._algo_order_instruments.pop(canonical_client_order_id, None)
 
@@ -1605,11 +1514,7 @@ def is_order_updated(order: Order, report: OrderStatusReport) -> bool:
     if order.has_price and report.price and order.price != report.price:
         return True
 
-    if (
-        order.has_trigger_price
-        and report.trigger_price
-        and order.trigger_price != report.trigger_price
-    ):
+    if order.has_trigger_price and report.trigger_price and order.trigger_price != report.trigger_price:
         return True
 
     return order.quantity != report.quantity

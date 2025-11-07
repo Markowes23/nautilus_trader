@@ -77,7 +77,8 @@ class MyExecAlgorithm(ExecAlgorithm):
         """
         # Optionally implement
 
-    def on_save(self) -> dict[str, bytes]:
+    @staticmethod
+    def on_save() -> dict[str, bytes]:
         """
         Actions to be performed when the algorithm component is saved.
 

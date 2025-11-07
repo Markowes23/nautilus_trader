@@ -28,7 +28,8 @@ ETHUSDT = TestInstrumentProvider.ethusdt_binance()
 
 
 class TestBinanceHttpParsing:
-    def test_parse_book_snapshot(self):
+    @staticmethod
+    def test_parse_book_snapshot():
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.http_responses",
@@ -55,7 +56,8 @@ class TestBinanceHttpParsing:
         assert result.sequence == 14527958487
         assert result.ts_init == 2
 
-    def test_parse_futures_symbol_config(self):
+    @staticmethod
+    def test_parse_futures_symbol_config():
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.http_responses",

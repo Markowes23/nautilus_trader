@@ -55,7 +55,8 @@ class TestMarginAccount:
             clock=TestClock(),
         )
 
-    def test_instantiated_accounts_basic_properties(self):
+    @staticmethod
+    def test_instantiated_accounts_basic_properties():
         # Arrange, Act
         account = TestExecStubs.margin_account()
 
@@ -68,7 +69,8 @@ class TestMarginAccount:
         assert account == account
         assert account.default_leverage == Decimal(1)
 
-    def test_set_default_leverage(self):
+    @staticmethod
+    def test_set_default_leverage():
         # Arrange
         account = TestExecStubs.margin_account()
 
@@ -79,7 +81,8 @@ class TestMarginAccount:
         assert account.default_leverage == Decimal(100)
         assert account.leverages() == {}
 
-    def test_set_leverage(self):
+    @staticmethod
+    def test_set_leverage():
         # Arrange
         account = TestExecStubs.margin_account()
 
@@ -90,7 +93,8 @@ class TestMarginAccount:
         assert account.leverage(AUDUSD_SIM.id) == Decimal(100)
         assert account.leverages() == {AUDUSD_SIM.id: Decimal(100)}
 
-    def test_is_unleveraged_with_leverage_returns_false(self):
+    @staticmethod
+    def test_is_unleveraged_with_leverage_returns_false():
         # Arrange
         account = TestExecStubs.margin_account()
 
@@ -100,7 +104,8 @@ class TestMarginAccount:
         # Assert
         assert not account.is_unleveraged(AUDUSD_SIM.id)
 
-    def test_is_unleveraged_with_no_leverage_returns_true(self):
+    @staticmethod
+    def test_is_unleveraged_with_no_leverage_returns_true():
         # Arrange
         account = TestExecStubs.margin_account()
 
@@ -110,14 +115,16 @@ class TestMarginAccount:
         # Assert
         assert account.is_unleveraged(AUDUSD_SIM.id)
 
-    def test_is_unleveraged_with_default_leverage_of_1_returns_true(self):
+    @staticmethod
+    def test_is_unleveraged_with_default_leverage_of_1_returns_true():
         # Arrange
         account = TestExecStubs.margin_account()
 
         # Act, Assert
         assert account.is_unleveraged(AUDUSD_SIM.id)
 
-    def test_update_margin_init(self):
+    @staticmethod
+    def test_update_margin_init():
         # Arrange
         account = TestExecStubs.margin_account()
         margin = Money(1_000.00, USD)
@@ -129,7 +136,8 @@ class TestMarginAccount:
         assert account.margin_init(AUDUSD_SIM.id) == margin
         assert account.margins_init() == {AUDUSD_SIM.id: margin}
 
-    def test_update_margin_maint(self):
+    @staticmethod
+    def test_update_margin_maint():
         # Arrange
         account = TestExecStubs.margin_account()
         margin = Money(1_000.00, USD)
@@ -141,7 +149,8 @@ class TestMarginAccount:
         assert account.margin_maint(AUDUSD_SIM.id) == margin
         assert account.margins_maint() == {AUDUSD_SIM.id: margin}
 
-    def test_calculate_margin_init_with_leverage(self):
+    @staticmethod
+    def test_calculate_margin_init_with_leverage():
         # Arrange
         account = TestExecStubs.margin_account()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -156,7 +165,8 @@ class TestMarginAccount:
         # Assert
         assert result == Money(48.00, USD)
 
-    def test_calculate_margin_init_with_default_leverage(self):
+    @staticmethod
+    def test_calculate_margin_init_with_default_leverage():
         # Arrange
         account = TestExecStubs.margin_account()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -197,7 +207,8 @@ class TestMarginAccount:
         # Assert
         assert result == expected
 
-    def test_calculate_margin_maint_with_no_leverage(self):
+    @staticmethod
+    def test_calculate_margin_maint_with_no_leverage():
         # Arrange
         account = TestExecStubs.margin_account()
         instrument = TestInstrumentProvider.xbtusd_bitmex()
@@ -213,7 +224,8 @@ class TestMarginAccount:
         # Assert
         assert result == Money(0.03045173, BTC)
 
-    def test_calculate_margin_maint_with_leverage_fx_instrument(self):
+    @staticmethod
+    def test_calculate_margin_maint_with_leverage_fx_instrument():
         # Arrange
         account = TestExecStubs.margin_account()
         instrument = TestInstrumentProvider.default_fx_ccy("AUD/USD")
@@ -230,7 +242,8 @@ class TestMarginAccount:
         # Assert
         assert result == Money(600.00, USD)
 
-    def test_calculate_margin_maint_with_leverage_inverse_instrument(self):
+    @staticmethod
+    def test_calculate_margin_maint_with_leverage_inverse_instrument():
         # Arrange
         account = TestExecStubs.margin_account()
         instrument = TestInstrumentProvider.xbtusd_bitmex()
@@ -735,7 +748,8 @@ class TestMarginAccount:
         assert account_pnl[0] == expected_position_pnl
         assert account_pnl[0].as_double() == expected_amount
 
-    def test_balance_impact_buy_order(self):
+    @staticmethod
+    def test_balance_impact_buy_order():
         # Arrange
         account = TestExecStubs.margin_account()
         account.set_default_leverage(Decimal(10))  # 10x leverage
@@ -752,7 +766,8 @@ class TestMarginAccount:
         expected = Money(-5000.00, USDT)
         assert impact == expected
 
-    def test_balance_impact_sell_order(self):
+    @staticmethod
+    def test_balance_impact_sell_order():
         # Arrange
         account = TestExecStubs.margin_account()
         account.set_default_leverage(Decimal(5))  # 5x leverage
@@ -769,7 +784,8 @@ class TestMarginAccount:
         expected = Money(6000.00, USDT)
         assert impact == expected
 
-    def test_margin_account_calculate_initial_margin(self):
+    @staticmethod
+    def test_margin_account_calculate_initial_margin():
         """
         Test that MarginAccount correctly calculates initial margin requirements.
         """
@@ -794,7 +810,8 @@ class TestMarginAccount:
         assert initial_margin > Money(0, USD)
         assert initial_margin < Money(notional, USD)
 
-    def test_margin_account_calculate_maintenance_margin(self):
+    @staticmethod
+    def test_margin_account_calculate_maintenance_margin():
         """
         Test that MarginAccount correctly calculates maintenance margin requirements.
         """
@@ -825,7 +842,8 @@ class TestMarginAccount:
         assert maint_margin > Money(0, USD)
         assert maint_margin <= initial_margin
 
-    def test_margin_account_calculate_balance_locked_with_leverage(self):
+    @staticmethod
+    def test_margin_account_calculate_balance_locked_with_leverage():
         """
         Test that MarginAccount leverage affects margin calculations.
         """
@@ -847,7 +865,8 @@ class TestMarginAccount:
         assert margin > Money(0, USD)
         assert margin < Money(20_000.00, USD)  # Should be around 10,000
 
-    def test_margin_account_calculate_commission_on_trade(self):
+    @staticmethod
+    def test_margin_account_calculate_commission_on_trade():
         """
         Test that MarginAccount correctly calculates commission on trades.
         """
@@ -874,7 +893,8 @@ class TestMarginAccount:
         # Commission should be small percentage of notional
         assert commission < Money(1000.00, USD)  # Less than 1% of 100k
 
-    def test_margin_account_update_commissions(self):
+    @staticmethod
+    def test_margin_account_update_commissions():
         """
         Test that MarginAccount.update_commissions tracks commissions.
         """

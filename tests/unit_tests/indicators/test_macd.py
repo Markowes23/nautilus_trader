@@ -64,7 +64,8 @@ class TestMovingAverageConvergenceDivergence:
         # Act, Assert
         assert self.macd.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = MovingAverageConvergenceDivergence(3, 10, price_type=PriceType.MID)
 
@@ -77,7 +78,8 @@ class TestMovingAverageConvergenceDivergence:
         assert indicator.has_inputs
         assert indicator.value == 0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = MovingAverageConvergenceDivergence(3, 10)
 
@@ -90,7 +92,8 @@ class TestMovingAverageConvergenceDivergence:
         assert indicator.has_inputs
         assert indicator.value == 0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = MovingAverageConvergenceDivergence(3, 10)
 

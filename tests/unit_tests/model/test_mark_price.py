@@ -23,13 +23,13 @@ BTCUSDT_BINANCE = TestInstrumentProvider.btcusdt_binance()
 
 
 class TestTradeTick:
-    def test_fully_qualified_name(self):
+    @staticmethod
+    def test_fully_qualified_name():
         # Arrange, Act, Assert
-        assert (
-            MarkPriceUpdate.fully_qualified_name() == "nautilus_trader.model.data:MarkPriceUpdate"
-        )
+        assert MarkPriceUpdate.fully_qualified_name() == "nautilus_trader.model.data:MarkPriceUpdate"
 
-    def test_hash_str_and_repr(self):
+    @staticmethod
+    def test_hash_str_and_repr():
         # Arrange
         mark_price = MarkPriceUpdate(
             instrument_id=BTCUSDT_BINANCE.id,
@@ -43,7 +43,8 @@ class TestTradeTick:
         assert str(mark_price) == "BTCUSDT.BINANCE,100000.00,1,2"
         assert repr(mark_price) == "MarkPriceUpdate(BTCUSDT.BINANCE,100000.00,1,2)"
 
-    def test_to_dict_returns_expected_dict(self):
+    @staticmethod
+    def test_to_dict_returns_expected_dict():
         # Arrange
         mark_price = MarkPriceUpdate(
             instrument_id=BTCUSDT_BINANCE.id,
@@ -64,7 +65,8 @@ class TestTradeTick:
             "ts_init": 2,
         }
 
-    def test_from_dict_returns_expected_tick(self):
+    @staticmethod
+    def test_from_dict_returns_expected_tick():
         # Arrange
         mark_price = MarkPriceUpdate(
             instrument_id=BTCUSDT_BINANCE.id,
@@ -79,7 +81,8 @@ class TestTradeTick:
         # Assert
         assert result == mark_price
 
-    def test_from_pyo3(self):
+    @staticmethod
+    def test_from_pyo3():
         # Arrange
         mark_price = MarkPriceUpdate(
             instrument_id=BTCUSDT_BINANCE.id,
@@ -95,7 +98,8 @@ class TestTradeTick:
         # Assert
         assert result == mark_price
 
-    def test_to_pyo3(self):
+    @staticmethod
+    def test_to_pyo3():
         # Arrange
         mark_price = MarkPriceUpdate(
             instrument_id=BTCUSDT_BINANCE.id,

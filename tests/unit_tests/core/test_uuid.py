@@ -21,7 +21,6 @@ from nautilus_trader.core.uuid import UUID4
 
 
 class TestUUID:
-
     @pytest.mark.parametrize(
         ("value"),
         [
@@ -37,7 +36,8 @@ class TestUUID:
         with pytest.raises(ValueError):
             UUID4.from_str(value)
 
-    def test_pickling_round_trip(self):
+    @staticmethod
+    def test_pickling_round_trip():
         # Arrange
         uuid = UUID4()
 
@@ -48,7 +48,8 @@ class TestUUID:
         # Assert
         assert unpickled == uuid
 
-    def test_equality(self):
+    @staticmethod
+    def test_equality():
         # Arrange, Act
         uuid1 = UUID4.from_str("2d89666b-1a1e-4a75-b193-4eb3b454c757")
         uuid2 = UUID4.from_str("2d89666b-1a1e-4a75-b193-4eb3b454c757")
@@ -59,7 +60,8 @@ class TestUUID:
         assert uuid1 == uuid2
         assert uuid2 != uuid3
 
-    def test_hash(self):
+    @staticmethod
+    def test_hash():
         # Arrange
         uuid1 = UUID4.from_str("2d89666b-1a1e-4a75-b193-4eb3b454c757")
         uuid2 = UUID4.from_str("2d89666b-1a1e-4a75-b193-4eb3b454c757")
@@ -68,7 +70,8 @@ class TestUUID:
         assert isinstance((hash(uuid1)), int)
         assert hash(uuid1) == hash(uuid2)
 
-    def test_str_and_repr(self):
+    @staticmethod
+    def test_str_and_repr():
         # Arrange
         uuid = UUID4.from_str("2d89666b-1a1e-4a75-b193-4eb3b454c757")
 
@@ -77,7 +80,8 @@ class TestUUID:
         assert str(uuid) == "2d89666b-1a1e-4a75-b193-4eb3b454c757"
         assert repr(uuid) == "UUID4('2d89666b-1a1e-4a75-b193-4eb3b454c757')"
 
-    def test_uuid4_produces_valid_uuid4(self):
+    @staticmethod
+    def test_uuid4_produces_valid_uuid4():
         # Arrange, Act
         result = UUID4()
 

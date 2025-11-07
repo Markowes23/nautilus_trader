@@ -537,11 +537,7 @@ class DYDXExecutionClient(LiveExecutionClient):
             address=self._wallet_address,
             subaccount_number=self._subaccount,
             symbol=symbol,
-            order_status=(
-                [DYDXOrderStatus.OPEN, DYDXOrderStatus.BEST_EFFORT_OPENED]
-                if command.open_only
-                else None
-            ),
+            order_status=([DYDXOrderStatus.OPEN, DYDXOrderStatus.BEST_EFFORT_OPENED] if command.open_only else None),
         )
 
         if dydx_orders is not None:
@@ -558,18 +554,10 @@ class DYDXExecutionClient(LiveExecutionClient):
                 # We use the updatedAt property to filter the orders since the
                 # createdAt property does not exist. createdAtBlockHeight is
                 # available, but a mapping between block height and datetime is missing.
-                if (
-                    start_dt is not None
-                    and dydx_order.updatedAt is not None
-                    and dydx_order.updatedAt < start_dt
-                ):
+                if start_dt is not None and dydx_order.updatedAt is not None and dydx_order.updatedAt < start_dt:
                     continue  # Filter start on the Nautilus side
 
-                if (
-                    end_dt is not None
-                    and dydx_order.updatedAt is not None
-                    and dydx_order.updatedAt > end_dt
-                ):
+                if end_dt is not None and dydx_order.updatedAt is not None and dydx_order.updatedAt > end_dt:
                     continue  # Filter end on the Nautilus side
 
                 report = dydx_order.parse_to_order_status_report(
@@ -642,11 +630,7 @@ class DYDXExecutionClient(LiveExecutionClient):
                     )
                     return []
 
-                if (
-                    start_dt is not None
-                    and dydx_fill.createdAt is not None
-                    and dydx_fill.createdAt < start_dt
-                ):
+                if start_dt is not None and dydx_fill.createdAt is not None and dydx_fill.createdAt < start_dt:
                     continue  # Filter start on the Nautilus side
 
                 report = dydx_fill.parse_to_fill_report(
@@ -865,12 +849,8 @@ class DYDXExecutionClient(LiveExecutionClient):
                     oracle_price=self._oracle_prices.get(instrument.id),
                 )
 
-                initial_margins[
-                    margin_balance.initial.currency
-                ] += margin_balance.initial.as_decimal()
-                maintenance_margins[
-                    margin_balance.maintenance.currency
-                ] += margin_balance.maintenance.as_decimal()
+                initial_margins[margin_balance.initial.currency] += margin_balance.initial.as_decimal()
+                maintenance_margins[margin_balance.maintenance.currency] += margin_balance.maintenance.as_decimal()
 
             margins = []
 
@@ -1017,9 +997,7 @@ class DYDXExecutionClient(LiveExecutionClient):
             return
 
         commission = (
-            Money(Decimal(fill_msg.fee), instrument.quote_currency)
-            if fill_msg.fee is not None
-            else Money(Decimal(0), instrument.quote_currency)
+            Money(Decimal(fill_msg.fee), instrument.quote_currency) if fill_msg.fee is not None else Money(Decimal(0), instrument.quote_currency)
         )
 
         if order.status != OrderStatus.FILLED:
@@ -1058,7 +1036,8 @@ class DYDXExecutionClient(LiveExecutionClient):
 
         return order_builder
 
-    def _parse_order_tags(self, order: Order) -> DYDXOrderTags:
+    @staticmethod
+    def _parse_order_tags(order: Order) -> DYDXOrderTags:
         """
         Parse the order tags to submit short term and long term orders.
         """
@@ -1161,16 +1140,12 @@ class DYDXExecutionClient(LiveExecutionClient):
             good_til_block = self._block_height + dydx_order_tags.num_blocks_open
         else:
             order_flags = OrderFlags.LONG_TERM
-            good_til_date_secs = (
-                int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
-            )
+            good_til_date_secs = int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
 
         if order.order_type in [OrderType.STOP_LIMIT, OrderType.STOP_MARKET]:
             order_flags = OrderFlags.CONDITIONAL
             good_til_block = None
-            good_til_date_secs = (
-                int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
-            )
+            good_til_date_secs = int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
 
             if order.order_type == OrderType.STOP_MARKET:
                 execution = OrderExecution.IOC
@@ -1214,25 +1189,15 @@ class DYDXExecutionClient(LiveExecutionClient):
         if order.order_type == OrderType.LIMIT:
             price = order.price.as_double()
         elif order.order_type == OrderType.MARKET:
-            price = (
-                dydx_order_tags.market_order_price.as_double()
-                if dydx_order_tags.market_order_price is not None
-                else 0
-            )
+            price = dydx_order_tags.market_order_price.as_double() if dydx_order_tags.market_order_price is not None else 0
         elif order.order_type == OrderType.STOP_LIMIT:
             price = order.price.as_double()
             trigger_price = order.trigger_price.as_double()
         elif order.order_type == OrderType.STOP_MARKET:
-            price = (
-                dydx_order_tags.market_order_price.as_double()
-                if dydx_order_tags.market_order_price is not None
-                else 0
-            )
+            price = dydx_order_tags.market_order_price.as_double() if dydx_order_tags.market_order_price is not None else 0
             trigger_price = order.trigger_price.as_double()
         else:
-            rejection_reason = (
-                f"Cannot submit order: order type `{order.order_type}` not (yet) supported"
-            )
+            rejection_reason = f"Cannot submit order: order type `{order.order_type}` not (yet) supported"
             self.generate_order_rejected(
                 strategy_id=order.strategy_id,
                 instrument_id=order.instrument_id,
@@ -1486,15 +1451,11 @@ class DYDXExecutionClient(LiveExecutionClient):
 
         if dydx_order_tags.is_short_term_order is False:
             order_flags = OrderFlags.LONG_TERM
-            good_til_date_secs = (
-                int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
-            )
+            good_til_date_secs = int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
 
         if order.order_type in [OrderType.STOP_LIMIT, OrderType.STOP_MARKET]:
             order_flags = OrderFlags.CONDITIONAL
-            good_til_date_secs = (
-                int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
-            )
+            good_til_date_secs = int(nanos_to_secs(order.expire_time_ns)) if order.expire_time_ns else None
 
         order_id = order_builder.create_order_id(
             address=self._wallet_address,
@@ -1528,11 +1489,7 @@ class DYDXExecutionClient(LiveExecutionClient):
             )
             return
 
-        is_expired = (
-            nanos_to_secs(self._clock.timestamp_ns()) > good_til_date_secs
-            if good_til_date_secs
-            else False
-        )
+        is_expired = nanos_to_secs(self._clock.timestamp_ns()) > good_til_date_secs if good_til_date_secs else False
 
         if is_expired:
             reason = f"Cannot cancel order: order {order.client_order_id!r} is expired"

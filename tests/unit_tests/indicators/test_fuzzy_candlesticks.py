@@ -29,12 +29,12 @@ AUDUSD_SIM = TestInstrumentProvider.default_fx_ccy("AUD/USD")
 
 
 class TestFuzzyCandlesticks:
-
     def setup(self):
         # Fixture Setup
         self.fc = FuzzyCandlesticks(10, 0.5, 1.0, 2.0, 3.0)
 
-    def test_fuzzy_candle_equality(self):
+    @staticmethod
+    def test_fuzzy_candle_equality():
         # Arrange
         fuzzy_candle1 = FuzzyCandle(
             CandleDirection.DIRECTION_BULL,
@@ -65,7 +65,8 @@ class TestFuzzyCandlesticks:
         assert fuzzy_candle1 == fuzzy_candle2
         assert fuzzy_candle1 != fuzzy_candle3
 
-    def test_fuzzy_str_and_repr(self):
+    @staticmethod
+    def test_fuzzy_str_and_repr():
         # Arrange
         fuzzy_candle = FuzzyCandle(
             CandleDirection.DIRECTION_BULL,
@@ -92,7 +93,8 @@ class TestFuzzyCandlesticks:
         # Arrange, Act, Assert
         assert self.fc.period == 10
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = FuzzyCandlesticks(10, 0.5, 1.0, 2.0, 3.0)
 
@@ -238,9 +240,7 @@ class TestFuzzyCandlesticks:
         result_vector = self.fc.vector
 
         # Assert: If _lengths[0] is used, the small candle will be misclassified as large
-        assert (
-            result_candle.size != CandleSize.SIZE_LARGE
-        ), f"Length indexing bug exposed, vector={result_vector}"
+        assert result_candle.size != CandleSize.SIZE_LARGE, f"Length indexing bug exposed, vector={result_vector}"
 
     def test_doji_bar_body_zero_issue(self):
         """
@@ -252,6 +252,4 @@ class TestFuzzyCandlesticks:
         result_vector = self.fc.vector
 
         # Assert: If body_percent != 0, it will be incorrectly classified as non-Doji
-        assert (
-            result_candle.body_size == CandleBodySize.BODY_NONE
-        ), f"Doji body detection failed, vector={result_vector}"
+        assert result_candle.body_size == CandleBodySize.BODY_NONE, f"Doji body detection failed, vector={result_vector}"

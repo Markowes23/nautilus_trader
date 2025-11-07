@@ -59,7 +59,8 @@ class TestDonchianChannel:
         # Act, Assert
         assert self.dc.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = DonchianChannel(10)
 
@@ -72,7 +73,8 @@ class TestDonchianChannel:
         assert indicator.has_inputs
         assert indicator.middle == 1.0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = DonchianChannel(10)
 
@@ -85,7 +87,8 @@ class TestDonchianChannel:
         assert indicator.has_inputs
         assert indicator.middle == 1.0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = DonchianChannel(10)
 

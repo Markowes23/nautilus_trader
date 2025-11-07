@@ -389,7 +389,8 @@ class EMACrossTrailingStop(Strategy):
         elif isinstance(event, PositionClosed):
             self.position_id = None
 
-    def on_save(self) -> dict[str, bytes]:
+    @staticmethod
+    def on_save() -> dict[str, bytes]:
         """
         Actions to be performed when the strategy is saved.
 

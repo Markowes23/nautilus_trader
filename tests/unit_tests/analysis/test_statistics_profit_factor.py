@@ -21,7 +21,8 @@ from tests.unit_tests.analysis.conftest import convert_series_to_dict
 
 
 class TestProfitFactorPortfolioStatistic:
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = ProfitFactor()
 
@@ -31,7 +32,8 @@ class TestProfitFactorPortfolioStatistic:
         # Assert
         assert result == "Profit Factor"
 
-    def test_calculate_given_empty_series_returns_nan(self):
+    @staticmethod
+    def test_calculate_given_empty_series_returns_nan():
         # Arrange
         stat = ProfitFactor()
         data = pd.Series([0.0], dtype=float64)
@@ -42,7 +44,8 @@ class TestProfitFactorPortfolioStatistic:
         # Assert
         assert pd.isna(result)
 
-    def test_calculate_given_mix_of_pnls_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls_returns_expected():
         # Arrange
         stat = ProfitFactor()
         data = pd.Series([3.0, 2.0, 1.0, -1.0, -2.0], dtype=float64)

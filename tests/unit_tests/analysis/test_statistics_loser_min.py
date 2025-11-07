@@ -20,7 +20,8 @@ from nautilus_trader.analysis import MinLoser
 
 
 class TestMinLoserPortfolioStatistic:
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = MinLoser()
 
@@ -30,7 +31,8 @@ class TestMinLoserPortfolioStatistic:
         # Assert
         assert result == "Min Loser"
 
-    def test_calculate_given_empty_series_returns_zero(self):
+    @staticmethod
+    def test_calculate_given_empty_series_returns_zero():
         # Arrange
         stat = MinLoser()
         data = pd.Series(dtype=float64)
@@ -41,7 +43,8 @@ class TestMinLoserPortfolioStatistic:
         # Assert
         assert result == 0.0
 
-    def test_calculate_given_mix_of_pnls_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls_returns_expected():
         # Arrange
         stat = MinLoser()
         data = pd.Series([2.0, 1.0, -1.0, -2.0], dtype=float64)

@@ -23,7 +23,8 @@ from nautilus_trader.trading.filters import NewsImpact
 
 
 class TestDataType:
-    def test_data_type_instantiation(self):
+    @staticmethod
+    def test_data_type_instantiation():
         # Arrange, Act
         data_type = DataType(Data, {"type": "NEWS_WIRE"})
 
@@ -34,7 +35,8 @@ class TestDataType:
         assert str(data_type) == "Data{'type': 'NEWS_WIRE'}"
         assert repr(data_type) == "DataType(type=Data, metadata={'type': 'NEWS_WIRE'})"
 
-    def test_data_type_instantiation_when_no_metadata(self):
+    @staticmethod
+    def test_data_type_instantiation_when_no_metadata():
         # Arrange, Act
         data_type = DataType(Data)
 
@@ -45,7 +47,8 @@ class TestDataType:
         assert str(data_type) == "Data"
         assert repr(data_type) == "DataType(type=Data, metadata={})"  # (P103??)
 
-    def test_data_type_instantiation_with_multiple_metadata(self):
+    @staticmethod
+    def test_data_type_instantiation_with_multiple_metadata():
         # Arrange, Act
         data_type = DataType(Data, {"b": 2, "a": 1, "c": None})
 
@@ -56,7 +59,8 @@ class TestDataType:
         assert str(data_type) == "Data{'b': 2, 'a': 1, 'c': None}"
         assert repr(data_type) == "DataType(type=Data, metadata={'b': 2, 'a': 1, 'c': None})"
 
-    def test_data_type_equality_and_hash(self):
+    @staticmethod
+    def test_data_type_equality_and_hash():
         # Arrange, Act
         data_type1 = DataType(Data, {"type": "NEWS_WIRE", "topic": "Earthquake"})
         data_type2 = DataType(Data, {"type": "NEWS_WIRE", "topic": "Flood"})
@@ -69,7 +73,8 @@ class TestDataType:
         assert data_type1 != data_type3
         assert isinstance(hash(data_type1), int)
 
-    def test_data_type_comparison(self):
+    @staticmethod
+    def test_data_type_comparison():
         # Arrange, Act
         data_type1 = DataType(Data, {"type": "NEWS_WIRE", "topic": "Earthquake"})
         data_type2 = DataType(Data, {"type": "NEWS_WIRE", "topic": "Flood"})
@@ -81,7 +86,8 @@ class TestDataType:
         assert data_type2 > data_type1
         assert data_type1 >= data_type3
 
-    def test_data_type_as_key_in_dict(self):
+    @staticmethod
+    def test_data_type_as_key_in_dict():
         # Arrange, Act
         data_type = DataType(Data, {"type": "NEWS_WIRE", "topic": "Earthquake"})
 
@@ -90,7 +96,8 @@ class TestDataType:
         # Assert
         assert data_type in hash_map
 
-    def test_data_instantiation(self):
+    @staticmethod
+    def test_data_instantiation():
         # Arrange, Act
         data_type = DataType(NewsEvent, {"publisher": "NEWS_WIRE"})
         data = NewsEvent(
@@ -106,7 +113,8 @@ class TestDataType:
         assert custom_data.data_type == data_type
         assert custom_data.data == data
 
-    def test_equality_when_types_not_equal_returns_false(self):
+    @staticmethod
+    def test_equality_when_types_not_equal_returns_false():
         # Arrange
         data_type1 = DataType(type=QuoteTick)
         data_type2 = DataType(type=Data)
@@ -114,7 +122,8 @@ class TestDataType:
         # Act, Assert
         assert data_type1 != data_type2
 
-    def test_equality_when_types_equal_returns_true(self):
+    @staticmethod
+    def test_equality_when_types_equal_returns_true():
         # Arrange
         data_type1 = DataType(type=Data)
         data_type2 = DataType(type=Data)
@@ -122,7 +131,8 @@ class TestDataType:
         # Act, Assert
         assert data_type1 == data_type2
 
-    def test_equality_when_definitions_different_returns_false(self):
+    @staticmethod
+    def test_equality_when_definitions_different_returns_false():
         # Arrange
         data_type1 = DataType(type=Data, metadata={"category": 1})
         data_type2 = DataType(type=Data, metadata={"category": 2})
@@ -130,7 +140,8 @@ class TestDataType:
         # Act, Assert
         assert data_type1 != data_type2
 
-    def test_equality_when_definitions_equal_returns_false(self):
+    @staticmethod
+    def test_equality_when_definitions_equal_returns_false():
         # Arrange
         data_type1 = DataType(type=Data, metadata={"category": 1})
         data_type2 = DataType(type=Data, metadata={"category": 1})
@@ -138,14 +149,16 @@ class TestDataType:
         # Act, Assert
         assert data_type1 == data_type2
 
-    def test_metadata(self):
+    @staticmethod
+    def test_metadata():
         # Arrange
         data_type = DataType(type=Data, metadata={"category": 1, "code": 0})
 
         # Act, Assert
         assert data_type.metadata == {"category": 1, "code": 0}
 
-    def test_hash_str_repr(self):
+    @staticmethod
+    def test_hash_str_repr():
         # Arrange
         data_type = DataType(type=Data, metadata={"category": 1, "code": 0})
 

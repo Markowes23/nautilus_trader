@@ -233,7 +233,8 @@ class PolymarketWebSocketClient:
 
         await self._send(msg)
 
-    def _create_subscribe_market_channel_msg(self, assets: list[str]) -> dict[str, Any]:
+    @staticmethod
+    def _create_subscribe_market_channel_msg(assets: list[str]) -> dict[str, Any]:
         message = {
             "type": "market",
             "assets_ids": assets,

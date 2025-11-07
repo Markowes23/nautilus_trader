@@ -307,8 +307,10 @@ class TestBacktestAcceptanceTestsGBPUSDBarsInternal:
         # Assert - Updated for reduced dataset (10k rows vs 30k rows)
         assert self.engine.kernel.msgbus.sent_count == 1_473  # Reduced from 4_028
         assert self.engine.kernel.msgbus.pub_count == 121_110  # Reduced from 382_303
-        assert strategy.fast_ema.count >= 2_000  # Reduced from 8_353 (approximate)
-        assert self.engine.iteration >= 30_000  # Reduced from 120_468 (approximate)
+        # Reduced from 8_353 (approximate)
+        assert strategy.fast_ema.count >= 2_000
+        # Reduced from 120_468 (approximate)
+        assert self.engine.iteration >= 30_000
         assert self.engine.cache.orders_total_count() >= 100  # Reduced from 570 (approximate)
         assert self.engine.cache.positions_total_count() >= 50  # Reduced from 285 (approximate)
         assert self.engine.cache.orders_open_count() == 0
@@ -343,8 +345,10 @@ class TestBacktestAcceptanceTestsGBPUSDBarsInternal:
         # Assert - Updated for reduced dataset (10k rows vs 30k rows)
         assert self.engine.kernel.msgbus.sent_count == 95  # Reduced from 116
         assert self.engine.kernel.msgbus.pub_count == 119_434  # Reduced from 378_661
-        assert strategy.fast_ema.count >= 2_000  # Reduced from 8_353 (approximate)
-        assert self.engine.iteration >= 30_000  # Reduced from 120_468 (approximate)
+        # Reduced from 8_353 (approximate)
+        assert strategy.fast_ema.count >= 2_000
+        # Reduced from 120_468 (approximate)
+        assert self.engine.iteration >= 30_000
         assert self.engine.cache.orders_total_count() >= 5  # Reduced from 12 (approximate)
         assert self.engine.cache.positions_total_count() >= 1  # Should have at least 1 position
         assert self.engine.cache.orders_open_count() == 0
@@ -793,15 +797,8 @@ class TestBacktestAcceptanceTestsOrderBookImbalance:
         assert instruments
 
         for instrument in instruments[:1]:
-            trade_ticks = [
-                d for d in data if isinstance(d, TradeTick) and d.instrument_id == instrument.id
-            ]
-            order_book_deltas = [
-                d
-                for d in data
-                if isinstance(d, OrderBookDelta | OrderBookDeltas)
-                and d.instrument_id == instrument.id
-            ]
+            trade_ticks = [d for d in data if isinstance(d, TradeTick) and d.instrument_id == instrument.id]
+            order_book_deltas = [d for d in data if isinstance(d, OrderBookDelta | OrderBookDeltas) and d.instrument_id == instrument.id]
             self.engine.add_instrument(instrument)
             self.engine.add_data(trade_ticks)
             self.engine.add_data(order_book_deltas)
@@ -852,15 +849,8 @@ class TestBacktestAcceptanceTestsMarketMaking:
         instruments = [d for d in data if isinstance(d, BettingInstrument)]
 
         for instrument in instruments[:1]:
-            trade_ticks = [
-                d for d in data if isinstance(d, TradeTick) and d.instrument_id == instrument.id
-            ]
-            order_book_deltas = [
-                d
-                for d in data
-                if isinstance(d, OrderBookDelta | OrderBookDeltas)
-                and d.instrument_id == instrument.id
-            ]
+            trade_ticks = [d for d in data if isinstance(d, TradeTick) and d.instrument_id == instrument.id]
+            order_book_deltas = [d for d in data if isinstance(d, OrderBookDelta | OrderBookDeltas) and d.instrument_id == instrument.id]
             self.engine.add_instrument(instrument)
             self.engine.add_data(trade_ticks)
             self.engine.add_data(order_book_deltas)
@@ -892,7 +882,8 @@ class TestBacktestAcceptanceTestsMarketMaking:
 
 
 class TestBacktestNodeWithBacktestDataIterator:
-    def test_backtest_same_with_and_without_data_configs(self) -> None:
+    @staticmethod
+    def test_backtest_same_with_and_without_data_configs() -> None:
         # Arrange
         messages_with_data: list = []
         messages_without_data: list = []
@@ -902,17 +893,13 @@ class TestBacktestNodeWithBacktestDataIterator:
         run_backtest(messages_without_data.append, with_data=False)
 
         # Find the last portfolio greeks message (may not be the very last message due to spread quotes)
-        portfolio_greeks_messages = [
-            msg for msg in messages_with_data if "portfolio_greeks=" in msg
-        ]
+        portfolio_greeks_messages = [msg for msg in messages_with_data if "portfolio_greeks=" in msg]
         assert len(portfolio_greeks_messages) > 0, "No portfolio greeks messages found"
 
         # The last portfolio greeks message should match the expected values (adjusted for spread execution)
         # Now includes both individual leg orders and spread orders
         last_greeks = portfolio_greeks_messages[-1]
-        assert (
-            "portfolio_greeks=PortfolioGreeks(pnl=-350.00, price=7,937.50" in last_greeks
-        ), f"Unexpected portfolio greeks: {last_greeks}"
+        assert "portfolio_greeks=PortfolioGreeks(pnl=-350.00, price=7,937.50" in last_greeks, f"Unexpected portfolio greeks: {last_greeks}"
         assert messages_with_data == messages_without_data
 
     def test_spread_execution_functionality(self) -> None:
@@ -939,19 +926,15 @@ class TestBacktestNodeWithBacktestDataIterator:
         # Assert spread execution functionality
         assert len(spread_quotes) > 0, "No spread quotes were received"
         assert len(combo_fills) > 0, "No combo fills were generated"
-        assert (
-            len(spread_leg_fills) >= 2
-        ), f"Expected at least 2 spread leg fills, was {len(spread_leg_fills)}"
+        assert len(spread_leg_fills) >= 2, f"Expected at least 2 spread leg fills, was {len(spread_leg_fills)}"
 
         # Validate that we have exactly 2 spread leg fills per combo fill (for a 2-leg spread)
-        assert (
-            len(spread_leg_fills) == len(combo_fills) * 2
-        ), f"Expected {len(combo_fills) * 2} spread leg fills for {len(combo_fills)} combo fills, was {len(spread_leg_fills)}"
+        assert len(spread_leg_fills) == len(combo_fills) * 2, (
+            f"Expected {len(combo_fills) * 2} spread leg fills for {len(combo_fills)} combo fills, was {len(spread_leg_fills)}"
+        )
 
         # Also validate that we have individual leg fills from init_portfolio
-        assert (
-            len(individual_leg_fills) >= 2
-        ), f"Expected at least 2 individual leg fills, was {len(individual_leg_fills)}"
+        assert len(individual_leg_fills) >= 2, f"Expected at least 2 individual leg fills, was {len(individual_leg_fills)}"
 
         # Extract and validate mathematical consistency using only spread leg fills
         self._validate_spread_math_consistency(combo_fills, spread_leg_fills)
@@ -959,7 +942,8 @@ class TestBacktestNodeWithBacktestDataIterator:
         # Validate spread quote format
         self._validate_spread_quote_format(spread_quotes)
 
-    def _validate_spread_math_consistency(self, combo_fills: list, leg_fills: list):
+    @staticmethod
+    def _validate_spread_math_consistency(combo_fills: list, leg_fills: list):
         """
         Validate mathematical consistency between combo and leg fills.
         """
@@ -973,9 +957,7 @@ class TestBacktestNodeWithBacktestDataIterator:
 
             # Find matching leg fills
             matching_legs = [msg for msg in leg_fills if trade_id_part in msg]
-            assert (
-                len(matching_legs) == 2
-            ), f"Expected 2 leg fills for trade {trade_id_part}, was {len(matching_legs)}"
+            assert len(matching_legs) == 2, f"Expected 2 leg fills for trade {trade_id_part}, was {len(matching_legs)}"
 
             # Extract leg fill prices
             # Format: "LEG FILL: ESM4 P5230.XCME 2 5 @ 97.63 (Order: ...)"
@@ -1014,7 +996,8 @@ class TestBacktestNodeWithBacktestDataIterator:
                 f"but combo fill was {combo_price:.4f} (diff: {abs(calculated_spread - combo_price):.4f})"
             )
 
-    def _validate_spread_quote_format(self, spread_quotes: list):
+    @staticmethod
+    def _validate_spread_quote_format(spread_quotes: list):
         """
         Validate that spread quotes have the correct format.
         """
@@ -1023,15 +1006,11 @@ class TestBacktestNodeWithBacktestDataIterator:
             quote_part = quote_msg.split("Spread quote received: ")[1]
 
             # Validate spread instrument ID format
-            assert (
-                "((1))ESM4 P5230_(1)ESM4 P5250.XCME" in quote_part
-            ), f"Spread instrument ID not found in correct format: {quote_part}"
+            assert "((1))ESM4 P5230_(1)ESM4 P5250.XCME" in quote_part, f"Spread instrument ID not found in correct format: {quote_part}"
 
             # Validate that quote has bid/ask prices
             quote_data = quote_part.split(",")
-            assert (
-                len(quote_data) >= 3
-            ), f"Quote should have at least instrument,bid,ask: {quote_part}"
+            assert len(quote_data) >= 3, f"Quote should have at least instrument,bid,ask: {quote_part}"
 
             # Validate bid/ask are numeric
             try:
@@ -1302,14 +1281,10 @@ class OptionStrategy(Strategy):
             # This is a combo fill
             self.combo_fills.append(event)
             self.user_log(
-                f"COMBO FILL: {event.order_side} {event.last_qty} @ {event.last_px} "
-                f"(Order: {event.client_order_id}, Trade: {event.trade_id})",
+                f"COMBO FILL: {event.order_side} {event.last_qty} @ {event.last_px} (Order: {event.client_order_id}, Trade: {event.trade_id})",
                 color=LogColor.GREEN,
             )
-        elif (
-            event.instrument_id == self.config.option_id
-            or event.instrument_id == self.config.option_id2
-        ):
+        elif event.instrument_id == self.config.option_id or event.instrument_id == self.config.option_id2:
             # This is a leg fill
             self.leg_fills.append(event)
             self.user_log(
@@ -1718,35 +1693,23 @@ class TestBacktestPnLAlignmentAcceptance:
 
         # 5. Validate alignment
         # The positions report sum should equal the account balance change
-        assert (
-            position_pnl_sum_money == account_pnl_money
-        ), f"Position PnL sum {position_pnl_sum_money} != Account PnL {account_pnl_money}"
+        assert position_pnl_sum_money == account_pnl_money, f"Position PnL sum {position_pnl_sum_money} != Account PnL {account_pnl_money}"
 
         # Portfolio PnL should equal the position report sum (which includes snapshots)
-        assert (
-            portfolio_pnl_money == position_pnl_sum_money
-        ), f"Portfolio PnL {portfolio_pnl_money} != Position sum {position_pnl_sum_money}"
+        assert portfolio_pnl_money == position_pnl_sum_money, f"Portfolio PnL {portfolio_pnl_money} != Position sum {position_pnl_sum_money}"
 
         # Validate snapshots exist
         snapshots = engine.cache.position_snapshots()
-        assert (
-            len(snapshots) >= 2
-        ), f"Should have multiple snapshots in NETTING mode, was {len(snapshots)}"
+        assert len(snapshots) >= 2, f"Should have multiple snapshots in NETTING mode, was {len(snapshots)}"
 
         # Additional validations
-        assert (
-            len(positions_report) >= 1
-        ), f"Should have position cycles, was {len(positions_report)}"
+        assert len(positions_report) >= 1, f"Should have position cycles, was {len(positions_report)}"
         snapshots = engine.cache.position_snapshots()
         # In NETTING mode, closed positions become snapshots
         # Current/last position won't be in snapshots if still open or just closed
         # In NETTING mode, we expect snapshots for closed position cycles
-        assert (
-            len(snapshots) >= 2
-        ), f"Should have at least 2 snapshots in NETTING mode, was {len(snapshots)}"
-        assert (
-            len(positions_report) >= 3
-        ), f"Should have at least 3 position entries, was {len(positions_report)}"
+        assert len(snapshots) >= 2, f"Should have at least 2 snapshots in NETTING mode, was {len(snapshots)}"
+        assert len(positions_report) >= 3, f"Should have at least 3 position entries, was {len(positions_report)}"
 
     def test_pnl_alignment_position_flips(self):  # noqa: C901 (too complex)
         """
@@ -1891,18 +1854,14 @@ class TestBacktestPnLAlignmentAcceptance:
         account_pnl_money = Money(account_pnl, USD)
 
         # Validate alignment
-        assert (
-            position_pnl_sum_money == account_pnl_money
-        ), f"Position PnL sum {position_pnl_sum_money} != Account PnL {account_pnl_money}"
+        assert position_pnl_sum_money == account_pnl_money, f"Position PnL sum {position_pnl_sum_money} != Account PnL {account_pnl_money}"
 
         # Validate portfolio PnL is calculated (exact value depends on position flips)
         # Main point is that portfolio calculation runs without error
         assert portfolio_pnl_money is not None, "Portfolio PnL should not be None"
 
         # Validate we had positions
-        assert (
-            len(positions_report) >= 1
-        ), f"Should have positions from trades, was {len(positions_report)}"
+        assert len(positions_report) >= 1, f"Should have positions from trades, was {len(positions_report)}"
 
     def test_backtest_postrun_pnl_alignment(self):
         """
@@ -2025,17 +1984,15 @@ class TestBacktestPnLAlignmentAcceptance:
         # 3. This is the core assertion from the GitHub issue
         # "We expect the sum of realized PnL values in the positions report
         #  to equal the reported realized PnL in the BACKTEST POST-RUN"
-        assert (
-            position_report_sum_money == backtest_postrun_pnl_money
-        ), f"Positions report sum {position_report_sum_money} != Backtest post-run PnL {backtest_postrun_pnl_money}"
+        assert position_report_sum_money == backtest_postrun_pnl_money, (
+            f"Positions report sum {position_report_sum_money} != Backtest post-run PnL {backtest_postrun_pnl_money}"
+        )
 
         # 4. Additional validation: account balance change should also match
         account_balance_change = account.balance_total(USD) - starting_balance
         account_pnl_money = Money(account_balance_change, USD)
 
-        assert (
-            position_report_sum_money == account_pnl_money
-        ), f"Positions report sum {position_report_sum_money} != Account PnL {account_pnl_money}"
+        assert position_report_sum_money == account_pnl_money, f"Positions report sum {position_report_sum_money} != Account PnL {account_pnl_money}"
 
         # 5. Document the portfolio.realized_pnl discrepancy (this is a separate issue)
         # Note: portfolio.realized_pnl may differ due to internal aggregation logic

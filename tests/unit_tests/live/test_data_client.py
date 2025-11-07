@@ -206,7 +206,8 @@ class TestLiveDataClientTests:
             clock=self.clock,
         )
 
-    def test_dummy_test(self):
+    @staticmethod
+    def test_dummy_test():
         # Arrange, Act, Assert
         assert True  # No exception raised
 
@@ -348,6 +349,7 @@ class TestLiveMarketDataClientTests:
             instrument_provider=InstrumentProvider(),
         )
 
-    def test_dummy_test(self):
+    @staticmethod
+    def test_dummy_test():
         # Arrange, Act, Assert
         assert True  # No exception raised

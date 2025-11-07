@@ -332,7 +332,8 @@ class ExecTester(Strategy):
     def get_price_offset(self, instrument: Instrument) -> Decimal:
         return instrument.price_increment * self.config.tob_offset_ticks
 
-    def is_order_active(self, order: Order) -> bool:
+    @staticmethod
+    def is_order_active(order: Order) -> bool:
         return order.is_active_local or order.is_inflight or order.is_open
 
     def submit_limit_order(self, order_side: OrderSide, price: Price) -> None:
@@ -373,11 +374,7 @@ class ExecTester(Strategy):
         emulation_trigger = (
             TriggerType[self.config.emulation_trigger]
             if isinstance(self.config.emulation_trigger, str)
-            else (
-                self.config.emulation_trigger
-                if self.config.emulation_trigger
-                else TriggerType.NO_TRIGGER
-            )
+            else (self.config.emulation_trigger if self.config.emulation_trigger else TriggerType.NO_TRIGGER)
         )
 
         order: LimitOrder = self.order_factory.limit(
@@ -440,21 +437,13 @@ class ExecTester(Strategy):
         emulation_trigger = (
             TriggerType[self.config.emulation_trigger]
             if isinstance(self.config.emulation_trigger, str)
-            else (
-                self.config.emulation_trigger
-                if self.config.emulation_trigger
-                else TriggerType.NO_TRIGGER
-            )
+            else (self.config.emulation_trigger if self.config.emulation_trigger else TriggerType.NO_TRIGGER)
         )
 
         trigger_type = (
             TriggerType[self.config.stop_trigger_type]
             if isinstance(self.config.stop_trigger_type, str)
-            else (
-                self.config.stop_trigger_type
-                if self.config.stop_trigger_type
-                else TriggerType.DEFAULT
-            )
+            else (self.config.stop_trigger_type if self.config.stop_trigger_type else TriggerType.DEFAULT)
         )
 
         target_offset = self.instrument.price_increment * self.config.bracket_offset_ticks
@@ -534,20 +523,12 @@ class ExecTester(Strategy):
         trigger_type = (
             TriggerType[self.config.stop_trigger_type]
             if isinstance(self.config.stop_trigger_type, str)
-            else (
-                self.config.stop_trigger_type
-                if self.config.stop_trigger_type
-                else TriggerType.DEFAULT
-            )
+            else (self.config.stop_trigger_type if self.config.stop_trigger_type else TriggerType.DEFAULT)
         )
         emulation_trigger = (
             TriggerType[self.config.emulation_trigger]
             if isinstance(self.config.emulation_trigger, str)
-            else (
-                self.config.emulation_trigger
-                if self.config.emulation_trigger
-                else TriggerType.NO_TRIGGER
-            )
+            else (self.config.emulation_trigger if self.config.emulation_trigger else TriggerType.NO_TRIGGER)
         )
 
         if self.config.stop_order_type == OrderType.STOP_MARKET:
@@ -735,7 +716,8 @@ class ExecTester(Strategy):
                     self.cancel_order(self.sell_stop_order)
                     self.submit_stop_order(OrderSide.SELL, trigger_price, limit_price)
 
-    def get_order_trigger_price(self, order: Order) -> Price | None:
+    @staticmethod
+    def get_order_trigger_price(order: Order) -> Price | None:
         """
         Get the trigger price for stop/conditional orders.
         """

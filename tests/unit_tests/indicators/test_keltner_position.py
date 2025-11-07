@@ -57,7 +57,8 @@ class TestKeltnerPosition:
         # Arrange, Act, Assert
         assert self.kp.k_multiplier == 2.5
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = KeltnerPosition(10, 2.5)
 
