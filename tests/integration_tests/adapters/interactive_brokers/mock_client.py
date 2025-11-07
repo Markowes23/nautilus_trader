@@ -27,7 +27,8 @@ class MockEClient(EClient):
         super().__init__(*args, **kwargs)
         self._next_valid_counter = 0
 
-    def _handle_task(self, handler: Callable, **kwargs):
+    @staticmethod
+    def _handle_task(handler: Callable, **kwargs):
         loop = asyncio.get_event_loop()
         if loop.is_running():
             loop.create_task(handler(**kwargs))  # noqa: RUF006

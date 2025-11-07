@@ -28,7 +28,8 @@ USDJPY = TestInstrumentProvider.default_fx_ccy("GBP/USD")
 
 
 class TestPositionSizer:
-    def test_update_instrument(self):
+    @staticmethod
+    def test_update_instrument():
         # Arrange
         sizer = PositionSizer(USDJPY)
 
@@ -192,7 +193,8 @@ class TestFixedRiskSizer:
         # Assert
         assert result == Quantity.from_int(275000)
 
-    def test_calculate_for_usdjpy_with_commission(self):
+    @staticmethod
+    def test_calculate_for_usdjpy_with_commission():
         # Arrange
         sizer = FixedRiskSizer(TestInstrumentProvider.default_fx_ccy("USD/JPY"))
         equity = Money(1_000_000, USD)

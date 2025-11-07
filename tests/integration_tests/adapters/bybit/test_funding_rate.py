@@ -26,7 +26,8 @@ class TestBybitFundingRateParsing:
     Test cases for Bybit funding rate parsing from ticker data.
     """
 
-    def test_parse_ticker_with_funding_rate(self):
+    @staticmethod
+    def test_parse_ticker_with_funding_rate():
         """
         Test parsing ticker data with funding rate information.
         """
@@ -68,7 +69,8 @@ class TestBybitFundingRateParsing:
         assert funding_rate.rate == Decimal("0.0001")
         assert funding_rate.next_funding_ns == 1640007200000 * 1_000_000
 
-    def test_parse_ticker_negative_funding_rate(self):
+    @staticmethod
+    def test_parse_ticker_negative_funding_rate():
         """
         Test parsing ticker data with negative funding rate.
         """
@@ -97,7 +99,8 @@ class TestBybitFundingRateParsing:
         assert funding_rate.rate == Decimal("-0.00025")
         assert funding_rate.rate < 0
 
-    def test_parse_ticker_without_next_funding_time(self):
+    @staticmethod
+    def test_parse_ticker_without_next_funding_time():
         """
         Test parsing ticker data without next funding time.
         """
@@ -126,7 +129,8 @@ class TestBybitFundingRateParsing:
         assert funding_rate.rate == Decimal("0.0001")
         assert funding_rate.next_funding_ns is None
 
-    def test_ticker_without_funding_rate_should_not_create_update(self):
+    @staticmethod
+    def test_ticker_without_funding_rate_should_not_create_update():
         """
         Test that ticker without funding rate does not create FundingRateUpdate.
         """
@@ -142,7 +146,8 @@ class TestBybitFundingRateParsing:
         # In the actual implementation, we would return None if fundingRate is None
         assert ticker_data.fundingRate is None
 
-    def test_high_precision_funding_rate(self):
+    @staticmethod
+    def test_high_precision_funding_rate():
         """
         Test parsing ticker with high precision funding rate.
         """

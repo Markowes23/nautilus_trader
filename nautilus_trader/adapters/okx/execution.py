@@ -179,8 +179,8 @@ class OKXExecutionClient(LiveExecutionClient):
     def okx_instrument_provider(self) -> OKXInstrumentProvider:
         return self._instrument_provider
 
+    @staticmethod
     def _derive_account_type(
-        self,
         instrument_provider: OKXInstrumentProvider,
         config: OKXExecClientConfig,
     ) -> AccountType:
@@ -189,8 +189,8 @@ class OKXExecutionClient(LiveExecutionClient):
             return AccountType.CASH
         return AccountType.MARGIN
 
+    @staticmethod
     def _derive_trade_mode(
-        self,
         account_type: AccountType,
         config: OKXExecClientConfig,
     ) -> OKXTradeMode:

@@ -46,7 +46,8 @@ class TestAroonOscillator:
         # Assert
         assert self.aroon.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = AroonOscillator(10)
         bar = TestDataStubs.bar_5decimal()

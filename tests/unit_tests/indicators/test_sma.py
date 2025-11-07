@@ -62,7 +62,8 @@ class TestSimpleMovingAverage:
         assert self.sma.count == 10
         assert self.sma.value == 5.5
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = SimpleMovingAverage(10, PriceType.MID)
 
@@ -75,7 +76,8 @@ class TestSimpleMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = SimpleMovingAverage(10)
 
@@ -88,7 +90,8 @@ class TestSimpleMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = SimpleMovingAverage(10)
 
@@ -126,7 +129,8 @@ class TestSimpleMovingAverage:
         # Act, Assert
         assert self.sma.value == 2.0
 
-    def test_handle_quote_tick_updates_with_expected_value(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_with_expected_value():
         # Arrange
         sma_for_ticks1 = SimpleMovingAverage(10, PriceType.ASK)
         sma_for_ticks2 = SimpleMovingAverage(10, PriceType.MID)
@@ -150,7 +154,8 @@ class TestSimpleMovingAverage:
         assert sma_for_ticks2.value == 1.00002
         assert sma_for_ticks3.value == 1.00001
 
-    def test_handle_trade_tick_updates_with_expected_value(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_with_expected_value():
         # Arrange
         sma_for_ticks = SimpleMovingAverage(10)
 

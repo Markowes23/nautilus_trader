@@ -88,10 +88,12 @@ RAW_CONFIG = msgspec.json.encode(
 
 
 class TestTradingNodeConfiguration:
-    def teardown(self):
+    @staticmethod
+    def teardown():
         ensure_all_tasks_completed()
 
-    def test_config_with_in_memory_execution_database(self):
+    @staticmethod
+    def test_config_with_in_memory_execution_database():
         # Arrange
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -106,7 +108,8 @@ class TestTradingNodeConfiguration:
         # Assert
         assert node is not None
 
-    def test_config_with_redis_execution_database(self):
+    @staticmethod
+    def test_config_with_redis_execution_database():
         # Arrange, Act
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -119,7 +122,8 @@ class TestTradingNodeConfiguration:
         # Assert
         assert node is not None
 
-    def test_node_config_from_raw(self):
+    @staticmethod
+    def test_node_config_from_raw():
         # Arrange, Act
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -190,7 +194,8 @@ class TestTradingNodeConfiguration:
         assert mock_data_factory.called
         assert mock_exec_factory.called
 
-    def test_setting_instance_id(self, monkeypatch):
+    @staticmethod
+    def test_setting_instance_id(monkeypatch):
         # Arrange
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -206,10 +211,12 @@ class TestTradingNodeConfiguration:
 
 
 class TestTradingNodeOperation:
-    def teardown(self):
+    @staticmethod
+    def teardown():
         ensure_all_tasks_completed()
 
-    def test_get_event_loop_returns_a_loop(self):
+    @staticmethod
+    def test_get_event_loop_returns_a_loop():
         # Arrange
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -224,7 +231,8 @@ class TestTradingNodeOperation:
         assert isinstance(loop, asyncio.AbstractEventLoop)
         assert loop == node.kernel.loop
 
-    def test_build_called_twice_raises_runtime_error(self):
+    @staticmethod
+    def test_build_called_twice_raises_runtime_error():
         # Arrange, # Act
         with pytest.raises(RuntimeError):
             config = TradingNodeConfig(logging=LoggingConfig(bypass_logging=True))

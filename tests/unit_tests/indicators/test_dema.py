@@ -66,7 +66,8 @@ class TestDoubleExponentialMovingAverage:
         # Assert
         assert self.dema.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = DoubleExponentialMovingAverage(10, PriceType.MID)
 
@@ -81,7 +82,8 @@ class TestDoubleExponentialMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = DoubleExponentialMovingAverage(10)
 
@@ -94,7 +96,8 @@ class TestDoubleExponentialMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = DoubleExponentialMovingAverage(10)
 

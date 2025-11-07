@@ -512,8 +512,8 @@ class BybitDataClient(LiveMarketDataClient):
         self._topic_bar_type.pop(topic, None)
         await ws_client.unsubscribe_klines(bybit_symbol.raw_symbol, interval_str)
 
+    @staticmethod
     def _get_cached_instrument_id(
-        self,
         symbol: str,
         product_type: BybitProductType,
     ) -> InstrumentId:
@@ -869,8 +869,8 @@ class BybitDataClient(LiveMarketDataClient):
             self._log.error(f"Error creating QuoteTick from ticker: {e}")
             return None
 
+    @staticmethod
     def _extract_ticker_prices_and_sizes(
-        self,
         ticker: Any,
         product_type: BybitProductType,
     ) -> tuple[float | None, float | None, float | None, float | None]:
@@ -900,7 +900,8 @@ class BybitDataClient(LiveMarketDataClient):
             )
         return None, None, None, None
 
-    def _get_instrument_id_from_ticker(self, ticker: Any) -> InstrumentId:
+    @staticmethod
+    def _get_instrument_id_from_ticker(ticker: Any) -> InstrumentId:
         """
         Get InstrumentId from ticker data.
         """

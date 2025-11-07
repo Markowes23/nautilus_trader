@@ -124,7 +124,8 @@ class MockCacheDatabase(CacheDatabaseFacade):
     def load_position(self, position_id: PositionId) -> Position | None:
         return self.positions.get(position_id)
 
-    def load_strategy(self, strategy_id: StrategyId) -> dict:
+    @staticmethod
+    def load_strategy(strategy_id: StrategyId) -> dict:
         return {}
 
     def delete_strategy(self, strategy_id: StrategyId) -> None:

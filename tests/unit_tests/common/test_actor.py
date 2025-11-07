@@ -142,7 +142,8 @@ class TestActor:
         self.data_engine.start()
         self.exec_engine.start()
 
-    def test_actor_fully_qualified_name(self) -> None:
+    @staticmethod
+    def test_actor_fully_qualified_name() -> None:
         # Arrange
         config = ActorConfig(component_id="ALPHA-01")
         actor = Actor(config=config)
@@ -1395,7 +1396,8 @@ class TestActor:
         assert new_formula != original_formula
         assert actor.cache.synthetic(synthetic.id).formula == new_formula
 
-    def test_queued_task_ids_when_no_executor(self) -> None:
+    @staticmethod
+    def test_queued_task_ids_when_no_executor() -> None:
         """
         Test should return empty list.
         """
@@ -1405,7 +1407,8 @@ class TestActor:
         # Act, Assert
         assert actor.queued_task_ids() == []
 
-    def test_active_task_ids_when_no_executor(self) -> None:
+    @staticmethod
+    def test_active_task_ids_when_no_executor() -> None:
         """
         Test should return empty list.
         """
@@ -1415,7 +1418,8 @@ class TestActor:
         # Act, Assert
         assert actor.active_task_ids() == []
 
-    def test_has_queued_tasks_when_no_executor(self) -> None:
+    @staticmethod
+    def test_has_queued_tasks_when_no_executor() -> None:
         """
         Test should return false.
         """
@@ -1425,7 +1429,8 @@ class TestActor:
         # Act, Assert
         assert not actor.has_queued_tasks()
 
-    def test_has_active_tasks_when_no_executor(self) -> None:
+    @staticmethod
+    def test_has_active_tasks_when_no_executor() -> None:
         """
         Test should return false.
         """
@@ -1435,7 +1440,8 @@ class TestActor:
         # Act, Assert
         assert not actor.has_active_tasks()
 
-    def test_has_any_tasks_when_no_executor(self) -> None:
+    @staticmethod
+    def test_has_any_tasks_when_no_executor() -> None:
         """
         Test should return false.
         """

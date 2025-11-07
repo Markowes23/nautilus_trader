@@ -33,7 +33,8 @@ class TestBetfairCommon:
     def setup(self):
         self.tick_scheme = BETFAIR_TICK_SCHEME
 
-    def test_min_max_bet(self):
+    @staticmethod
+    def test_min_max_bet():
         assert betfair_float_to_price(1000) == MAX_BET_PRICE
         assert betfair_float_to_price(1.01) == MIN_BET_PRICE
 
@@ -81,7 +82,8 @@ class TestBettingInstrument:
         assert self.instrument.min_price == Price.from_str("1.01")
         assert self.instrument.max_price == Price.from_str("1000")
 
-    def test_to_dict(self):
+    @staticmethod
+    def test_to_dict():
         instrument = betting_instrument()
         data = instrument.to_dict(instrument)
         assert data["venue_name"] == "BETFAIR"

@@ -24,7 +24,8 @@ from nautilus_trader.test_kit.providers import TestInstrumentProvider
 
 
 class TestBacktestLoaders:
-    def test_default_fx_with_5_dp_returns_expected_instrument(self):
+    @staticmethod
+    def test_default_fx_with_5_dp_returns_expected_instrument():
         # Arrange
         loader = TestInstrumentProvider()
 
@@ -38,7 +39,8 @@ class TestBacktestLoaders:
         assert instrument.base_currency.code == "AUD"
         assert instrument.quote_currency.code == "USD"
 
-    def test_default_fx_with_3_dp_returns_expected_instrument(self):
+    @staticmethod
+    def test_default_fx_with_3_dp_returns_expected_instrument():
         # Arrange
         loader = TestInstrumentProvider()
 
@@ -54,7 +56,8 @@ class TestBacktestLoaders:
 
 
 class TestParquetTickDataLoaders:
-    def test_btcusdt_trade_ticks_from_parquet_loader_return_expected_row(self):
+    @staticmethod
+    def test_btcusdt_trade_ticks_from_parquet_loader_return_expected_row():
         # Arrange, Act
         path = TEST_DATA_DIR / "binance" / "btcusdt-trades.parquet"
         ticks = ParquetTickDataLoader.load(path)
@@ -67,7 +70,8 @@ class TestParquetTickDataLoaders:
         assert "buyer_maker" in ticks.columns
         assert ticks.iloc[0]["trade_id"] == 553287559
 
-    def test_btcusdt_quote_ticks_from_parquet_loader_return_expected_row(self):
+    @staticmethod
+    def test_btcusdt_quote_ticks_from_parquet_loader_return_expected_row():
         # Arrange, Act
         path = TEST_DATA_DIR / "binance" / "btcusdt-quotes.parquet"
         ticks = ParquetTickDataLoader.load(path)

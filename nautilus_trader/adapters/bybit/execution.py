@@ -730,8 +730,8 @@ class BybitExecutionClient(LiveExecutionClient):
             ts_init=self._clock.timestamp_ns(),
         )
 
+    @staticmethod
     def _get_cached_instrument_id(
-        self,
         symbol: str,
         product_type: BybitProductType,
     ) -> InstrumentId:

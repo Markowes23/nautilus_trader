@@ -898,8 +898,8 @@ class BitmexExecutionClient(LiveExecutionClient):
             ts_event=report.ts_event,
         )
 
+    @staticmethod
     def _handle_position_status_report_pyo3(
-        self,
         pyo3_report: nautilus_pyo3.PositionStatusReport,
     ) -> None:
         _report = PositionStatusReport.from_pyo3(pyo3_report)

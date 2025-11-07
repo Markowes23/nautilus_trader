@@ -1814,8 +1814,8 @@ class ParquetDataCatalog(BaseDataCatalog):
         else:
             raise RuntimeError(f"unsupported `data_cls` for Rust parquet, was {data_cls.__name__}")
 
+    @staticmethod
     def _build_query(
-        self,
         table: str,
         start: TimestampLike | None = None,
         end: TimestampLike | None = None,

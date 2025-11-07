@@ -51,7 +51,8 @@ class TestKlingerVolumeOscillator:
         # Act, Assert
         assert self.kvo.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = KlingerVolumeOscillator(5, 10, 5)
 

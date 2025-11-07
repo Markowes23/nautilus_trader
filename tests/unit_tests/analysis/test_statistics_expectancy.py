@@ -20,7 +20,8 @@ from nautilus_trader.analysis import Expectancy
 
 
 class TestExpectancyPortfolioStatistic:
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = Expectancy()
 
@@ -30,7 +31,8 @@ class TestExpectancyPortfolioStatistic:
         # Assert
         assert result == "Expectancy"
 
-    def test_calculate_given_empty_series_returns_zero(self):
+    @staticmethod
+    def test_calculate_given_empty_series_returns_zero():
         # Arrange
         stat = Expectancy()
         data = pd.Series(dtype=float64)
@@ -41,7 +43,8 @@ class TestExpectancyPortfolioStatistic:
         # Assert
         assert result == 0.0
 
-    def test_calculate_given_insufficient_data_returns_zero(self):
+    @staticmethod
+    def test_calculate_given_insufficient_data_returns_zero():
         # Arrange
         stat = Expectancy()
         data = pd.Series([0.0, 0.0], dtype=float64)
@@ -52,7 +55,8 @@ class TestExpectancyPortfolioStatistic:
         # Assert
         assert result == 0.0
 
-    def test_calculate_given_one_winner_one_loser_returns_zero(self):
+    @staticmethod
+    def test_calculate_given_one_winner_one_loser_returns_zero():
         # Arrange
         stat = Expectancy()
         data = pd.Series([1.0, -1.0], dtype=float64)
@@ -63,7 +67,8 @@ class TestExpectancyPortfolioStatistic:
         # Assert
         assert result == 0.0
 
-    def test_calculate_given_mix_of_pnls_returns_expected(self):
+    @staticmethod
+    def test_calculate_given_mix_of_pnls_returns_expected():
         # Arrange
         stat = Expectancy()
         data = pd.Series([2.0, 1.5, 1.0, 0.5, -1.0], dtype=float64)

@@ -28,7 +28,8 @@ AUDUSD_SIM = TestInstrumentProvider.default_fx_ccy("AUD/USD")
 
 
 class TestSpreadAnalyzer:
-    def test_instantiate(self):
+    @staticmethod
+    def test_instantiate():
         # Arrange
         analyzer = SpreadAnalyzer(AUDUSD_SIM.id, 1000)
 
@@ -38,7 +39,8 @@ class TestSpreadAnalyzer:
         assert analyzer.average == 0
         assert analyzer.initialized is False
 
-    def test_handle_ticks_initializes_indicator(self):
+    @staticmethod
+    def test_handle_ticks_initializes_indicator():
         # Arrange
         analyzer = SpreadAnalyzer(AUDUSD_SIM.id, 1)  # Only one tick
         tick = TestDataStubs.quote_tick(AUDUSD_SIM)
@@ -50,7 +52,8 @@ class TestSpreadAnalyzer:
         # Assert
         assert analyzer.initialized
 
-    def test_update_with_incorrect_tick_raises_exception(self):
+    @staticmethod
+    def test_update_with_incorrect_tick_raises_exception():
         # Arrange
         analyzer = SpreadAnalyzer(AUDUSD_SIM.id, 1000)
         tick = QuoteTick(
@@ -66,7 +69,8 @@ class TestSpreadAnalyzer:
         with pytest.raises(ValueError):
             analyzer.handle_quote_tick(tick)
 
-    def test_update_correctly_updates_analyzer(self):
+    @staticmethod
+    def test_update_correctly_updates_analyzer():
         # Arrange
         analyzer = SpreadAnalyzer(AUDUSD_SIM.id, 1000)
         tick1 = QuoteTick(
@@ -97,7 +101,8 @@ class TestSpreadAnalyzer:
         assert analyzer.current == pytest.approx(6e-05)
         assert analyzer.average == pytest.approx(8e-05)
 
-    def test_reset_successfully_returns_indicator_to_fresh_state(self):
+    @staticmethod
+    def test_reset_successfully_returns_indicator_to_fresh_state():
         # Arrange
         instance = SpreadAnalyzer(AUDUSD_SIM.id, 1000)
 

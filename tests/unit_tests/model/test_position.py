@@ -63,7 +63,8 @@ class TestPosition:
             clock=TestClock(),
         )
 
-    def test_side_from_order_side_given_invalid_value(self) -> None:
+    @staticmethod
+    def test_side_from_order_side_given_invalid_value() -> None:
         """
         Test raises `ValueError`.
         """

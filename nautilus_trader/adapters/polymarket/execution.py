@@ -645,7 +645,8 @@ class PolymarketExecutionClient(LiveExecutionClient):
 
     # -- COMMAND HANDLERS -------------------------------------------------------------------------
 
-    def _get_neg_risk_for_instrument(self, instrument) -> bool:
+    @staticmethod
+    def _get_neg_risk_for_instrument(instrument) -> bool:
         if instrument is None or instrument.info is None:
             return False
         return instrument.info.get("neg_risk", False)

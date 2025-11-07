@@ -29,7 +29,8 @@ from nautilus_trader.test_kit.stubs.identifiers import TestIdStubs
 
 
 class TestFillModel:
-    def test_instantiate_with_no_random_seed(self):
+    @staticmethod
+    def test_instantiate_with_no_random_seed():
         # Arrange
         fill_model = FillModel()
 
@@ -38,7 +39,8 @@ class TestFillModel:
         assert fill_model.is_limit_filled()
         assert fill_model.is_stop_filled()
 
-    def test_instantiate_with_random_seed(self):
+    @staticmethod
+    def test_instantiate_with_random_seed():
         # Arrange
         fill_model = FillModel(random_seed=42)
 
@@ -47,7 +49,8 @@ class TestFillModel:
         assert fill_model.is_limit_filled()
         assert fill_model.is_stop_filled()
 
-    def test_is_stop_filled_with_random_seed(self):
+    @staticmethod
+    def test_is_stop_filled_with_random_seed():
         # Arrange
         fill_model = FillModel(
             prob_fill_on_stop=0.5,
@@ -57,7 +60,8 @@ class TestFillModel:
         # Act, Assert
         assert not fill_model.is_stop_filled()
 
-    def test_is_limit_filled_with_random_seed(self):
+    @staticmethod
+    def test_is_limit_filled_with_random_seed():
         # Arrange
         fill_model = FillModel(
             prob_fill_on_limit=0.5,
@@ -67,7 +71,8 @@ class TestFillModel:
         # Act, Assert
         assert not fill_model.is_limit_filled()
 
-    def test_is_slipped_with_random_seed(self):
+    @staticmethod
+    def test_is_slipped_with_random_seed():
         # Arrange
         fill_model = FillModel(
             prob_slippage=0.5,

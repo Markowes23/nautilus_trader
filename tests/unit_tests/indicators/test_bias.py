@@ -59,7 +59,8 @@ class TestBias:
         # Act, Assert
         assert self.bias.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = Bias(10)
 

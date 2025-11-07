@@ -26,7 +26,8 @@ class TestSecureString:
     Tests for SecureString credential handling.
     """
 
-    def test_init_with_valid_string(self):
+    @staticmethod
+    def test_init_with_valid_string():
         # Arrange, Act
         secure = SecureString("my_secret_key", name="api_key")
 
@@ -35,12 +36,14 @@ class TestSecureString:
         assert len(secure) == 13
         assert bool(secure) is True
 
-    def test_init_with_invalid_type_raises(self):
+    @staticmethod
+    def test_init_with_invalid_type_raises():
         # Arrange, Act, Assert
         with pytest.raises(TypeError, match="Value must be a string"):
             SecureString(12345)
 
-    def test_get_redacted_with_long_string(self):
+    @staticmethod
+    def test_get_redacted_with_long_string():
         # Arrange
         secure = SecureString("abcdefghijklmnopqrstuvwxyz", name="api_key")
 
@@ -50,7 +53,8 @@ class TestSecureString:
         # Assert
         assert redacted == "abcd...wxyz"
 
-    def test_get_redacted_with_custom_visible_chars(self):
+    @staticmethod
+    def test_get_redacted_with_custom_visible_chars():
         # Arrange
         secure = SecureString("abcdefghijklmnopqrstuvwxyz", name="api_key")
 
@@ -60,7 +64,8 @@ class TestSecureString:
         # Assert
         assert redacted == "ab...yz"
 
-    def test_get_redacted_with_short_string(self):
+    @staticmethod
+    def test_get_redacted_with_short_string():
         # Arrange
         secure = SecureString("short", name="api_key")
 
@@ -70,7 +75,8 @@ class TestSecureString:
         # Assert
         assert redacted == "<api_key:***>"
 
-    def test_get_redacted_with_empty_string(self):
+    @staticmethod
+    def test_get_redacted_with_empty_string():
         # Arrange
         secure = SecureString("", name="api_key")
 
@@ -80,7 +86,8 @@ class TestSecureString:
         # Assert
         assert redacted == "<api_key:empty>"
 
-    def test_str_returns_redacted(self):
+    @staticmethod
+    def test_str_returns_redacted():
         # Arrange
         secure = SecureString("my_secret_key_12345", name="api_key")
 
@@ -91,7 +98,8 @@ class TestSecureString:
         assert result == "my_s...2345"
         assert "secret" not in result
 
-    def test_repr_returns_redacted(self):
+    @staticmethod
+    def test_repr_returns_redacted():
         # Arrange
         secure = SecureString("my_secret_key_12345", name="api_key")
 
@@ -102,7 +110,8 @@ class TestSecureString:
         assert result == "SecureString(name='api_key', value=my_s...2345)"
         assert "secret" not in result
 
-    def test_clear_removes_value(self):
+    @staticmethod
+    def test_clear_removes_value():
         # Arrange
         secure = SecureString("my_secret_key", name="api_key")
 
@@ -116,7 +125,8 @@ class TestSecureString:
         assert len(secure) == 0
         assert bool(secure) is False
 
-    def test_equality_with_another_secure_string(self):
+    @staticmethod
+    def test_equality_with_another_secure_string():
         # Arrange
         secure1 = SecureString("my_secret", name="key1")
         secure2 = SecureString("my_secret", name="key2")
@@ -126,7 +136,8 @@ class TestSecureString:
         assert secure1 == secure2
         assert secure1 != secure3
 
-    def test_equality_with_string(self):
+    @staticmethod
+    def test_equality_with_string():
         # Arrange
         secure = SecureString("my_secret", name="key")
 
@@ -134,7 +145,8 @@ class TestSecureString:
         assert secure == "my_secret"
         assert secure != "different"
 
-    def test_equality_after_clear(self):
+    @staticmethod
+    def test_equality_after_clear():
         # Arrange
         secure1 = SecureString("my_secret", name="key1")
         secure2 = SecureString("my_secret", name="key2")
@@ -146,7 +158,8 @@ class TestSecureString:
         assert secure1 != secure2
         assert secure1 != "my_secret"
 
-    def test_from_env_with_existing_variable(self):
+    @staticmethod
+    def test_from_env_with_existing_variable():
         # Arrange
         os.environ["TEST_API_KEY"] = "test_secret_token_xyz"
 
@@ -160,7 +173,8 @@ class TestSecureString:
         # Cleanup
         del os.environ["TEST_API_KEY"]
 
-    def test_from_env_with_custom_name(self):
+    @staticmethod
+    def test_from_env_with_custom_name():
         # Arrange
         os.environ["TEST_API_KEY"] = "test_secret_token_xyz"
 
@@ -174,19 +188,22 @@ class TestSecureString:
         # Cleanup
         del os.environ["TEST_API_KEY"]
 
-    def test_from_env_with_missing_variable_raises(self):
+    @staticmethod
+    def test_from_env_with_missing_variable_raises():
         # Arrange, Act, Assert
         with pytest.raises(ValueError, match="Environment variable MISSING_VAR is not set"):
             SecureString.from_env("MISSING_VAR")
 
-    def test_bool_returns_false_for_empty_string(self):
+    @staticmethod
+    def test_bool_returns_false_for_empty_string():
         # Arrange
         secure = SecureString("", name="empty_key")
 
         # Act, Assert
         assert bool(secure) is False
 
-    def test_bool_returns_false_after_clear(self):
+    @staticmethod
+    def test_bool_returns_false_after_clear():
         # Arrange
         secure = SecureString("value", name="key")
 
@@ -196,7 +213,8 @@ class TestSecureString:
         # Assert
         assert bool(secure) is False
 
-    def test_multiple_clears_are_safe(self):
+    @staticmethod
+    def test_multiple_clears_are_safe():
         # Arrange
         secure = SecureString("my_secret", name="key")
 
@@ -207,7 +225,8 @@ class TestSecureString:
         # Assert
         assert secure.get_redacted() == "<key:cleared>"
 
-    def test_memory_clearing_on_deletion(self):
+    @staticmethod
+    def test_memory_clearing_on_deletion():
         # Arrange
         secure = SecureString("my_secret_key", name="api_key")
 
@@ -222,7 +241,8 @@ class TestMaskApiKey:
     Tests for the mask_api_key utility function.
     """
 
-    def test_mask_long_api_key(self):
+    @staticmethod
+    def test_mask_long_api_key():
         # Arrange
         api_key = "sk-1234567890abcdefghijklmnop"
 
@@ -232,7 +252,8 @@ class TestMaskApiKey:
         # Assert
         assert masked == "sk-1...mnop"
 
-    def test_mask_with_custom_visible_chars(self):
+    @staticmethod
+    def test_mask_with_custom_visible_chars():
         # Arrange
         api_key = "sk-1234567890abcdefghijklmnop"
 
@@ -242,7 +263,8 @@ class TestMaskApiKey:
         # Assert
         assert masked == "sk-123...klmnop"
 
-    def test_mask_short_api_key(self):
+    @staticmethod
+    def test_mask_short_api_key():
         # Arrange
         api_key = "short"
 
@@ -252,7 +274,8 @@ class TestMaskApiKey:
         # Assert
         assert masked == "***"
 
-    def test_mask_empty_api_key(self):
+    @staticmethod
+    def test_mask_empty_api_key():
         # Arrange
         api_key = ""
 
@@ -262,7 +285,8 @@ class TestMaskApiKey:
         # Assert
         assert masked == "<empty>"
 
-    def test_mask_none_api_key(self):
+    @staticmethod
+    def test_mask_none_api_key():
         # Arrange
         api_key = None
 

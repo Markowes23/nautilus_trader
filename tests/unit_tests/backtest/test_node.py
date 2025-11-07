@@ -158,7 +158,8 @@ class TestBacktestNode:
         assert isinstance(results, list)
         assert len(results) == 1
 
-    def test_node_config_from_raw(self):
+    @staticmethod
+    def test_node_config_from_raw():
         # Arrange
         raw = msgspec.json.encode(
             {

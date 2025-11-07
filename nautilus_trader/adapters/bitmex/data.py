@@ -197,7 +197,8 @@ class BitmexDataClient(LiveMarketDataClient):
         )
         self._ws_client_futures.clear()
 
-    def _determine_ws_url(self, config: BitmexDataClientConfig) -> str:
+    @staticmethod
+    def _determine_ws_url(config: BitmexDataClientConfig) -> str:
         if config.base_url_ws:
             return config.base_url_ws
         elif config.testnet:

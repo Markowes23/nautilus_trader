@@ -238,7 +238,8 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
         data: bytes = sink.getvalue().to_pybytes()
         return self._inner.process_record_batch_bytes(data)
 
-    def _process_price_column(self, df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
+    @staticmethod
+    def _process_price_column(df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
         """
         Process a price column from the DataFrame.
         """
@@ -254,7 +255,8 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
         else:
             return [default_bytes] * len(df)
 
-    def _process_size_column(self, df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
+    @staticmethod
+    def _process_size_column(df: pd.DataFrame, col_name: str, default_bytes: bytes) -> list:
         """
         Process a size column from the DataFrame.
         """
@@ -270,7 +272,8 @@ class OrderBookDepth10DataWranglerV2(WranglerBase):
         else:
             return [default_bytes] * len(df)
 
-    def _process_count_column(self, df: pd.DataFrame, col_name: str) -> list:
+    @staticmethod
+    def _process_count_column(df: pd.DataFrame, col_name: str) -> list:
         """
         Process a count column from the DataFrame.
         """
@@ -603,8 +606,8 @@ class TradeTickDataWranglerV2(WranglerBase):
         data: bytes = sink.getvalue().to_pybytes()
         return self._inner.process_record_batch_bytes(data)
 
+    @staticmethod
     def from_json(
-        self,
         data: list[dict[str, Any]],
     ) -> list[nautilus_pyo3.TradeTick]:
         return [nautilus_pyo3.TradeTick.from_dict(d) for d in data]

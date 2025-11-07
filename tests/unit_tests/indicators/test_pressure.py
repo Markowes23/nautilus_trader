@@ -54,7 +54,8 @@ class TestPressure:
         # Act, Assert
         assert self.pressure.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = Pressure(10, MovingAverageType.EXPONENTIAL)
 

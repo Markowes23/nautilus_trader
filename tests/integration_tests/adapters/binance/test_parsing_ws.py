@@ -29,7 +29,8 @@ ETHUSDT = TestInstrumentProvider.ethusdt_binance()
 
 
 class TestBinanceWebSocketParsing:
-    def test_parse_ticker(self):
+    @staticmethod
+    def test_parse_ticker():
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -48,7 +49,8 @@ class TestBinanceWebSocketParsing:
         # Assert
         assert result.instrument_id == ETHUSDT.id
 
-    def test_parse_trade_lite(self):
+    @staticmethod
+    def test_parse_trade_lite():
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -63,7 +65,8 @@ class TestBinanceWebSocketParsing:
         # Assert
         assert data.s == "ETHUSDT"
 
-    def test_parse_spot_execution_report_binance_us(self):
+    @staticmethod
+    def test_parse_spot_execution_report_binance_us():
         # Arrange: Load Binance US execution report with W and V fields
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -84,7 +87,8 @@ class TestBinanceWebSocketParsing:
         assert wrapper.data.W == 1759347763167  # Working time field
         assert wrapper.data.V == "EXPIRE_MAKER"  # Self-Trade Prevention Mode
 
-    def test_parse_to_order_status_report_with_filled_status(self):
+    @staticmethod
+    def test_parse_to_order_status_report_with_filled_status():
         # Arrange: Load Binance US execution report with FILLED status
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -122,7 +126,8 @@ class TestBinanceWebSocketParsing:
         assert report.filled_qty.as_decimal() == Decimal(wrapper.data.z)
         assert report.quantity.as_decimal() == Decimal(wrapper.data.q)
 
-    def test_parse_to_order_status_report_with_rejected_status(self):
+    @staticmethod
+    def test_parse_to_order_status_report_with_rejected_status():
         # Arrange: Load execution report with REJECTED status (e.g., GTX post-only order)
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -158,7 +163,8 @@ class TestBinanceWebSocketParsing:
         assert wrapper.data.X == BinanceOrderStatus.REJECTED
         assert wrapper.data.r == "GTX_ORDER_REJECT"
 
-    def test_parse_to_order_status_report_with_pending_cancel_status(self):
+    @staticmethod
+    def test_parse_to_order_status_report_with_pending_cancel_status():
         # Arrange: Load execution report with PENDING_CANCEL status
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -193,7 +199,8 @@ class TestBinanceWebSocketParsing:
         assert report.order_status == OrderStatus.PENDING_CANCEL
         assert wrapper.data.X == BinanceOrderStatus.PENDING_CANCEL
 
-    def test_parse_spot_execution_report_trade_with_l_zero(self):
+    @staticmethod
+    def test_parse_spot_execution_report_trade_with_l_zero():
         # Arrange: Load execution report with TRADE execution type but L=0
         # This can occur with self-trade prevention or other edge cases
         raw = pkgutil.get_data(
@@ -215,7 +222,8 @@ class TestBinanceWebSocketParsing:
 
         assert Decimal(wrapper.data.L) == 0
 
-    def test_parse_spot_execution_report_calculated(self):
+    @staticmethod
+    def test_parse_spot_execution_report_calculated():
         # Arrange: Load execution report with CALCULATED (liquidation) execution type
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -241,7 +249,8 @@ class TestBinanceWebSocketParsing:
 
         assert Decimal(wrapper.data.L) > 0
 
-    def test_parse_spot_execution_report_trade_prevention(self):
+    @staticmethod
+    def test_parse_spot_execution_report_trade_prevention():
         # Arrange: Load execution report with TRADE_PREVENTION execution type
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",

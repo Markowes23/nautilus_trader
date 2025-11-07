@@ -32,7 +32,8 @@ GBPUSD_SIM = TestIdStubs.gbpusd_id()
 
 
 class TestCurrency:
-    def test_currency_with_negative_precision_raises_overflow_error(self):
+    @staticmethod
+    def test_currency_with_negative_precision_raises_overflow_error():
         # Arrange, Act, Assert
         with pytest.raises(OverflowError):
             Currency(
@@ -43,7 +44,8 @@ class TestCurrency:
                 currency_type=CurrencyType.FIAT,
             )
 
-    def test_currency_with_precision_over_maximum_raises_value_error(self):
+    @staticmethod
+    def test_currency_with_precision_over_maximum_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Currency(
@@ -54,7 +56,8 @@ class TestCurrency:
                 currency_type=CurrencyType.FIAT,
             )
 
-    def test_currency_properties(self):
+    @staticmethod
+    def test_currency_properties():
         # Testing this as `code` and `precision` are being returned from Rust
         # Arrange
         currency = Currency(
@@ -72,7 +75,8 @@ class TestCurrency:
         assert currency.name == "Australian dollar"
         assert currency.currency_type == CurrencyType.FIAT
 
-    def test_currency_equality(self):
+    @staticmethod
+    def test_currency_equality():
         # Arrange
         currency1 = Currency(
             code="AUD",
@@ -103,7 +107,8 @@ class TestCurrency:
         assert currency1 == currency2
         assert currency1 != currency3
 
-    def test_currency_hash(self):
+    @staticmethod
+    def test_currency_hash():
         # Arrange
         currency = Currency(
             code="AUD",
@@ -117,7 +122,8 @@ class TestCurrency:
         assert isinstance(hash(currency), int)
         assert hash(currency) == hash(currency)
 
-    def test_str_repr(self):
+    @staticmethod
+    def test_str_repr():
         # Arrange
         currency = Currency(
             code="AUD",
@@ -136,7 +142,8 @@ class TestCurrency:
             == "Currency(code='AUD', precision=2, iso4217=36, name='Australian dollar', currency_type=FIAT)"
         )
 
-    def test_currency_pickle(self):
+    @staticmethod
+    def test_currency_pickle():
         # Arrange
         currency = Currency(
             code="AUD",
@@ -157,7 +164,8 @@ class TestCurrency:
             == "Currency(code='AUD', precision=2, iso4217=36, name='Australian dollar', currency_type=FIAT)"
         )
 
-    def test_register_adds_currency_to_internal_currency_map(self):
+    @staticmethod
+    def test_register_adds_currency_to_internal_currency_map():
         # Arrange, Act
         ape_coin = Currency(
             code="APE",
@@ -172,7 +180,8 @@ class TestCurrency:
 
         assert result == ape_coin
 
-    def test_register_when_overwrite_false_does_not_overwrite_internal_currency_map(self):
+    @staticmethod
+    def test_register_when_overwrite_false_does_not_overwrite_internal_currency_map():
         # Arrange, Act
         another_aud = Currency(
             code="AUD",
@@ -188,14 +197,16 @@ class TestCurrency:
         assert result.precision == 2  # Correct precision from built-in currency
         assert result.currency_type == CurrencyType.FIAT
 
-    def test_from_internal_map_when_unknown(self):
+    @staticmethod
+    def test_from_internal_map_when_unknown():
         # Arrange, Act
         result = Currency.from_internal_map("SOME_CURRENCY")
 
         # Assert
         assert result is None
 
-    def test_from_internal_map_when_exists(self):
+    @staticmethod
+    def test_from_internal_map_when_exists():
         # Arrange, Act
         result = Currency.from_internal_map("AUD")
 
@@ -206,14 +217,16 @@ class TestCurrency:
         assert result.name == "Australian dollar"
         assert result.currency_type == CurrencyType.FIAT
 
-    def test_from_str_in_strict_mode_given_unknown_code_returns_none(self):
+    @staticmethod
+    def test_from_str_in_strict_mode_given_unknown_code_returns_none():
         # Arrange, Act
         result = Currency.from_str("SOME_CURRENCY", strict=True)
 
         # Assert
         assert result is None
 
-    def test_from_str_not_in_strict_mode_returns_crypto(self):
+    @staticmethod
+    def test_from_str_not_in_strict_mode_returns_crypto():
         # Arrange, Act
         result = Currency.from_str("ZXX_EXOTIC", strict=False)
 

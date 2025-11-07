@@ -188,7 +188,8 @@ class TestExecAlgorithm:
         # Act, Assert
         exec_algorithm.reset()
 
-    def test_exec_algorithm_to_importable_config(self) -> None:
+    @staticmethod
+    def test_exec_algorithm_to_importable_config() -> None:
         # Arrange
         exec_algorithm = TWAPExecAlgorithm()
 

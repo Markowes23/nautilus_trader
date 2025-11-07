@@ -38,7 +38,8 @@ class TestObject:
 
 
 class TestSerializationBase:
-    def test_register_serializable_type(self):
+    @staticmethod
+    def test_register_serializable_type():
         # Arrange, Act, Assert
         register_serializable_type(
             cls=TestObject,

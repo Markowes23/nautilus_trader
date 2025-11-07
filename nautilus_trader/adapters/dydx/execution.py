@@ -1058,7 +1058,8 @@ class DYDXExecutionClient(LiveExecutionClient):
 
         return order_builder
 
-    def _parse_order_tags(self, order: Order) -> DYDXOrderTags:
+    @staticmethod
+    def _parse_order_tags(order: Order) -> DYDXOrderTags:
         """
         Parse the order tags to submit short term and long term orders.
         """

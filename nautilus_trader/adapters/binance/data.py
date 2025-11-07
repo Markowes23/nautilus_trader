@@ -793,8 +793,8 @@ class BinanceCommonDataClient(LiveMarketDataClient):
             bars = bars[:limit]
         return bars
 
+    @staticmethod
     def _aggregate_bar_to_trade_ticks(
-        self,
         instrument: Instrument,
         aggregator: BarAggregator,
         binance_bar: BinanceBar,

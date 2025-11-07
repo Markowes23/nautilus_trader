@@ -190,8 +190,8 @@ class BinanceFuturesEnumParser(BinanceEnumParser):
         else:
             return None
 
+    @staticmethod
     def parse_futures_position_side(
-        self,
         net_size: Decimal,
     ) -> PositionSide:
         if net_size > 0:

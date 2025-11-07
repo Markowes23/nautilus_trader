@@ -126,7 +126,8 @@ class TestAccountType:
         # Assert
         assert result == expected
 
-    def test_instantiate_from_string(self):
+    @staticmethod
+    def test_instantiate_from_string():
         assert AccountType["CASH"] == AccountType.CASH
 
 

@@ -70,7 +70,8 @@ from nautilus_trader.model.objects import Quantity
 
 
 class TestBybitWsDecoders:
-    def test_ws_public_kline(self):
+    @staticmethod
+    def test_ws_public_kline():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_kline.json",
@@ -96,7 +97,8 @@ class TestBybitWsDecoders:
         assert result.ts == 1672324988882
         assert result.type == "snapshot"
 
-    def test_ws_public_liquidation(self):
+    @staticmethod
+    def test_ws_public_liquidation():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_liquidation.json",
@@ -116,7 +118,8 @@ class TestBybitWsDecoders:
         assert result.ts == 1673251091822
         assert result.type == "snapshot"
 
-    def test_ws_public_orderbook_delta(self):
+    @staticmethod
+    def test_ws_public_orderbook_delta():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_orderbook_delta.json",
@@ -150,7 +153,8 @@ class TestBybitWsDecoders:
         assert result.ts == 1687940967466
         assert result.type == "delta"
 
-    def test_ws_public_orderbook_delta_parse_to_deltas(self):
+    @staticmethod
+    def test_ws_public_orderbook_delta_parse_to_deltas():
         # Prepare
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
@@ -180,7 +184,8 @@ class TestBybitWsDecoders:
             else:
                 assert delta.flags == RecordFlag.F_LAST
 
-    def test_ws_public_orderbook_delta_parse_to_deltas_no_asks(self):
+    @staticmethod
+    def test_ws_public_orderbook_delta_parse_to_deltas_no_asks():
         # Prepare
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
@@ -210,7 +215,8 @@ class TestBybitWsDecoders:
             else:
                 assert delta.flags == RecordFlag.F_LAST
 
-    def test_ws_public_orderbook_snapshot(self):
+    @staticmethod
+    def test_ws_public_orderbook_snapshot():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_orderbook_snapshot.json",
@@ -236,7 +242,8 @@ class TestBybitWsDecoders:
         assert result.type == "snapshot"
         assert result.ts == 1672304484978
 
-    def test_ws_public_orderbook_snapshot_flags(self):
+    @staticmethod
+    def test_ws_public_orderbook_snapshot_flags():
         # Prepare
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
@@ -267,7 +274,8 @@ class TestBybitWsDecoders:
             else:
                 assert delta.flags == RecordFlag.F_LAST
 
-    def test_ws_public_orderbook_snapshot_flags_no_asks(self):
+    @staticmethod
+    def test_ws_public_orderbook_snapshot_flags_no_asks():
         # Prepare
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
@@ -298,7 +306,8 @@ class TestBybitWsDecoders:
             else:
                 assert delta.flags == RecordFlag.F_LAST
 
-    def test_ws_public_ticker_linear(self):
+    @staticmethod
+    def test_ws_public_ticker_linear():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_ticker_linear.json",
@@ -334,7 +343,8 @@ class TestBybitWsDecoders:
         assert result.ts == 1673272861686
         assert result.cs == 24987956059
 
-    def test_ws_public_ticker_option(self):
+    @staticmethod
+    def test_ws_public_ticker_option():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_ticker_option.json",
@@ -374,7 +384,8 @@ class TestBybitWsDecoders:
         assert result.type == "snapshot"
         assert result.ts == 1672917511074
 
-    def test_ws_public_ticker_spot(self):
+    @staticmethod
+    def test_ws_public_ticker_spot():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_ticker_spot.json",
@@ -399,7 +410,8 @@ class TestBybitWsDecoders:
         assert result.ts == 1673853746003
         assert result.cs == 2588407389
 
-    def test_ws_public_trade(self):
+    @staticmethod
+    def test_ws_public_trade():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
             "ws_trade.json",
@@ -422,7 +434,8 @@ class TestBybitWsDecoders:
         assert result.type == "snapshot"
         assert result.ts == 1672304486868
 
-    def test_ws_trade_msg_parse_to_trade_tick(self):
+    @staticmethod
+    def test_ws_trade_msg_parse_to_trade_tick():
         # Prepare
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.public",
@@ -456,7 +469,8 @@ class TestBybitWsDecoders:
         # Assert
         assert result == expected_result
 
-    def test_ws_private_execution(self):
+    @staticmethod
+    def test_ws_private_execution():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.private",
             "ws_execution.json",
@@ -499,7 +513,8 @@ class TestBybitWsDecoders:
         assert result.id == "592324803b2785-26fa-4214-9963-bdd4727f07be"
         assert result.creationTime == 1672364174455
 
-    def test_ws_private_order(self):
+    @staticmethod
+    def test_ws_private_order():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.private",
             "ws_order.json",
@@ -556,7 +571,8 @@ class TestBybitWsDecoders:
         assert result.id == "5923240c6880ab-c59f-420b-9adb-3639adc9dd90"
         assert result.creationTime == 1672364262474
 
-    def test_ws_private_position(self):
+    @staticmethod
+    def test_ws_private_position():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.private",
             "ws_position.json",
@@ -604,7 +620,8 @@ class TestBybitWsDecoders:
         assert result.id == "59232430b58efe-5fc5-4470-9337-4ce293b68edd"
         assert result.creationTime == 1672364174455
 
-    def test_ws_private_wallet(self):
+    @staticmethod
+    def test_ws_private_wallet():
         item = pkgutil.get_data(
             "tests.integration_tests.adapters.bybit.resources.ws_messages.private",
             "ws_wallet.json",
@@ -690,7 +707,8 @@ class TestBybitWsDecoders:
         assert result.topic == "wallet"
         assert result.id == "5923248e5d0ee3-faeb-4864-87e4-9cd63f785c1b"
 
-    def test_execution_parse_to_fill_report_uses_exec_fee(self):
+    @staticmethod
+    def test_execution_parse_to_fill_report_uses_exec_fee():
         execution = BybitExecution(
             symbol="XRPUSDT",
             orderId="f6e324ff-99c2-4e89-9739-3086e47f9381",

@@ -42,7 +42,8 @@ GBPUSD_1_MIN_BID = BarType(GBPUSD_SIM, ONE_MIN_BID)
 
 
 class TestBarSpecification:
-    def test_bar_spec_equality(self):
+    @staticmethod
+    def test_bar_spec_equality():
         # Arrange
         bar_spec1 = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
         bar_spec2 = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
@@ -53,7 +54,8 @@ class TestBarSpecification:
         assert bar_spec1 == bar_spec2
         assert bar_spec1 != bar_spec3
 
-    def test_bar_spec_comparison(self):
+    @staticmethod
+    def test_bar_spec_comparison():
         # Arrange
         bar_spec1 = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
         bar_spec2 = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
@@ -65,7 +67,8 @@ class TestBarSpecification:
         assert bar_spec1 < bar_spec3
         assert bar_spec3 >= bar_spec1
 
-    def test_bar_spec_pickle(self):
+    @staticmethod
+    def test_bar_spec_pickle():
         # Arrange
         bar_spec = BarSpecification(1000, BarAggregation.TICK, PriceType.LAST)
 
@@ -76,7 +79,8 @@ class TestBarSpecification:
         # Assert
         assert unpickled == bar_spec
 
-    def test_bar_spec_hash_str_and_repr(self):
+    @staticmethod
+    def test_bar_spec_hash_str_and_repr():
         # Arrange
         bar_spec = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
 
@@ -245,7 +249,8 @@ class TestBarSpecification:
             == is_information_aggregated
         )
 
-    def test_properties(self):
+    @staticmethod
+    def test_properties():
         # Arrange, Act
         bar_spec = BarSpecification(1, BarAggregation.HOUR, PriceType.BID)
 
@@ -256,7 +261,8 @@ class TestBarSpecification:
 
 
 class TestBarType:
-    def test_bar_type_equality(self):
+    @staticmethod
+    def test_bar_type_equality():
         # Arrange
         instrument_id1 = InstrumentId(Symbol("AUD/USD"), Venue("SIM"))
         instrument_id2 = InstrumentId(Symbol("GBP/USD"), Venue("SIM"))
@@ -270,7 +276,8 @@ class TestBarType:
         assert bar_type1 == bar_type2
         assert bar_type1 != bar_type3
 
-    def test_bar_type_comparison(self):
+    @staticmethod
+    def test_bar_type_comparison():
         # Arrange
         instrument_id1 = InstrumentId(Symbol("AUD/USD"), Venue("SIM"))
         instrument_id2 = InstrumentId(Symbol("GBP/USD"), Venue("SIM"))
@@ -285,7 +292,8 @@ class TestBarType:
         assert bar_type3 > bar_type1
         assert bar_type3 >= bar_type1
 
-    def test_bar_type_pickle(self):
+    @staticmethod
+    def test_bar_type_pickle():
         # Arrange
         instrument_id = InstrumentId(Symbol("AUD/USD"), Venue("SIM"))
         bar_spec = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
@@ -298,7 +306,8 @@ class TestBarType:
         # Assert
         assert unpickled == bar_type
 
-    def test_bar_type_hash_str_and_repr(self):
+    @staticmethod
+    def test_bar_type_hash_str_and_repr():
         # Arrange
         instrument_id = InstrumentId(Symbol("AUD/USD"), Venue("SIM"))
         bar_spec = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
@@ -405,7 +414,8 @@ class TestBarType:
         # Assert
         assert expected == bar_type
 
-    def test_bar_type_from_str_with_utf8_symbol(self):
+    @staticmethod
+    def test_bar_type_from_str_with_utf8_symbol():
         # Arrange
         non_ascii_instrument = "TËST-PÉRP.BINANCE"
         non_ascii_bar_type = "TËST-PÉRP.BINANCE-1-MINUTE-LAST-EXTERNAL"
@@ -419,7 +429,8 @@ class TestBarType:
         assert bar_type.aggregation_source == AggregationSource.EXTERNAL
         assert str(bar_type) == non_ascii_bar_type
 
-    def test_properties(self):
+    @staticmethod
+    def test_properties():
         # Arrange, Act
         instrument_id = InstrumentId(Symbol("AUD/USD"), Venue("SIM"))
         bar_spec = BarSpecification(1, BarAggregation.MINUTE, PriceType.BID)
@@ -432,11 +443,13 @@ class TestBarType:
 
 
 class TestBar:
-    def test_fully_qualified_name(self):
+    @staticmethod
+    def test_fully_qualified_name():
         # Arrange, Act, Assert
         assert Bar.fully_qualified_name() == "nautilus_trader.core.nautilus_pyo3.model:Bar"
 
-    def test_validation_when_high_below_open_raises_value_error(self):
+    @staticmethod
+    def test_validation_when_high_below_open_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Bar(
@@ -450,7 +463,8 @@ class TestBar:
                 0,
             )
 
-    def test_validation_when_high_below_low_raises_value_error(self):
+    @staticmethod
+    def test_validation_when_high_below_low_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Bar(
@@ -464,7 +478,8 @@ class TestBar:
                 0,
             )
 
-    def test_validation_when_high_below_close_raises_value_error(self):
+    @staticmethod
+    def test_validation_when_high_below_close_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Bar(
@@ -478,7 +493,8 @@ class TestBar:
                 0,
             )
 
-    def test_validation_when_low_above_close_raises_value_error(self):
+    @staticmethod
+    def test_validation_when_low_above_close_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Bar(
@@ -492,7 +508,8 @@ class TestBar:
                 0,
             )
 
-    def test_validation_when_low_above_open_raises_value_error(self):
+    @staticmethod
+    def test_validation_when_low_above_open_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Bar(
@@ -506,7 +523,8 @@ class TestBar:
                 0,
             )
 
-    def test_equality(self):
+    @staticmethod
+    def test_equality():
         # Arrange
         bar1 = Bar(
             AUDUSD_1_MIN_BID,
@@ -534,7 +552,8 @@ class TestBar:
         assert bar1 == bar1
         assert bar1 != bar2
 
-    def test_hash_str_repr(self):
+    @staticmethod
+    def test_hash_str_repr():
         # Arrange
         bar = Bar(
             AUDUSD_1_MIN_BID,
@@ -557,7 +576,8 @@ class TestBar:
             == "Bar(AUD/USD.SIM-1-MINUTE-BID-EXTERNAL,1.00001,1.00004,1.00000,1.00003,100000,0)"
         )
 
-    def test_is_single_price(self):
+    @staticmethod
+    def test_is_single_price():
         # Arrange
         bar1 = Bar(
             AUDUSD_1_MIN_BID,
@@ -585,7 +605,8 @@ class TestBar:
         assert bar1.is_single_price()
         assert not bar2.is_single_price()
 
-    def test_to_dict(self):
+    @staticmethod
+    def test_to_dict():
         # Arrange
         bar = Bar(
             AUDUSD_1_MIN_BID,
@@ -614,7 +635,8 @@ class TestBar:
             "ts_init": 0,
         }
 
-    def test_from_dict_returns_expected_bar(self):
+    @staticmethod
+    def test_from_dict_returns_expected_bar():
         # Arrange
         bar = Bar(
             AUDUSD_1_MIN_BID,
@@ -633,7 +655,8 @@ class TestBar:
         # Assert
         assert result == bar
 
-    def test_pickle_bar(self):
+    @staticmethod
+    def test_pickle_bar():
         # Arrange
         bar = Bar(
             AUDUSD_1_MIN_BID,
@@ -653,7 +676,8 @@ class TestBar:
         # Assert
         assert unpickled == bar
 
-    def test_bar_type_composite_parse_valid(self):
+    @staticmethod
+    def test_bar_type_composite_parse_valid():
         input_str = "BTCUSDT-PERP.BINANCE-2-MINUTE-LAST-INTERNAL@1-MINUTE-EXTERNAL"
         bar_type = BarType.from_str(input_str)
         standard = bar_type.standard()

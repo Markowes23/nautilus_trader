@@ -1394,7 +1394,8 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         else:
             return ts + pd.Timedelta(bar_type.spec.timedelta).value
 
-    async def _convert_ib_bar_date_to_unix_nanos(self, bar: BarData, bar_type: BarType) -> int:
+    @staticmethod
+    async def _convert_ib_bar_date_to_unix_nanos(bar: BarData, bar_type: BarType) -> int:
         """
         Convert the date from BarData to unix nanoseconds.
 
@@ -1572,8 +1573,8 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
 
         await self._handle_data(OrderBookDeltas(instrument_id=instrument_id, deltas=deltas))
 
+    @staticmethod
     def _aggregate_order_book_by_price(
-        self,
         book: dict[str, dict[int, IBKRBookLevel]],
     ) -> dict[str, dict[float, IBKRBookLevel]]:
         """

@@ -39,7 +39,8 @@ class TestSpreadInstrumentParsing:
     Test cases for parsing spread instruments from instrument IDs.
     """
 
-    def test_parse_spread_instrument_id_basic_spread(self):
+    @staticmethod
+    def test_parse_spread_instrument_id_basic_spread():
         """
         Test parsing basic 1x1 spread instrument ID.
         """
@@ -78,7 +79,8 @@ class TestSpreadInstrumentParsing:
         assert instrument.lot_size == Quantity.from_int(100)  # Should equal multiplier
         assert instrument.price_increment == Price.from_str("0.01")
 
-    def test_parse_spread_instrument_id_ratio_spread(self):
+    @staticmethod
+    def test_parse_spread_instrument_id_ratio_spread():
         """
         Test parsing ratio spread instrument ID.
         """
@@ -114,7 +116,8 @@ class TestSpreadInstrumentParsing:
         assert instrument.lot_size == Quantity.from_int(50)  # Should equal multiplier
         assert instrument.price_increment == Price.from_str("0.05")
 
-    def test_parse_spread_instrument_id_butterfly(self):
+    @staticmethod
+    def test_parse_spread_instrument_id_butterfly():
         """
         Test parsing butterfly spread (3 legs).
         """
@@ -135,7 +138,8 @@ class TestSpreadInstrumentParsing:
         assert isinstance(instrument, OptionSpread)
         assert instrument.strategy_type == "SPREAD"
 
-    def test_parse_spread_instrument_id_iron_condor(self):
+    @staticmethod
+    def test_parse_spread_instrument_id_iron_condor():
         """
         Test parsing iron condor spread (4 legs).
         """
@@ -164,7 +168,8 @@ class TestSpreadInstrumentParsing:
         assert isinstance(instrument, OptionSpread)
         assert instrument.strategy_type == "SPREAD"
 
-    def test_parse_spread_instrument_id_invalid(self):
+    @staticmethod
+    def test_parse_spread_instrument_id_invalid():
         """
         Test parsing invalid spread instrument ID.
         """
@@ -242,8 +247,8 @@ class TestOptionSpreadParsing:
         assert isinstance(instrument, OptionSpread)
         assert instrument.strategy_type == "SPREAD"
 
+    @staticmethod
     def _create_bag_contract_details(
-        self,
         symbol: str,
         currency: str,
         multiplier: str,

@@ -2617,7 +2617,8 @@ class TestReconciliationFiltering:
     Tests for filtering logic during live execution reconciliation.
     """
 
-    def _get_exec_engine(self, config: LiveExecEngineConfig):
+    @staticmethod
+    def _get_exec_engine(config: LiveExecEngineConfig):
         loop = asyncio.get_event_loop()
         clock = LiveClock()
         trader_id = TestIdStubs.trader_id()

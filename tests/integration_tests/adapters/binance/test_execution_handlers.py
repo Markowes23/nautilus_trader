@@ -40,7 +40,8 @@ class TestBinanceSpotExecutionHandlers:
     Tests for Binance Spot execution report handler methods with mocked dependencies.
     """
 
-    def test_trade_execution_generates_fill_with_correct_params(self, mocker):
+    @staticmethod
+    def test_trade_execution_generates_fill_with_correct_params(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -67,7 +68,8 @@ class TestBinanceSpotExecutionHandlers:
         assert call_kwargs["last_px"] == Price.from_str("2499.50000000")
         assert call_kwargs["liquidity_side"] == LiquiditySide.MAKER  # m=true in test data
 
-    def test_trade_execution_with_l_zero_filled_generates_fill_with_warning(self, mocker):
+    @staticmethod
+    def test_trade_execution_with_l_zero_filled_generates_fill_with_warning(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -99,7 +101,8 @@ class TestBinanceSpotExecutionHandlers:
         assert call_kwargs["last_px"] == Price.from_str("0.00000000")
         assert call_kwargs["last_qty"] == Quantity.from_str("0.00100000")
 
-    def test_trade_execution_with_l_zero_canceled_generates_order_canceled(self, mocker):
+    @staticmethod
+    def test_trade_execution_with_l_zero_canceled_generates_order_canceled(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -122,7 +125,8 @@ class TestBinanceSpotExecutionHandlers:
         exec_client._log.warning.assert_called_once()
         assert "L=0" in exec_client._log.warning.call_args[0][0]
 
-    def test_trade_execution_with_l_zero_expired_generates_order_expired(self, mocker):
+    @staticmethod
+    def test_trade_execution_with_l_zero_expired_generates_order_expired(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -145,7 +149,8 @@ class TestBinanceSpotExecutionHandlers:
         exec_client._log.warning.assert_called_once()
         assert "L=0" in exec_client._log.warning.call_args[0][0]
 
-    def test_trade_execution_with_l_zero_non_terminal_skips_fill(self, mocker):
+    @staticmethod
+    def test_trade_execution_with_l_zero_non_terminal_skips_fill(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -169,7 +174,8 @@ class TestBinanceSpotExecutionHandlers:
         exec_client._log.warning.assert_called_once()
         assert "L=0" in exec_client._log.warning.call_args[0][0]
 
-    def test_calculated_execution_generates_fill_with_taker_side(self, mocker):
+    @staticmethod
+    def test_calculated_execution_generates_fill_with_taker_side(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -200,7 +206,8 @@ class TestBinanceSpotExecutionHandlers:
         assert call_kwargs["last_px"] == Price.from_str("49500.00000000")
         assert call_kwargs["liquidity_side"] == LiquiditySide.TAKER  # Liquidations always taker
 
-    def test_trade_prevention_logs_but_no_fill(self, mocker):
+    @staticmethod
+    def test_trade_prevention_logs_but_no_fill(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -222,7 +229,8 @@ class TestBinanceSpotExecutionHandlers:
         exec_client._log.info.assert_called_once()
         assert "Self-trade prevention" in exec_client._log.info.call_args[0][0]
 
-    def test_canceled_execution_generates_order_canceled(self, mocker):
+    @staticmethod
+    def test_canceled_execution_generates_order_canceled(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -244,7 +252,8 @@ class TestBinanceSpotExecutionHandlers:
         call_kwargs = exec_client.generate_order_canceled.call_args.kwargs
         assert call_kwargs["client_order_id"] == ClientOrderId(wrapper.data.c)
 
-    def test_expired_execution_generates_order_expired(self, mocker):
+    @staticmethod
+    def test_expired_execution_generates_order_expired(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -266,7 +275,8 @@ class TestBinanceSpotExecutionHandlers:
         call_kwargs = exec_client.generate_order_expired.call_args.kwargs
         assert call_kwargs["client_order_id"] == ClientOrderId(wrapper.data.c)
 
-    def test_rejected_execution_generates_order_rejected_with_post_only_flag(self, mocker):
+    @staticmethod
+    def test_rejected_execution_generates_order_rejected_with_post_only_flag(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -297,7 +307,8 @@ class TestBinanceFuturesExecutionHandlers:
     dependencies.
     """
 
-    def test_liquidation_order_sends_order_status_then_fill_report(self, mocker):
+    @staticmethod
+    def test_liquidation_order_sends_order_status_then_fill_report(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -342,7 +353,8 @@ class TestBinanceFuturesExecutionHandlers:
         fill_idx = exec_client.mock_calls.index(fill_call)
         assert status_idx < fill_idx, "OrderStatusReport must be sent before FillReport"
 
-    def test_adl_order_sends_order_status_then_fill_report(self, mocker):
+    @staticmethod
+    def test_adl_order_sends_order_status_then_fill_report(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -386,7 +398,8 @@ class TestBinanceFuturesExecutionHandlers:
         fill_idx = exec_client.mock_calls.index(fill_call)
         assert status_idx < fill_idx, "OrderStatusReport must be sent before FillReport"
 
-    def test_settlement_order_sends_order_status_then_fill_report(self, mocker):
+    @staticmethod
+    def test_settlement_order_sends_order_status_then_fill_report(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -428,7 +441,8 @@ class TestBinanceFuturesExecutionHandlers:
         fill_idx = exec_client.mock_calls.index(fill_call)
         assert status_idx < fill_idx, "OrderStatusReport must be sent before FillReport"
 
-    def test_liquidation_order_zero_quantity_skipped(self, mocker):
+    @staticmethod
+    def test_liquidation_order_zero_quantity_skipped(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",
@@ -453,7 +467,8 @@ class TestBinanceFuturesExecutionHandlers:
         exec_client._send_order_status_report.assert_not_called()
         exec_client._send_fill_report.assert_not_called()
 
-    def test_liquidation_fill_commission_calculated_when_not_provided(self, mocker):
+    @staticmethod
+    def test_liquidation_fill_commission_calculated_when_not_provided(mocker):
         # Arrange
         raw = pkgutil.get_data(
             package="tests.integration_tests.adapters.binance.resources.ws_messages",

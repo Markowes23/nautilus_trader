@@ -21,7 +21,8 @@ from nautilus_trader.examples.strategies.ema_cross import EMACross
 
 
 class TestStrategyFactory:
-    def test_create_from_path(self):
+    @staticmethod
+    def test_create_from_path():
         # Arrange
         config = {
             "instrument_id": "AUD/USD.SIM",
@@ -47,7 +48,8 @@ class TestStrategyFactory:
             " 'trade_size': 1000000, 'fast_ema_period': 10, 'slow_ema_period': 20}"
         )
 
-    def test_create_from_raw(self):
+    @staticmethod
+    def test_create_from_raw():
         # Arrange
         raw = msgspec.json.encode(
             {

@@ -180,7 +180,8 @@ class TransactionBuilder:
         """
         return Coin(amount=str(amount), denom=self.denomination)
 
-    def fee(self, gas_limit: int, *amount: list[Coin]) -> Fee:
+    @staticmethod
+    def fee(gas_limit: int, *amount: list[Coin]) -> Fee:
         """
         Determine the fee for the transaction.
         """

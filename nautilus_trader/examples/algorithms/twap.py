@@ -97,7 +97,8 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         """
         self._scheduled_sizes.clear()
 
-    def on_save(self) -> dict[str, bytes]:
+    @staticmethod
+    def on_save() -> dict[str, bytes]:
         """
         Actions to be performed when the algorithm component is saved.
 
@@ -125,7 +126,8 @@ class TWAPExecAlgorithm(ExecAlgorithm):
         """
         # Optionally implement
 
-    def round_decimal_down(self, amount: Decimal, precision: int) -> Decimal:
+    @staticmethod
+    def round_decimal_down(amount: Decimal, precision: int) -> Decimal:
         return amount.quantize(Decimal(f"1e-{precision}"), rounding=ROUND_DOWN)
 
     def on_order(self, order: Order) -> None:

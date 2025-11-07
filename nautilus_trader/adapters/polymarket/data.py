@@ -631,8 +631,8 @@ class PolymarketDataClient(LiveMarketDataClient):
                 self._last_quotes[instrument.id] = quote
                 self._handle_data(quote)
 
+    @staticmethod
     def _build_snapshot_from_book(
-        self,
         instrument: BinaryOption,
         change: PolymarketTickSizeChange,
         book: OrderBook,

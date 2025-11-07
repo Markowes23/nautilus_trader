@@ -1231,5 +1231,6 @@ class BetfairExecutionClient(LiveExecutionClient):
         canceled_ms = unmatched_order.cd or unmatched_order.ld or unmatched_order.md
         return millis_to_nanos(canceled_ms) if canceled_ms else self._clock.timestamp_ns()
 
-    def _get_cancel_quantity(self, unmatched_order: UnmatchedOrder) -> float:
+    @staticmethod
+    def _get_cancel_quantity(unmatched_order: UnmatchedOrder) -> float:
         return (unmatched_order.sc or 0) + (unmatched_order.sl or 0) + (unmatched_order.sv or 0)

@@ -21,79 +21,95 @@ from nautilus_trader.core.correctness import PyCondition
 
 
 class TestCondition:
-    def test_raises_custom_exception(self):
+    @staticmethod
+    def test_raises_custom_exception():
         # Arrange, Act, Assert
         with pytest.raises(RuntimeError):
             PyCondition.is_true(False, "predicate", RuntimeError)
 
-    def test_true_when_predicate_false_raises_value_error(self):
+    @staticmethod
+    def test_true_when_predicate_false_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             PyCondition.is_true(False, "predicate")
 
-    def test_true_when_predicate_true_does_nothing(self):
+    @staticmethod
+    def test_true_when_predicate_true_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.is_true(True, "this should be True")
 
-    def test_false_when_predicate_true_raises_value_error(self):
+    @staticmethod
+    def test_false_when_predicate_true_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             PyCondition.is_false(True, "predicate")
 
-    def test_false_when_predicate_false_does_nothing(self):
+    @staticmethod
+    def test_false_when_predicate_false_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.is_false(False, "this should be False")
 
-    def test_is_none_when_arg_not_none_raises_type_error(self):
+    @staticmethod
+    def test_is_none_when_arg_not_none_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.none("something", "param")
 
-    def test_is_none_when_arg_is_none_does_nothing(self):
+    @staticmethod
+    def test_is_none_when_arg_is_none_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.none(None, "param")
 
-    def test_not_none_when_arg_none_raises_type_error(self):
+    @staticmethod
+    def test_not_none_when_arg_none_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.not_none(None, "param")
 
-    def test_not_none_when_arg_not_none_does_nothing(self):
+    @staticmethod
+    def test_not_none_when_arg_not_none_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.not_none("something", "param")
 
-    def test_type_when_type_is_incorrect_raises_type_error(self):
+    @staticmethod
+    def test_type_when_type_is_incorrect_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.type("a string", int, "param")
 
-    def test_type_when_type_is_correct_does_nothing(self):
+    @staticmethod
+    def test_type_when_type_is_correct_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.type("a string", str, "param")
 
-    def test_type_or_none_when_type_is_incorrect_raises_type_error(self):
+    @staticmethod
+    def test_type_or_none_when_type_is_incorrect_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.type("a string", int, "param")
 
-    def test_type_or_none_when_type_is_correct_or_none_does_nothing(self):
+    @staticmethod
+    def test_type_or_none_when_type_is_correct_or_none_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.type_or_none("a string", str, "param")
         PyCondition.type_or_none(None, str, "param")
 
-    def test_callable_when_arg_not_callable_raises_type_error(self):
+    @staticmethod
+    def test_callable_when_arg_not_callable_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.callable(None, "param")
 
-    def test_callable_when_arg_is_callable_does_nothing(self):
+    @staticmethod
+    def test_callable_when_arg_is_callable_does_nothing():
         # Arrange
         collection = []
 
         # Act, Assert: ValueError not raised
         PyCondition.callable(collection.append, "param")
 
-    def test_callable_or_none_when_arg_not_callable_raises_type_error(self):
+    @staticmethod
+    def test_callable_or_none_when_arg_not_callable_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.callable_or_none("not_callable", "param")
@@ -115,20 +131,24 @@ class TestCondition:
         with pytest.raises(ValueError):
             PyCondition.equal(id1, id2, "id1", "id2")
 
-    def test_equal_when_args_are_equal_does_nothing(self):
+    @staticmethod
+    def test_equal_when_args_are_equal_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.equal("O-123456", "O-123456", "order_id1", "order_id2")
 
-    def test_not_equal_when_args_not_equal_raises_value_error(self):
+    @staticmethod
+    def test_not_equal_when_args_not_equal_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             PyCondition.not_equal("O-123456", "O-123456", "order_id1", "order_id2")
 
-    def test_not_equal_when_args_are_not_equal_does_nothing(self):
+    @staticmethod
+    def test_not_equal_when_args_are_not_equal_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.not_equal("O-123456", "O-", "order_id1", "order_id2")
 
-    def test_list_type_when_contains_incorrect_types_raises_type_error(self):
+    @staticmethod
+    def test_list_type_when_contains_incorrect_types_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.list_type(["a", "b", 3], str, "param")
@@ -158,57 +178,69 @@ class TestCondition:
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.dict_types(value, str, int, "param_name")
 
-    def test_is_in_when_item_not_in_list_raises_type_error(self):
+    @staticmethod
+    def test_is_in_when_item_not_in_list_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(KeyError):
             PyCondition.is_in("a", ["b", 1], "item", "list")
 
-    def test_is_in_when_item_is_in_list_does_nothing(self):
+    @staticmethod
+    def test_is_in_when_item_is_in_list_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.is_in("a", ["a", 1], "item", "list")
 
-    def test_not_in_when_item_is_in_list_raises_value_error(self):
+    @staticmethod
+    def test_not_in_when_item_is_in_list_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(KeyError):
             PyCondition.not_in("a", ["a", 1], "item", "list")
 
-    def test_not_in_when_item_not_in_list_does_nothing(self):
+    @staticmethod
+    def test_not_in_when_item_not_in_list_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.not_in("b", ["a", 1], "item", "list")
 
-    def test_key_is_in_when_key_not_in_dictionary_raises_key_error(self):
+    @staticmethod
+    def test_key_is_in_when_key_not_in_dictionary_raises_key_error():
         # Arrange, Act, Assert
         with pytest.raises(KeyError):
             PyCondition.is_in("a", {"b": 1}, "key", "dict")
 
-    def test_key_is_in_when_key_is_in_dictionary_does_nothing(self):
+    @staticmethod
+    def test_key_is_in_when_key_is_in_dictionary_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.is_in("a", {"a": 1}, "key", "dict")
 
-    def test_key_not_in_when_key_is_in_dictionary_raises_key_error(self):
+    @staticmethod
+    def test_key_not_in_when_key_is_in_dictionary_raises_key_error():
         # Arrange, Act, Assert
         with pytest.raises(KeyError):
             PyCondition.not_in("a", {"a": 1}, "key", "dict")
 
-    def test_key_not_in_when_key_not_in_dictionary_does_nothing(self):
+    @staticmethod
+    def test_key_not_in_when_key_not_in_dictionary_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.not_in("b", {"a": 1}, "key", "dict")
 
-    def test_not_empty_when_collection_empty_raises_value_error(self):
+    @staticmethod
+    def test_not_empty_when_collection_empty_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             PyCondition.not_empty([], "some_collection")
 
-    def test_not_empty_when_collection_not_empty_does_nothing(self):
+    @staticmethod
+    def test_not_empty_when_collection_not_empty_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.not_empty([1], "some_collection")
 
-    def test_empty_when_collection_not_empty_raises_value_error(self):
+    @staticmethod
+    def test_empty_when_collection_not_empty_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             PyCondition.empty([1, 2], "some_collection")
 
-    def test_empty_when_collection_empty_does_nothing(self):
+    @staticmethod
+    def test_empty_when_collection_empty_does_nothing():
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.empty([], "some_collection")
 
@@ -229,7 +261,8 @@ class TestCondition:
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.not_negative(value, "param")
 
-    def test_not_negative_int_when_arg_negative_raises_value_error(self):
+    @staticmethod
+    def test_not_negative_int_when_arg_negative_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             PyCondition.not_negative_int(-1, "param")
@@ -268,7 +301,8 @@ class TestCondition:
         with pytest.raises(ValueError):
             PyCondition.positive_int(value, "param")
 
-    def test_positive_int_when_args_positive_does_nothing(self):
+    @staticmethod
+    def test_positive_int_when_args_positive_does_nothing():
         # Arrange, Act, Assert: AssertionError not raised
         PyCondition.positive_int(1, "param")
 
@@ -309,7 +343,8 @@ class TestCondition:
         # Arrange, Act, Assert: ValueError not raised
         PyCondition.in_range_int(value, start, end, "param")
 
-    def test_valid_string_given_none_raises_type_error(self):
+    @staticmethod
+    def test_valid_string_given_none_raises_type_error():
         # Arrange, Act, Assert
         with pytest.raises(TypeError):
             PyCondition.valid_string(None, "param")

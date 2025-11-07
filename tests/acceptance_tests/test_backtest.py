@@ -892,7 +892,8 @@ class TestBacktestAcceptanceTestsMarketMaking:
 
 
 class TestBacktestNodeWithBacktestDataIterator:
-    def test_backtest_same_with_and_without_data_configs(self) -> None:
+    @staticmethod
+    def test_backtest_same_with_and_without_data_configs() -> None:
         # Arrange
         messages_with_data: list = []
         messages_without_data: list = []
@@ -959,7 +960,8 @@ class TestBacktestNodeWithBacktestDataIterator:
         # Validate spread quote format
         self._validate_spread_quote_format(spread_quotes)
 
-    def _validate_spread_math_consistency(self, combo_fills: list, leg_fills: list):
+    @staticmethod
+    def _validate_spread_math_consistency(combo_fills: list, leg_fills: list):
         """
         Validate mathematical consistency between combo and leg fills.
         """
@@ -1014,7 +1016,8 @@ class TestBacktestNodeWithBacktestDataIterator:
                 f"but combo fill was {combo_price:.4f} (diff: {abs(calculated_spread - combo_price):.4f})"
             )
 
-    def _validate_spread_quote_format(self, spread_quotes: list):
+    @staticmethod
+    def _validate_spread_quote_format(spread_quotes: list):
         """
         Validate that spread quotes have the correct format.
         """

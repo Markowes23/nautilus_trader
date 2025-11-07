@@ -212,8 +212,8 @@ class HyperliquidInstrumentProvider(InstrumentProvider):
     # Internal helpers
     # ------------------------------------------------------------------
 
+    @staticmethod
     def _accept_instrument(
-        self,
         instrument: Instrument,
         filters: dict | None,
     ) -> bool:

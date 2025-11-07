@@ -434,8 +434,8 @@ class HistoricInteractiveBrokersClient:
 
         return sorted(data, key=lambda x: x.ts_init)
 
+    @staticmethod
     def _handle_timestamp_iteration(
-        self,
         ticks: list[TradeTick | QuoteTick],
         end_date_time: pd.Timestamp,
     ) -> tuple[pd.Timestamp | None, bool]:
@@ -512,8 +512,8 @@ class HistoricInteractiveBrokersClient:
                     contracts=[contract],
                 )
 
+    @staticmethod
     def _calculate_duration_segments(
-        self,
         start_date: pd.Timestamp | None,
         end_date: pd.Timestamp,
         duration: str | None,

@@ -51,7 +51,8 @@ class TestRateOfChange:
         # Assert
         assert self.roc.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = RateOfChange(3)
 
@@ -118,7 +119,8 @@ class TestRateOfChange:
         # Act, Assert
         assert self.roc.value == 2.9996400432144683e-05
 
-    def test_log_returns_value_with_noisy_inputs(self):
+    @staticmethod
+    def test_log_returns_value_with_noisy_inputs():
         # Arrange
         roc = RateOfChange(3, use_log=True)
 

@@ -82,7 +82,8 @@ class InteractiveBrokersClientConnectionMixin(BaseMixin):
             if self._eclient.wrapper:
                 self._eclient.wrapper.error(NO_VALID_ID, CONNECT_FAIL.code(), CONNECT_FAIL.msg())
 
-    def _msgspec_decoding_hook(self, byte_data: bytes) -> str:
+    @staticmethod
+    def _msgspec_decoding_hook(byte_data: bytes) -> str:
         """
         Decode connection time from the server for possible more languages.
         """

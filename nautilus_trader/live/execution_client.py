@@ -134,8 +134,8 @@ class LiveExecutionClient(ExecutionClient):
 
         self.reconciliation_active = False
 
+    @staticmethod
     async def run_after_delay(
-        self,
         delay: float,
         coro: Coroutine,
     ) -> None:

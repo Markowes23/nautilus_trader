@@ -162,7 +162,8 @@ class BacktestNode:
             if not engine.trader.is_disposed:
                 engine.dispose()
 
-    def _validate_configs(self, configs: list[BacktestRunConfig]) -> None:  # noqa: C901
+    @staticmethod
+    def _validate_configs(configs: list[BacktestRunConfig]) -> None:  # noqa: C901
         venue_ids: list[Venue] = []
 
         for config in configs:
@@ -669,7 +670,8 @@ class BacktestNode:
             fs_rust_storage_options=config.catalog_fs_rust_storage_options,
         )
 
-    def _load_engine_data(self, engine: BacktestEngine, result: CatalogDataResult) -> None:
+    @staticmethod
+    def _load_engine_data(engine: BacktestEngine, result: CatalogDataResult) -> None:
         if is_nautilus_class(result.data_cls):
             engine.add_data(
                 data=result.data,

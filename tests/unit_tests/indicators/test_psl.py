@@ -59,7 +59,8 @@ class TestPsychologicalLine:
         # Act, Assert
         assert self.psl.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = PsychologicalLine(10)
 

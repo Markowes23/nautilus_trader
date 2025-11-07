@@ -51,7 +51,8 @@ class TestVolatilityCompressionRatio:
         # Assert
         assert self.vcr.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = VolatilityRatio(10, 100)
 

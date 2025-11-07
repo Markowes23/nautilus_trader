@@ -53,7 +53,8 @@ class TestAdaptiveMovingAverage:
         # Assert
         assert self.ama.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = AdaptiveMovingAverage(10, 2, 30, PriceType.MID)
 
@@ -66,7 +67,8 @@ class TestAdaptiveMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = AdaptiveMovingAverage(10, 2, 30)
 
@@ -79,7 +81,8 @@ class TestAdaptiveMovingAverage:
         assert indicator.has_inputs
         assert indicator.value == 1.0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = AdaptiveMovingAverage(10, 2, 30)
 

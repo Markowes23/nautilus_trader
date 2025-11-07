@@ -128,7 +128,8 @@ class TestBetfairInstrumentProvider:
         expected = [MarketStatusAction.PRE_OPEN] * 7 + [MarketStatusAction.CLOSE]
         assert result == expected
 
-    def test_list_market_catalogue_parsing(self):
+    @staticmethod
+    def test_list_market_catalogue_parsing():
         # Arrange
         raw = BetfairResponses.list_market_catalogue()
         market_catalogue = msgspec.json.decode(msgspec.json.encode(raw), type=MarketCatalogue)

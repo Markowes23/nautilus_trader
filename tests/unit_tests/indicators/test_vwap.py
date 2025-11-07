@@ -51,7 +51,8 @@ class TestVolumeWeightedAveragePrice:
         # Assert
         assert self.vwap.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = VolumeWeightedAveragePrice()
 

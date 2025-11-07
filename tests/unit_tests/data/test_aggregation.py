@@ -72,7 +72,8 @@ ETHUSDT_BINANCE = TestInstrumentProvider.ethusdt_binance()
 
 
 class TestBarBuilder:
-    def test_instantiate(self):
+    @staticmethod
+    def test_instantiate():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -82,7 +83,8 @@ class TestBarBuilder:
         assert builder.ts_last == 0
         assert builder.count == 0
 
-    def test_str_repr(self):
+    @staticmethod
+    def test_str_repr():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -97,7 +99,8 @@ class TestBarBuilder:
             == "BarBuilder(BTCUSDT.BINANCE-100-TICK-LAST-EXTERNAL,None,None,None,None,0.000000)"
         )
 
-    def test_single_update_results_in_expected_properties(self):
+    @staticmethod
+    def test_single_update_results_in_expected_properties():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -110,7 +113,8 @@ class TestBarBuilder:
         assert builder.ts_last == 0
         assert builder.count == 1
 
-    def test_single_bar_update_results_in_expected_properties(self):
+    @staticmethod
+    def test_single_bar_update_results_in_expected_properties():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -141,7 +145,8 @@ class TestBarBuilder:
         assert built_bar.close == Price.from_str("1.00005")
         assert built_bar.volume == Quantity.from_str("1.5")
 
-    def test_single_update_when_timestamp_less_than_last_update_ignores(self):
+    @staticmethod
+    def test_single_update_when_timestamp_less_than_last_update_ignores():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -155,7 +160,8 @@ class TestBarBuilder:
         assert builder.ts_last == 1_000
         assert builder.count == 1
 
-    def test_single_bar_update_when_timestamp_less_than_last_update_ignores(self):
+    @staticmethod
+    def test_single_bar_update_when_timestamp_less_than_last_update_ignores():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -191,7 +197,8 @@ class TestBarBuilder:
         assert builder.ts_last == 1_000
         assert builder.count == 1
 
-    def test_multiple_updates_correctly_increments_count(self):
+    @staticmethod
+    def test_multiple_updates_correctly_increments_count():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -206,7 +213,8 @@ class TestBarBuilder:
         # Assert
         assert builder.count == 5
 
-    def test_multiple_bar_updates_correctly_increments_count(self):
+    @staticmethod
+    def test_multiple_bar_updates_correctly_increments_count():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -229,7 +237,8 @@ class TestBarBuilder:
         assert builder.count == 5
         assert builder.ts_last == 5_000
 
-    def test_build_when_no_updates_raises_exception(self):
+    @staticmethod
+    def test_build_when_no_updates_raises_exception():
         # Arrange
         bar_type = TestDataStubs.bartype_audusd_1min_bid()
         builder = BarBuilder(AUDUSD_SIM, bar_type)
@@ -238,7 +247,8 @@ class TestBarBuilder:
         with pytest.raises(TypeError):
             builder.build()
 
-    def test_build_when_received_updates_returns_expected_bar(self):
+    @staticmethod
+    def test_build_when_received_updates_returns_expected_bar():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -264,7 +274,8 @@ class TestBarBuilder:
         assert builder.ts_last == NANOSECONDS_IN_SECOND
         assert builder.count == 0
 
-    def test_build_when_received_bar_updates_returns_expected_bar(self):
+    @staticmethod
+    def test_build_when_received_bar_updates_returns_expected_bar():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -318,7 +329,8 @@ class TestBarBuilder:
         assert builder.ts_last == NANOSECONDS_IN_SECOND
         assert builder.count == 0
 
-    def test_build_with_previous_close(self):
+    @staticmethod
+    def test_build_with_previous_close():
         # Arrange
         bar_type = TestDataStubs.bartype_btcusdt_binance_100tick_last()
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
@@ -341,7 +353,8 @@ class TestBarBuilder:
 
 
 class TestTickBarAggregator:
-    def test_handle_quote_tick_when_count_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_quote_tick_when_count_below_threshold_updates():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -369,7 +382,8 @@ class TestTickBarAggregator:
         # Assert
         assert len(handler) == 0
 
-    def test_handle_trade_tick_when_count_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_trade_tick_when_count_below_threshold_updates():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -397,7 +411,8 @@ class TestTickBarAggregator:
         # Assert
         assert len(handler) == 0
 
-    def test_handle_bar_when_count_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_bar_when_count_below_threshold_updates():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -426,7 +441,8 @@ class TestTickBarAggregator:
         # Assert
         assert len(handler) == 0
 
-    def test_handle_quote_tick_when_count_at_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_quote_tick_when_count_at_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -481,7 +497,8 @@ class TestTickBarAggregator:
         assert handler[0].close == Price.from_str("1.000015")
         assert handler[0].volume == Quantity.from_int(3)
 
-    def test_handle_trade_tick_when_count_at_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_trade_tick_when_count_at_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -536,7 +553,8 @@ class TestTickBarAggregator:
         assert handler[0].close == Price.from_str("1.00000")
         assert handler[0].volume == Quantity.from_int(3)
 
-    def test_handle_bar_when_count_at_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_bar_when_count_at_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -594,7 +612,8 @@ class TestTickBarAggregator:
         assert handler[0].close == Price.from_str("1.00003")
         assert handler[0].volume == Quantity.from_int(3)
 
-    def test_run_quote_ticks_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_quote_ticks_through_aggregator_results_in_expected_bars():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -624,7 +643,8 @@ class TestTickBarAggregator:
         assert last_bar.close == Price.from_str("0.670230")
         assert last_bar.volume == Quantity.from_int(100_000_000)
 
-    def test_run_trade_ticks_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_trade_ticks_through_aggregator_results_in_expected_bars():
         # Arrange
         handler = []
         instrument = ETHUSDT_BINANCE
@@ -653,7 +673,8 @@ class TestTickBarAggregator:
         assert last_bar.close == Price.from_str("425.15")
         assert last_bar.volume == Quantity.from_str("3141.91117")
 
-    def test_run_bars_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_bars_through_aggregator_results_in_expected_bars():
         handler = []
         bar_spec = BarSpecification(3, BarAggregation.TICK, PriceType.LAST)
         bar_type = BarType(ETHUSDT_BINANCE.id, bar_spec)
@@ -709,7 +730,8 @@ class TestTickBarAggregator:
 
 
 class TestVolumeBarAggregator:
-    def test_handle_quote_tick_when_volume_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_quote_tick_when_volume_below_threshold_updates():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -737,7 +759,8 @@ class TestVolumeBarAggregator:
         # Assert
         assert len(handler) == 0
 
-    def test_handle_trade_tick_when_volume_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_trade_tick_when_volume_below_threshold_updates():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -765,7 +788,8 @@ class TestVolumeBarAggregator:
         # Assert
         assert len(handler) == 0
 
-    def test_handle_bar_when_volume_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_bar_when_volume_below_threshold_updates():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -794,7 +818,8 @@ class TestVolumeBarAggregator:
         # Assert
         assert len(handler) == 0
 
-    def test_handle_quote_tick_when_volume_at_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_quote_tick_when_volume_at_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -849,7 +874,8 @@ class TestVolumeBarAggregator:
         assert handler[0].close == Price.from_str("1.00000")
         assert handler[0].volume == Quantity.from_int(10_000)
 
-    def test_handle_trade_tick_when_volume_at_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_trade_tick_when_volume_at_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -904,7 +930,8 @@ class TestVolumeBarAggregator:
         assert handler[0].close == Price.from_str("1.00000")
         assert handler[0].volume == Quantity.from_int(10_000)
 
-    def test_handle_bar_when_volume_at_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_bar_when_volume_at_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -950,7 +977,8 @@ class TestVolumeBarAggregator:
         assert handler[0].close == Price.from_str("1.00002")
         assert handler[0].volume == Quantity.from_int(100000)
 
-    def test_handle_quote_tick_when_volume_beyond_threshold_sends_bars_to_handler(self):
+    @staticmethod
+    def test_handle_quote_tick_when_volume_beyond_threshold_sends_bars_to_handler():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1015,7 +1043,8 @@ class TestVolumeBarAggregator:
         assert handler[2].close == Price.from_str("1.00000")
         assert handler[2].volume == Quantity.from_int(10_000)
 
-    def test_handle_trade_tick_when_volume_beyond_threshold_sends_bars_to_handler(self):
+    @staticmethod
+    def test_handle_trade_tick_when_volume_beyond_threshold_sends_bars_to_handler():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1080,7 +1109,8 @@ class TestVolumeBarAggregator:
         assert handler[2].close == Price.from_str("1.00000")
         assert handler[2].volume == Quantity.from_int(10_000)
 
-    def test_handle_bar_when_volume_beyond_threshold_sends_bars_to_handler(self):
+    @staticmethod
+    def test_handle_bar_when_volume_beyond_threshold_sends_bars_to_handler():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1131,7 +1161,8 @@ class TestVolumeBarAggregator:
         assert handler[1].close == Price.from_str("1.00002")
         assert handler[1].volume == Quantity.from_int(100000)
 
-    def test_run_quote_ticks_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_quote_ticks_through_aggregator_results_in_expected_bars():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1164,7 +1195,8 @@ class TestVolumeBarAggregator:
         assert last_bar.close == Price.from_str("0.670655")
         assert last_bar.volume == Quantity.from_int(1_000)
 
-    def test_run_trade_ticks_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_trade_ticks_through_aggregator_results_in_expected_bars():
         # Arrange
         handler = []
         instrument = ETHUSDT_BINANCE
@@ -1193,7 +1225,8 @@ class TestVolumeBarAggregator:
         assert last_bar.close == Price.from_str("425.06")
         assert last_bar.volume == Quantity.from_int(1_000)
 
-    def test_run_bars_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_bars_through_aggregator_results_in_expected_bars():
         handler = []
         bar_spec = BarSpecification(30, BarAggregation.VOLUME, PriceType.LAST)
         bar_type = BarType(ETHUSDT_BINANCE.id, bar_spec)
@@ -1249,7 +1282,8 @@ class TestVolumeBarAggregator:
 
 
 class TestTestValueBarAggregator:
-    def test_handle_quote_tick_when_value_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_quote_tick_when_value_below_threshold_updates():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1278,7 +1312,8 @@ class TestTestValueBarAggregator:
         assert len(handler) == 0
         assert aggregator.get_cumulative_value() == Decimal("3000.03000")
 
-    def test_handle_trade_tick_when_value_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_trade_tick_when_value_below_threshold_updates():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1307,7 +1342,8 @@ class TestTestValueBarAggregator:
         assert len(handler) == 0
         assert aggregator.get_cumulative_value() == Decimal("52500.000")
 
-    def test_handle_bar_when_value_below_threshold_updates(self):
+    @staticmethod
+    def test_handle_bar_when_value_below_threshold_updates():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1337,7 +1373,8 @@ class TestTestValueBarAggregator:
         assert len(handler) == 0
         assert aggregator.get_cumulative_value() == Decimal("52500.000")
 
-    def test_handle_quote_tick_when_value_beyond_threshold_sends_bar_to_handler(self):
+    @staticmethod
+    def test_handle_quote_tick_when_value_beyond_threshold_sends_bar_to_handler():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1393,7 +1430,8 @@ class TestTestValueBarAggregator:
         assert handler[0].volume == Quantity.from_str("99999")
         assert aggregator.get_cumulative_value() == Decimal("10501.400")
 
-    def test_handle_trade_tick_when_volume_beyond_threshold_sends_bars_to_handler(self):
+    @staticmethod
+    def test_handle_trade_tick_when_volume_beyond_threshold_sends_bars_to_handler():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1455,7 +1493,8 @@ class TestTestValueBarAggregator:
         expected = Decimal("40000.11")
         assert aggregator.get_cumulative_value().quantize(expected, ROUND_HALF_EVEN) == expected
 
-    def test_handle_bar_when_value_beyond_threshold_sends_bars_to_handler(self):
+    @staticmethod
+    def test_handle_bar_when_value_beyond_threshold_sends_bars_to_handler():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1523,7 +1562,8 @@ class TestTestValueBarAggregator:
             == expected
         )
 
-    def test_run_quote_ticks_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_quote_ticks_through_aggregator_results_in_expected_bars():
         # Arrange
         handler = []
         instrument_id = TestIdStubs.audusd_id()
@@ -1556,7 +1596,8 @@ class TestTestValueBarAggregator:
         assert last_bar.close == Price.from_str("0.670630")
         assert last_bar.volume == Quantity.from_int(1_491)
 
-    def test_run_trade_ticks_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_trade_ticks_through_aggregator_results_in_expected_bars():
         # Arrange
         handler = []
         bar_spec = BarSpecification(10000, BarAggregation.VALUE, PriceType.LAST)
@@ -1584,7 +1625,8 @@ class TestTestValueBarAggregator:
         assert last_bar.close == Price.from_str("423.25")
         assert last_bar.volume == Quantity.from_str("23.62824")
 
-    def test_run_bars_through_aggregator_results_in_expected_bars(self):
+    @staticmethod
+    def test_run_bars_through_aggregator_results_in_expected_bars():
         handler = []
         bar_spec = BarSpecification(3000, BarAggregation.VALUE, PriceType.LAST)
         bar_type = BarType(ETHUSDT_BINANCE.id, bar_spec)
@@ -1640,7 +1682,8 @@ class TestTestValueBarAggregator:
 
 
 class TestRenkoBarAggregator:
-    def test_handle_quote_tick_when_price_below_brick_size_updates(self):
+    @staticmethod
+    def test_handle_quote_tick_when_price_below_brick_size_updates():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1668,7 +1711,8 @@ class TestRenkoBarAggregator:
         # Assert
         assert len(handler) == 0  # No bar created yet
 
-    def test_handle_quote_tick_when_price_exceeds_brick_size_creates_bar(self):
+    @staticmethod
+    def test_handle_quote_tick_when_price_exceeds_brick_size_creates_bar():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1713,7 +1757,8 @@ class TestRenkoBarAggregator:
         assert bar.close == Price.from_str("1.00010")
         assert bar.volume == Quantity.from_int(2)
 
-    def test_handle_quote_tick_multiple_bricks_in_one_update(self):
+    @staticmethod
+    def test_handle_quote_tick_multiple_bricks_in_one_update():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1766,7 +1811,8 @@ class TestRenkoBarAggregator:
         assert bar2.low == Price.from_str("1.00010")
         assert bar2.close == Price.from_str("1.00020")
 
-    def test_handle_quote_tick_downward_movement(self):
+    @staticmethod
+    def test_handle_quote_tick_downward_movement():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1811,7 +1857,8 @@ class TestRenkoBarAggregator:
         assert bar.close == Price.from_str("1.00010")
         assert bar.volume == Quantity.from_int(2)
 
-    def test_get_brick_size(self):
+    @staticmethod
+    def test_get_brick_size():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1826,7 +1873,8 @@ class TestRenkoBarAggregator:
         # Act & Assert
         assert aggregator.brick_size == Decimal("0.00010")  # 10 pips for AUDUSD
 
-    def test_handle_bar_when_price_below_brick_size_updates(self):
+    @staticmethod
+    def test_handle_bar_when_price_below_brick_size_updates():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1873,7 +1921,8 @@ class TestRenkoBarAggregator:
         # Assert
         assert len(handler) == 0  # No Renko bars should be created yet
 
-    def test_handle_bar_when_price_exceeds_brick_size_creates_bar(self):
+    @staticmethod
+    def test_handle_bar_when_price_exceeds_brick_size_creates_bar():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1926,7 +1975,8 @@ class TestRenkoBarAggregator:
         assert bar.close == Price.from_str("1.00010")
         assert bar.volume == Quantity.from_int(150)  # 100 + 50
 
-    def test_handle_bar_multiple_bricks_in_one_update(self):
+    @staticmethod
+    def test_handle_bar_multiple_bricks_in_one_update():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -1989,7 +2039,8 @@ class TestRenkoBarAggregator:
         assert bar2.close == Price.from_str("1.00020")
         assert bar2.volume == Quantity.from_int(300)  # 100 + 200
 
-    def test_handle_bar_downward_movement(self):
+    @staticmethod
+    def test_handle_bar_downward_movement():
         # Arrange
         handler = []
         instrument = AUDUSD_SIM
@@ -2044,7 +2095,8 @@ class TestRenkoBarAggregator:
 
 
 class TestTimeBarAggregator:
-    def test_instantiate_given_invalid_bar_spec_raises_value_error(self):
+    @staticmethod
+    def test_instantiate_given_invalid_bar_spec_raises_value_error():
         # Arrange
         clock = TestClock()
         handler = []
@@ -2112,7 +2164,8 @@ class TestTimeBarAggregator:
         # Assert
         assert aggregator.next_close_ns == expected
 
-    def test_update_timer_with_test_clock_sends_single_bar_to_handler(self):
+    @staticmethod
+    def test_update_timer_with_test_clock_sends_single_bar_to_handler():
         # Arrange
         clock = TestClock()
         handler = []
@@ -2177,7 +2230,8 @@ class TestTimeBarAggregator:
         assert initial_next_close == 60_000_000_000
         assert aggregator.next_close_ns == 120_000_000_000
 
-    def test_batch_update_sends_single_bar_to_handler(self):
+    @staticmethod
+    def test_batch_update_sends_single_bar_to_handler():
         # Arrange
         clock = TestClock()
         clock.set_time(3 * 60 * NANOSECONDS_IN_SECOND)
@@ -2239,7 +2293,8 @@ class TestTimeBarAggregator:
         assert Quantity.from_int(3) == bar.volume
         assert bar.ts_init == 3 * 60_000_000_000
 
-    def test_update_timer_with_test_clock_sends_single_bar_to_handler_with_bars(self):
+    @staticmethod
+    def test_update_timer_with_test_clock_sends_single_bar_to_handler_with_bars():
         # Arrange
         clock = TestClock()
         handler = []
@@ -2316,9 +2371,9 @@ class TestTimeBarAggregator:
         assert initial_next_close == 180_000_000_000
         assert aggregator.next_close_ns == 360_000_000_000
 
+    @staticmethod
     def test_update_timer_with_test_clock_sends_no_bar_to_handler_with_skip_first_non_full_bar(
-        self,
-    ):
+        ):
         # Arrange
         clock = TestClock()
         handler = []
@@ -2389,7 +2444,8 @@ class TestTimeBarAggregator:
         assert initial_next_close == 180_000_000_001
         assert aggregator.next_close_ns == 180_000_000_001  # TODO: This didn't increment?
 
-    def test_skip_first_non_full_bar_when_starting_on_bar_boundary(self):
+    @staticmethod
+    def test_skip_first_non_full_bar_when_starting_on_bar_boundary():
         """
         Test that when skip_first_non_full_bar=True and we start exactly on a bar
         boundary, the first bar should NOT be skipped (reproduces issue #2605).
@@ -2467,7 +2523,8 @@ class TestTimeBarAggregator:
         assert handler[0].close == Price.from_str("1.00003")
         assert handler[0].volume == Quantity.from_int(300000)
 
-    def test_skip_first_non_full_bar_when_starting_near_bar_boundary(self):
+    @staticmethod
+    def test_skip_first_non_full_bar_when_starting_near_bar_boundary():
         """
         When skip_first_non_full_bar=True and we start within the tolerance of a bar
         boundary (e.g., +100µs), the first bar should NOT be skipped.
@@ -2543,9 +2600,9 @@ class TestTimeBarAggregator:
         assert handler[0].close == Price.from_str("1.00003")
         assert handler[0].volume == Quantity.from_int(300000)
 
+    @staticmethod
     def test_update_timer_with_test_clock_sends_single_bar_to_handler_with_bars_and_time_origin(
-        self,
-    ):
+        ):
         # Arrange
         clock = TestClock()
         clock.set_time((30 * 60 + 30) * NANOSECONDS_IN_SECOND + 10_000)
@@ -2626,7 +2683,8 @@ class TestTimeBarAggregator:
         assert initial_next_close == pd.Timestamp("1970-01-01 00:33:30.000010").value
         assert aggregator.next_close_ns == pd.Timestamp("1970-01-01 00:36:30.000010").value
 
-    def test_update_timer_with_test_clock_sends_single_monthly_bar_to_handler_with_bars(self):
+    @staticmethod
+    def test_update_timer_with_test_clock_sends_single_monthly_bar_to_handler_with_bars():
         # Arrange
         clock = TestClock()
         clock.set_time(pd.Timestamp("2024-3-23").value)
@@ -2701,7 +2759,8 @@ class TestTimeBarAggregator:
         assert bar.volume == Quantity.from_int(3)
         assert bar.ts_init == pd.Timestamp("2024-4-1").value
 
-    def test_update_timer_with_test_clock_sends_single_weekly_bar_to_handler_with_bars(self):
+    @staticmethod
+    def test_update_timer_with_test_clock_sends_single_weekly_bar_to_handler_with_bars():
         # Arrange
         clock = TestClock()
         clock.set_time(pd.Timestamp("2024-3-20").value)
@@ -2776,7 +2835,8 @@ class TestTimeBarAggregator:
         assert bar.volume == Quantity.from_int(3)
         assert bar.ts_init == pd.Timestamp("2024-3-25").value
 
-    def test_batch_update_sends_single_bar_to_handler_with_bars(self):
+    @staticmethod
+    def test_batch_update_sends_single_bar_to_handler_with_bars():
         # Arrange
         clock = TestClock()
         clock.set_time(3 * 60 * NANOSECONDS_IN_SECOND)
@@ -2851,7 +2911,8 @@ class TestTimeBarAggregator:
         assert bar.volume == Quantity.from_int(3)
         assert bar.ts_init == 3 * 60 * NANOSECONDS_IN_SECOND
 
-    def test_aggregation_for_same_sec_and_minute_intervals(self):
+    @staticmethod
+    def test_aggregation_for_same_sec_and_minute_intervals():
         # Arrange - prepare data
         path = TEST_DATA_DIR / "binance/btcusdt-quotes.parquet"
         df_ticks = ParquetTickDataLoader.load(path)
@@ -2890,7 +2951,8 @@ class TestTimeBarAggregator:
         assert handler[0].ts_event == 1610064002000000000
         assert handler[0].ts_init == 1610064002000000000
 
-    def test_do_not_build_with_no_updates(self):
+    @staticmethod
+    def test_do_not_build_with_no_updates():
         # Arrange
         path = TEST_DATA_DIR / "binance/btcusdt-quotes.parquet"
         df_ticks = ParquetTickDataLoader.load(path)
@@ -2921,7 +2983,8 @@ class TestTimeBarAggregator:
         # Assert
         assert len(handler) == 1  # <-- only 1 bar even after 5 minutes
 
-    def test_timestamp_on_close_false_timestamps_ts_event_as_open(self):
+    @staticmethod
+    def test_timestamp_on_close_false_timestamps_ts_event_as_open():
         # Arrange
         path = TEST_DATA_DIR / "binance/btcusdt-quotes.parquet"
         df_ticks = ParquetTickDataLoader.load(path)

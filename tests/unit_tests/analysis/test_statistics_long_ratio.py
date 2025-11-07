@@ -39,7 +39,8 @@ class TestLongRatioPortfolioStatistics:
             clock=TestClock(),
         )
 
-    def test_name_returns_expected_returns_expected(self):
+    @staticmethod
+    def test_name_returns_expected_returns_expected():
         # Arrange
         stat = LongRatio()
 
@@ -49,7 +50,8 @@ class TestLongRatioPortfolioStatistics:
         # Assert
         assert result == "Long Ratio"
 
-    def test_calculate_given_empty_list_returns_none(self):
+    @staticmethod
+    def test_calculate_given_empty_list_returns_none():
         # Arrange
         stat = LongRatio()
 

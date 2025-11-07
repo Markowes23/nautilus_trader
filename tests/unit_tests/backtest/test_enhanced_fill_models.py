@@ -269,7 +269,8 @@ class TestEnhancedFillModels:
 
         assert result is None  # Default behavior should return None
 
-    def test_fill_model_with_different_instruments(self):
+    @staticmethod
+    def test_fill_model_with_different_instruments():
         """
         Test that fill models work with different instrument types.
         """

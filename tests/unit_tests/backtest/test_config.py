@@ -350,7 +350,8 @@ class TestBacktestConfigParsing:
         assert len(token) == 64
         assert all(c in "0123456789abcdef" for c in token)
 
-    def test_backtest_main_cli(self, mocker) -> None:
+    @staticmethod
+    def test_backtest_main_cli(mocker) -> None:
         # Arrange
         from nautilus_trader.backtest.__main__ import main
 
@@ -417,14 +418,16 @@ class TestParseFiltersExpr:
     Test security and functionality of parse_filters_expr function.
     """
 
-    def test_parse_filters_expr_none_input(self):
+    @staticmethod
+    def test_parse_filters_expr_none_input():
         """
         Test that None input returns None.
         """
         result = parse_filters_expr(None)
         assert result is None
 
-    def test_parse_filters_expr_empty_string(self):
+    @staticmethod
+    def test_parse_filters_expr_empty_string():
         """
         Test that empty string returns None.
         """
@@ -552,7 +555,8 @@ class TestParseFiltersExpr:
             with pytest.raises(ValueError):
                 parse_filters_expr(expr)
 
-    def test_parse_filters_expr_complex_valid_expressions(self):
+    @staticmethod
+    def test_parse_filters_expr_complex_valid_expressions():
         """
         Logical OR between multiple comparisons should be accepted.
         """
@@ -575,7 +579,8 @@ class TestParseFiltersExpr:
         with pytest.raises(ValueError):
             parse_filters_expr(expr)
 
-    def test_backtest_venue_config_allow_cash_borrowing_default(self):
+    @staticmethod
+    def test_backtest_venue_config_allow_cash_borrowing_default():
         """
         Test that allow_cash_borrowing defaults to False.
         """
@@ -590,7 +595,8 @@ class TestParseFiltersExpr:
         # Assert
         assert config.allow_cash_borrowing is False
 
-    def test_backtest_venue_config_allow_cash_borrowing_enabled(self):
+    @staticmethod
+    def test_backtest_venue_config_allow_cash_borrowing_enabled():
         """
         Test that allow_cash_borrowing can be enabled.
         """

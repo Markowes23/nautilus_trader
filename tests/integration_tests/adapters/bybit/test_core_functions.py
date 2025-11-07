@@ -20,7 +20,8 @@ from nautilus_trader.adapters.bybit.common.symbol import BybitSymbol
 
 
 class TestBybitSymbol:
-    def test_symbol_missing_product_type(self):
+    @staticmethod
+    def test_symbol_missing_product_type():
         with pytest.raises(ValueError):
             BybitSymbol("BTCUSD")
 
@@ -29,7 +30,8 @@ class TestBybitSymbol:
 
         BybitSymbol("BTCUSD-LINEAR")
 
-    def test_format_symbol(self):
+    @staticmethod
+    def test_format_symbol():
         symbol_str = "ETHUSDT-LINEAR"
         symbol = BybitSymbol(symbol_str)
 

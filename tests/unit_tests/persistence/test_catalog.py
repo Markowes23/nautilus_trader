@@ -517,8 +517,8 @@ class TestConsolidateDataByPeriod:
 
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
+    @staticmethod
     def _create_test_bars(
-        self,
         timestamps: list[int],
         instrument_id: str = "AUD/USD.SIM",
     ) -> list[Bar]:
@@ -556,19 +556,22 @@ class TestConsolidateDataByPeriod:
             quotes.append(quote)
         return quotes
 
-    def _get_bar_type_identifier(self) -> str:
+    @staticmethod
+    def _get_bar_type_identifier() -> str:
         """
         Get the bar type identifier for AUD/USD bars.
         """
         return "AUD/USD.SIM-1-MINUTE-BID-EXTERNAL"
 
-    def _get_quote_type_identifier(self) -> str:
+    @staticmethod
+    def _get_quote_type_identifier() -> str:
         """
         Get the quote type identifier for ETH/USDT quotes.
         """
         return "ETH/USDT.BINANCE"
 
-    def _get_realistic_timestamps(self, count: int, interval_hours: int = 1) -> list[int]:
+    @staticmethod
+    def _get_realistic_timestamps(count: int, interval_hours: int = 1) -> list[int]:
         """
         Generate realistic timestamps starting from 2024-01-01.
         """

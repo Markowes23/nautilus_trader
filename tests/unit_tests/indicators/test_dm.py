@@ -47,7 +47,8 @@ class TestDirectionalMovement:
         # Assert
         assert self.dm.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = DirectionalMovement(10)
 

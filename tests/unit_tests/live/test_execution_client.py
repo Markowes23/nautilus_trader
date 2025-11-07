@@ -63,7 +63,8 @@ class TestExecutionClientImpl(LiveExecutionClient):
     async def _query_order(self, command):
         await asyncio.sleep(0.01)
 
-    async def _query_account(self, command):
+    @staticmethod
+    async def _query_account(command):
         await asyncio.sleep(0.01)
 
     async def generate_order_status_report(self, command):

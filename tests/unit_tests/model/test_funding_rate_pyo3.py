@@ -26,14 +26,16 @@ BTCUSDT_PERP_BINANCE = InstrumentId(Symbol("BTCUSDT-PERP"), Venue("BINANCE"))
 
 
 class TestFundingRateUpdate:
-    def test_fully_qualified_name(self):
+    @staticmethod
+    def test_fully_qualified_name():
         # Arrange, Act, Assert
         assert (
             FundingRateUpdate.fully_qualified_name()
             == "nautilus_trader.core.nautilus_pyo3.model:FundingRateUpdate"
         )
 
-    def test_funding_rate_update_new_minimal(self):
+    @staticmethod
+    def test_funding_rate_update_new_minimal():
         # Arrange, Act
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -49,7 +51,8 @@ class TestFundingRateUpdate:
         assert funding_rate.ts_event == 1_640_000_000_000_000_000
         assert funding_rate.ts_init == 1_640_000_000_000_000_000
 
-    def test_funding_rate_update_new_complete(self):
+    @staticmethod
+    def test_funding_rate_update_new_complete():
         # Arrange, Act
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -66,7 +69,8 @@ class TestFundingRateUpdate:
         assert funding_rate.ts_event == 1_640_000_000_000_000_000
         assert funding_rate.ts_init == 1_640_000_000_000_000_000
 
-    def test_hash_str_and_repr(self):
+    @staticmethod
+    def test_hash_str_and_repr():
         # Arrange
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -86,7 +90,8 @@ class TestFundingRateUpdate:
             == 'FundingRateUpdate { instrument_id: "BTCUSDT-PERP.BINANCE", rate: 0.0001, next_funding_ns: None, ts_event: UnixNanos(1640000000000000000), ts_init: UnixNanos(1640000000000000000) }'  # noqa: E501
         )
 
-    def test_equality(self):
+    @staticmethod
+    def test_equality():
         # Arrange
         funding_rate1 = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -113,7 +118,8 @@ class TestFundingRateUpdate:
         assert hash(funding_rate1) == hash(funding_rate2)
         assert hash(funding_rate1) != hash(funding_rate3)
 
-    def test_to_dict_minimal_fields(self):
+    @staticmethod
+    def test_to_dict_minimal_fields():
         # Arrange
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -138,7 +144,8 @@ class TestFundingRateUpdate:
             assert key in result
             assert result[key] == expected_value
 
-    def test_to_dict_all_fields(self):
+    @staticmethod
+    def test_to_dict_all_fields():
         # Arrange
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -165,7 +172,8 @@ class TestFundingRateUpdate:
             assert key in result
             assert result[key] == expected_value
 
-    def test_from_dict_minimal_fields(self):
+    @staticmethod
+    def test_from_dict_minimal_fields():
         # Arrange
         values = {
             "instrument_id": "BTCUSDT-PERP.BINANCE",
@@ -184,7 +192,8 @@ class TestFundingRateUpdate:
         assert result.ts_event == 1_640_000_000_000_000_000
         assert result.ts_init == 1_640_000_000_000_000_000
 
-    def test_from_dict_all_fields(self):
+    @staticmethod
+    def test_from_dict_all_fields():
         # Arrange
         values = {
             "instrument_id": "BTCUSDT-PERP.BINANCE",
@@ -204,7 +213,8 @@ class TestFundingRateUpdate:
         assert result.ts_event == 1_640_000_000_000_000_000
         assert result.ts_init == 1_640_000_000_000_000_000
 
-    def test_roundtrip_dict_conversion_minimal_fields(self):
+    @staticmethod
+    def test_roundtrip_dict_conversion_minimal_fields():
         # Arrange
         original = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -219,7 +229,8 @@ class TestFundingRateUpdate:
         # Assert
         assert result == original
 
-    def test_roundtrip_dict_conversion_all_fields(self):
+    @staticmethod
+    def test_roundtrip_dict_conversion_all_fields():
         # Arrange
         original = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -235,7 +246,8 @@ class TestFundingRateUpdate:
         # Assert
         assert result == original
 
-    def test_pickling_round_trip(self):
+    @staticmethod
+    def test_pickling_round_trip():
         # Arrange
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -252,7 +264,8 @@ class TestFundingRateUpdate:
         # Assert
         assert unpickled == funding_rate
 
-    def test_json_serialization_roundtrip(self):
+    @staticmethod
+    def test_json_serialization_roundtrip():
         # Arrange
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -269,7 +282,8 @@ class TestFundingRateUpdate:
         # Assert
         assert result == funding_rate
 
-    def test_msgpack_serialization_roundtrip(self):
+    @staticmethod
+    def test_msgpack_serialization_roundtrip():
         # Arrange
         funding_rate = FundingRateUpdate(
             instrument_id=BTCUSDT_PERP_BINANCE,
@@ -286,14 +300,16 @@ class TestFundingRateUpdate:
         # Assert
         assert result == funding_rate
 
-    def test_get_metadata(self):
+    @staticmethod
+    def test_get_metadata():
         # Arrange, Act
         metadata = FundingRateUpdate.get_metadata(BTCUSDT_PERP_BINANCE)
 
         # Assert
         assert metadata == {"instrument_id": "BTCUSDT-PERP.BINANCE"}
 
-    def test_get_fields(self):
+    @staticmethod
+    def test_get_fields():
         # Arrange, Act
         fields = FundingRateUpdate.get_fields()
 

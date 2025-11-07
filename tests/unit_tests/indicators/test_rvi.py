@@ -51,7 +51,8 @@ class TestRelativeVolatilityIndex:
         # Act, Assert
         assert self.rvi.initialized is True
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = RelativeVolatilityIndex(10)
 

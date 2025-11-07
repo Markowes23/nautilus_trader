@@ -332,7 +332,8 @@ class ExecTester(Strategy):
     def get_price_offset(self, instrument: Instrument) -> Decimal:
         return instrument.price_increment * self.config.tob_offset_ticks
 
-    def is_order_active(self, order: Order) -> bool:
+    @staticmethod
+    def is_order_active(order: Order) -> bool:
         return order.is_active_local or order.is_inflight or order.is_open
 
     def submit_limit_order(self, order_side: OrderSide, price: Price) -> None:
@@ -735,7 +736,8 @@ class ExecTester(Strategy):
                     self.cancel_order(self.sell_stop_order)
                     self.submit_stop_order(OrderSide.SELL, trigger_price, limit_price)
 
-    def get_order_trigger_price(self, order: Order) -> Price | None:
+    @staticmethod
+    def get_order_trigger_price(order: Order) -> Price | None:
         """
         Get the trigger price for stop/conditional orders.
         """

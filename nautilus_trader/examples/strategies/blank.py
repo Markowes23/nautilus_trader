@@ -79,7 +79,8 @@ class MyStrategy(Strategy):
         """
         # Optionally implement
 
-    def on_save(self) -> dict[str, bytes]:
+    @staticmethod
+    def on_save() -> dict[str, bytes]:
         """
         Actions to be performed when the strategy is saved.
 

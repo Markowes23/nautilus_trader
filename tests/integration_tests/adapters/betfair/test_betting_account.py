@@ -88,7 +88,8 @@ class TestBettingAccount:
         )
         return fill
 
-    def test_instantiated_accounts_basic_properties(self):
+    @staticmethod
+    def test_instantiated_accounts_basic_properties():
         # Arrange, Act
         account = TestExecStubs.betting_account()
 
@@ -100,7 +101,8 @@ class TestBettingAccount:
         assert repr(account) == "BettingAccount(id=SIM-000, type=BETTING, base=GBP)"
         assert isinstance(hash(account), int)
 
-    def test_instantiate_single_asset_cash_account(self):
+    @staticmethod
+    def test_instantiate_single_asset_cash_account():
         # Arrange
         event = AccountState(
             account_id=AccountId("SIM-000"),
@@ -136,7 +138,8 @@ class TestBettingAccount:
         assert account.balances_free() == {GBP: Money(1_000_000, GBP)}
         assert account.balances_locked() == {GBP: Money(0, GBP)}
 
-    def test_apply_given_new_state_event_updates_correctly(self):
+    @staticmethod
+    def test_apply_given_new_state_event_updates_correctly():
         # Arrange
         event1 = AccountState(
             account_id=AccountId("SIM-001"),

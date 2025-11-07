@@ -582,7 +582,8 @@ def test_add_listener_receives_byte_messages(bus):
         def is_closed(self):
             return self._closed
 
-        def publish(self, topic, payload):
+        @staticmethod
+        def publish(topic, payload):
             events.append((topic, payload))
 
     listener_open = DummyListener(closed=False)

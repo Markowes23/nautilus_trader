@@ -931,12 +931,14 @@ class DYDXDataClient(LiveMarketDataClient):
         candles_resolution = get_interval_from_bar_type(command.bar_type)
         await self._ws_client.unsubscribe_klines(dydx_symbol.raw_symbol, candles_resolution)
 
-    def _get_cached_instrument_id(self, symbol: str) -> InstrumentId:
+    @staticmethod
+    def _get_cached_instrument_id(symbol: str) -> InstrumentId:
         dydx_symbol = DYDXSymbol(symbol)
         nautilus_instrument_id: InstrumentId = dydx_symbol.to_instrument_id()
         return nautilus_instrument_id
 
-    def _should_partition_bars_request(self, request: RequestBars, max_bars: int) -> bool:
+    @staticmethod
+    def _should_partition_bars_request(request: RequestBars, max_bars: int) -> bool:
         bar_timedelta = request.bar_type.spec.timedelta
         total_duration = request.end - request.start
         expected_bars = int(total_duration / bar_timedelta)

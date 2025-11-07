@@ -85,7 +85,8 @@ class TestSpreadExecutionDetection:
                 result == expected
             ), f"Failed for {instrument_id_str}: expected {expected}, was {result}"
 
-    def _is_spread_instrument(self, instrument_id):
+    @staticmethod
+    def _is_spread_instrument(instrument_id):
         """
         Test implementation of spread detection.
         """
@@ -149,7 +150,8 @@ class TestSpreadLegExtraction:
         # Should return original ID for invalid format
         assert leg_id == leg_fill.instrument_id
 
-    def _extract_leg_instrument_id(self, leg_fill):
+    @staticmethod
+    def _extract_leg_instrument_id(leg_fill):
         """
         Test implementation of leg instrument ID extraction.
         """
@@ -299,7 +301,8 @@ class TestSpreadFillCreation:
         assert individual_leg_fill.order_side == OrderSide.SELL
         assert individual_leg_fill.last_qty == Quantity.from_int(6)
 
-    def _create_combo_fill(self, leg_fill: OrderFilled, contract=None) -> OrderFilled | None:
+    @staticmethod
+    def _create_combo_fill(leg_fill: OrderFilled, contract=None) -> OrderFilled | None:
         """
         Test implementation of combo fill creation.
         """
@@ -386,7 +389,8 @@ class TestSpreadFillCreation:
         except Exception:
             return None
 
-    def _extract_leg_instrument_id(self, leg_fill: OrderFilled) -> InstrumentId | None:
+    @staticmethod
+    def _extract_leg_instrument_id(leg_fill: OrderFilled) -> InstrumentId | None:
         """
         Test implementation of leg instrument ID extraction.
         """
@@ -406,8 +410,8 @@ class TestSpreadFillCreation:
         except Exception:
             return None
 
+    @staticmethod
     def _extract_leg_instrument_id_with_ratio(
-        self,
         leg_fill: OrderFilled,
         contract=None,
     ) -> tuple[InstrumentId | None, int]:
@@ -432,7 +436,8 @@ class TestSpreadFillTracking:
     Test cases for spread fill deduplication tracking.
     """
 
-    def test_fill_tracking_deduplication(self):
+    @staticmethod
+    def test_fill_tracking_deduplication():
         """
         Test that duplicate fills are properly tracked.
         """
@@ -452,7 +457,8 @@ class TestSpreadFillTracking:
         # Duplicate should be detected
         assert fill_id in tracking[client_order_id]
 
-    def test_multiple_orders_tracking(self):
+    @staticmethod
+    def test_multiple_orders_tracking():
         """
         Test tracking fills for multiple orders.
         """
@@ -472,7 +478,8 @@ class TestSpreadFillTracking:
         assert fill2 in tracking[order2]
         assert fill2 not in tracking[order1]
 
-    def test_multiple_fills_same_order(self):
+    @staticmethod
+    def test_multiple_fills_same_order():
         """
         Test tracking multiple fills for same order.
         """
@@ -554,7 +561,8 @@ class TestSpreadExecutionIntegration:
         # Should be called with original fill as fallback
         self.client._send_order_fill_event.assert_called_with(leg_fill)
 
-    def _create_test_fill(self, instrument_id_str: str) -> OrderFilled:
+    @staticmethod
+    def _create_test_fill(instrument_id_str: str) -> OrderFilled:
         """
         Create a test fill for testing.
         """

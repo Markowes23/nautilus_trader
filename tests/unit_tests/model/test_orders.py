@@ -75,12 +75,14 @@ class TestOrders:
             clock=TestClock(),
         )
 
-    def test_opposite_side_given_invalid_value_raises_value_error(self):
+    @staticmethod
+    def test_opposite_side_given_invalid_value_raises_value_error():
         # Arrange, Act, Assert
         with pytest.raises(ValueError):
             Order.opposite_side(0)  # <-- invalid value
 
-    def test_flatten_side_given_invalid_value_or_flat_raises_value_error(self):
+    @staticmethod
+    def test_flatten_side_given_invalid_value_or_flat_raises_value_error():
         # Arrange, Act
         with pytest.raises(ValueError):
             Order.closing_side(0)  # <-- invalid value

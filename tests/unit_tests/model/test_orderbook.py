@@ -46,7 +46,8 @@ class TestOrderBook:
         )
         self.sample_book = self.make_sample_book()
 
-    def test_order_book_pickleable(self):
+    @staticmethod
+    def test_order_book_pickleable():
         # Arrange
         book = OrderBook(
             instrument_id=InstrumentId.from_str("1.166564490-237491-0.0.BETFAIR"),
@@ -345,7 +346,8 @@ class TestOrderBook:
             "╰──────┴───────┴──────╯"
         )  # <-- Calls pprint internally
 
-    def test_pprint_when_no_orders(self):
+    @staticmethod
+    def test_pprint_when_no_orders():
         # Arrange
         ob = OrderBook(
             instrument_id=TestIdStubs.audusd_id(),
@@ -654,7 +656,8 @@ class TestOrderBook:
         assert str(book) == str(unpickled)
         assert book.bids()[0].orders()[0].price == Price.from_str("0.00400")
 
-    def test_orderbook_deep_copy(self):
+    @staticmethod
+    def test_orderbook_deep_copy():
         # Arrange
         instrument_id = InstrumentId.from_str("1.166564490-237491-0.0.BETFAIR")
         book = OrderBook(instrument_id, BookType.L2_MBP)
@@ -694,7 +697,8 @@ class TestOrderBook:
         assert book.ts_last == new.ts_last
         assert book.sequence == new.sequence
 
-    def test_orderbook_esh4_glbx_20231224_mbo_l3(self) -> None:
+    @staticmethod
+    def test_orderbook_esh4_glbx_20231224_mbo_l3() -> None:
         # Arrange
         loader = DatabentoDataLoader()
         instrument = TestInstrumentProvider.es_future(expiry_year=2024, expiry_month=3)

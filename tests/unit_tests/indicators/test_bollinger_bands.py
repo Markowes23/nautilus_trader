@@ -22,14 +22,16 @@ AUDUSD_SIM = TestInstrumentProvider.default_fx_ccy("AUD/USD")
 
 
 class TestBollingerBands:
-    def test_name_returns_expected_name(self):
+    @staticmethod
+    def test_name_returns_expected_name():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
         # Act, Assert
         assert indicator.name == "BollingerBands"
 
-    def test_str_repr_returns_expected_string(self):
+    @staticmethod
+    def test_str_repr_returns_expected_string():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -37,7 +39,8 @@ class TestBollingerBands:
         assert str(indicator) == "BollingerBands(20, 2.0, SIMPLE)"
         assert repr(indicator) == "BollingerBands(20, 2.0, SIMPLE)"
 
-    def test_properties_after_instantiation(self):
+    @staticmethod
+    def test_properties_after_instantiation():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -48,7 +51,8 @@ class TestBollingerBands:
         assert indicator.lower == 0
         assert indicator.middle == 0
 
-    def test_initialized_with_required_inputs_returns_true(self):
+    @staticmethod
+    def test_initialized_with_required_inputs_returns_true():
         # Arrange
         indicator = BollingerBands(5, 2.0)
 
@@ -61,7 +65,8 @@ class TestBollingerBands:
         # Act, Assert
         assert indicator.initialized is True
 
-    def test_handle_quote_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_quote_tick_updates_indicator():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -74,7 +79,8 @@ class TestBollingerBands:
         assert indicator.has_inputs
         assert indicator.middle == 1.0
 
-    def test_handle_trade_tick_updates_indicator(self):
+    @staticmethod
+    def test_handle_trade_tick_updates_indicator():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -87,7 +93,8 @@ class TestBollingerBands:
         assert indicator.has_inputs
         assert indicator.middle == 1.0
 
-    def test_handle_bar_updates_indicator(self):
+    @staticmethod
+    def test_handle_bar_updates_indicator():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -100,7 +107,8 @@ class TestBollingerBands:
         assert indicator.has_inputs
         assert indicator.middle == 1.0000266666666666
 
-    def test_value_with_one_input_returns_expected_value(self):
+    @staticmethod
+    def test_value_with_one_input_returns_expected_value():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -112,7 +120,8 @@ class TestBollingerBands:
         assert indicator.middle == 1.00010
         assert indicator.lower == 1.00010
 
-    def test_value_with_three_inputs_returns_expected_value(self):
+    @staticmethod
+    def test_value_with_three_inputs_returns_expected_value():
         # Arrange
         indicator = BollingerBands(20, 2.0)
 
@@ -126,7 +135,8 @@ class TestBollingerBands:
         assert indicator.middle == 1.0001900000000001
         assert indicator.lower == 1.0000644493609618
 
-    def test_reset_successfully_returns_indicator_to_fresh_state(self):
+    @staticmethod
+    def test_reset_successfully_returns_indicator_to_fresh_state():
         # Arrange
         indicator = BollingerBands(5, 2.0)
 

@@ -110,8 +110,8 @@ class TestDYDXDataClientBarPartitioning:
             name="DYDX",
         )
 
+    @staticmethod
     def create_request_bars(
-        self,
         bar_type_str: str,
         start_time: datetime,
         end_time: datetime,
@@ -133,8 +133,8 @@ class TestDYDXDataClientBarPartitioning:
             params=None,
         )
 
+    @staticmethod
     def create_mock_candle(
-        self,
         timestamp: datetime,
         price: float = 100.0,
         is_partial: bool = False,

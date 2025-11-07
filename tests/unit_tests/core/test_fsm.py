@@ -37,7 +37,8 @@ class TestFiniteStateMachine:
         assert self.fsm.state == ComponentState.READY
         assert self.fsm.state_string == "READY"
 
-    def test_trigger_with_invalid_transition_raises_exception(self):
+    @staticmethod
+    def test_trigger_with_invalid_transition_raises_exception():
         # Arrange
         fsm = FiniteStateMachine(
             state_transition_table=ComponentFSMFactory.get_state_transition_table(),

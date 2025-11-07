@@ -1806,8 +1806,8 @@ class LiveExecutionEngine(ExecutionEngine):
             )
         return True
 
+    @staticmethod
     def _get_existing_fill_for_trade_id(
-        self,
         order: Order,
         trade_id: TradeId,
     ) -> OrderFilled | None:
@@ -1817,7 +1817,8 @@ class LiveExecutionEngine(ExecutionEngine):
 
         return None
 
-    def _fill_reports_equal(self, cached_fill: OrderFilled, report: FillReport) -> bool:
+    @staticmethod
+    def _fill_reports_equal(cached_fill: OrderFilled, report: FillReport) -> bool:
         # Commission can be missing on reports from some venues/paths; compare safely
         if cached_fill.commission is None and report.commission is None:
             commissions_equal = True
@@ -2133,7 +2134,8 @@ class LiveExecutionEngine(ExecutionEngine):
 
         return True  # Reconciled
 
-    def _generate_client_order_id(self) -> ClientOrderId:
+    @staticmethod
+    def _generate_client_order_id() -> ClientOrderId:
         return ClientOrderId(f"O-{UUID4().value}")
 
     def _generate_inferred_fill(
@@ -2323,7 +2325,8 @@ class LiveExecutionEngine(ExecutionEngine):
         self._log.debug(f"Generated {filled}")
         self._handle_event_with_tracking(filled)
 
-    def _should_update(self, order: Order, report: OrderStatusReport) -> bool:
+    @staticmethod
+    def _should_update(order: Order, report: OrderStatusReport) -> bool:
         if report.quantity != order.quantity:
             return True
 
