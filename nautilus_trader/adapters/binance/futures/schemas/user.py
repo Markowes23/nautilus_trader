@@ -294,21 +294,15 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
         # Log exchange-generated liquidation/ADL/settlement orders
         if is_liquidation:
             exec_client._log.warning(
-                f"Received liquidation order: {self.c}, "
-                f"symbol={self.s}, side={self.S.value}, "
-                f"exec_type={self.x.value}, status={self.X.value}",
+                f"Received liquidation order: {self.c}, symbol={self.s}, side={self.S.value}, exec_type={self.x.value}, status={self.X.value}",
             )
         elif is_adl:
             exec_client._log.warning(
-                f"Received ADL order: {self.c}, "
-                f"symbol={self.s}, side={self.S.value}, "
-                f"exec_type={self.x.value}, status={self.X.value}",
+                f"Received ADL order: {self.c}, symbol={self.s}, side={self.S.value}, exec_type={self.x.value}, status={self.X.value}",
             )
         elif is_settlement:
             exec_client._log.warning(
-                f"Received settlement order: {self.c}, "
-                f"symbol={self.s}, side={self.S.value}, "
-                f"exec_type={self.x.value}, status={self.X.value}",
+                f"Received settlement order: {self.c}, symbol={self.s}, side={self.S.value}, exec_type={self.x.value}, status={self.X.value}",
             )
 
         # For exchange-generated orders without strategy, still need to process fills
@@ -338,9 +332,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
         # Check for CALCULATED execution type (liquidation fills) OR special client order IDs
         # Binance sends liquidation/ADL fills with x=CALCULATED and X=FILLED
         if (is_liquidation or is_adl or is_settlement) and (
-            self.x == BinanceExecutionType.CALCULATED
-            or self.X == BinanceOrderStatus.NEW_ADL
-            or self.X == BinanceOrderStatus.NEW_INSURANCE
+            self.x == BinanceExecutionType.CALCULATED or self.X == BinanceOrderStatus.NEW_ADL or self.X == BinanceOrderStatus.NEW_INSURANCE
         ):
             # These are special exchange-generated fills without a pre-existing order
             if Decimal(self.l) == 0:
@@ -430,14 +422,12 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
         elif self.x in (BinanceExecutionType.TRADE, BinanceExecutionType.CALCULATED):
             if self.x == BinanceExecutionType.CALCULATED:
                 exec_client._log.info(
-                    f"Received CALCULATED (liquidation) execution for order {venue_order_id}, "
-                    f"generating OrderFilled event",
+                    f"Received CALCULATED (liquidation) execution for order {venue_order_id}, generating OrderFilled event",
                 )
 
             if Decimal(self.L) == 0:
                 exec_client._log.warning(
-                    f"Received {self.x.value} execution with L=0 for order {venue_order_id}, "
-                    f"order status={self.X.value}",
+                    f"Received {self.x.value} execution with L=0 for order {venue_order_id}, order status={self.X.value}",
                 )
 
                 # Route based on order status to ensure terminal events are generated
@@ -450,9 +440,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
                             venue_order_id=venue_order_id,
                             quantity=Quantity(float(self.q), size_precision),
                             price=Price(float(self.p), price_precision),
-                            trigger_price=(
-                                Price(float(self.sp), price_precision) if self.sp else None
-                            ),
+                            trigger_price=(Price(float(self.sp), price_precision) if self.sp else None),
                             ts_event=ts_event,
                         )
                     else:
@@ -464,9 +452,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
                             ts_event=ts_event,
                         )
                     return
-                elif self.X == BinanceOrderStatus.CANCELED or (
-                    exec_client.treat_expired_as_canceled and self.x == BinanceExecutionType.EXPIRED
-                ):
+                elif self.X == BinanceOrderStatus.CANCELED or (exec_client.treat_expired_as_canceled and self.x == BinanceExecutionType.EXPIRED):
                     exec_client.generate_order_canceled(
                         strategy_id=strategy_id,
                         instrument_id=instrument_id,
@@ -479,8 +465,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
                     # Continue to generate fill with L=0 to close order
                     # Better to have bad price data than stuck order
                     exec_client._log.warning(
-                        f"Generating OrderFilled with L=0 for terminal state {self.X.value} "
-                        f"to prevent order from being stuck",
+                        f"Generating OrderFilled with L=0 for terminal state {self.X.value} to prevent order from being stuck",
                     )
                 else:
                     # Non-terminal status with L=0, skip fill generation
@@ -507,9 +492,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
 
             # Liquidations are always taker, regular trades use the 'm' field
             liquidity_side = (
-                LiquiditySide.TAKER
-                if self.x == BinanceExecutionType.CALCULATED
-                else (LiquiditySide.MAKER if self.m else LiquiditySide.TAKER)
+                LiquiditySide.TAKER if self.x == BinanceExecutionType.CALCULATED else (LiquiditySide.MAKER if self.m else LiquiditySide.TAKER)
             )
 
             exec_client.generate_order_filled(
@@ -528,9 +511,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
                 liquidity_side=liquidity_side,
                 ts_event=ts_event,
             )
-        elif self.x == BinanceExecutionType.CANCELED or (
-            exec_client.treat_expired_as_canceled and self.x == BinanceExecutionType.EXPIRED
-        ):
+        elif self.x == BinanceExecutionType.CANCELED or (exec_client.treat_expired_as_canceled and self.x == BinanceExecutionType.EXPIRED):
             exec_client.generate_order_canceled(
                 strategy_id=strategy_id,
                 instrument_id=instrument_id,
@@ -582,8 +563,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
             )
         elif self.x == BinanceExecutionType.TRADE_PREVENTION:
             exec_client._log.info(
-                f"Self-trade prevention triggered for order {venue_order_id}, "
-                f"prevented qty={self.l} at price={self.L}",
+                f"Self-trade prevention triggered for order {venue_order_id}, prevented qty={self.l} at price={self.L}",
             )
         else:
             # Event not handled

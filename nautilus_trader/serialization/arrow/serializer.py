@@ -15,7 +15,8 @@
 
 from collections.abc import Callable
 from io import BytesIO
-from typing import Any, Union
+from typing import Any
+from typing import Union
 
 import pyarrow as pa
 
@@ -186,10 +187,7 @@ class ArrowSerializer:
                         pyo3_instrument_closes,
                     )
                 elif data_cls == OrderBookDepth10:
-                    data = [
-                        nautilus_pyo3.OrderBookDepth10.from_dict(OrderBookDepth10.to_dict(item))
-                        for item in data
-                    ]
+                    data = [nautilus_pyo3.OrderBookDepth10.from_dict(OrderBookDepth10.to_dict(item)) for item in data]
                     batch_bytes = nautilus_pyo3.book_depth10_to_arrow_record_batch_bytes(
                         data,
                     )
@@ -378,7 +376,6 @@ for _data_cls in NAUTILUS_ARROW_SCHEMA:
             decoder=make_dict_deserializer(_data_cls),
         )
 
-
 # Custom implementations
 for instrument_cls in Instrument.__subclasses__():
     register_arrow(
@@ -388,14 +385,12 @@ for instrument_cls in Instrument.__subclasses__():
         decoder=instruments.deserialize,
     )
 
-
 register_arrow(
     AccountState,
     schema=account_state.SCHEMA,
     encoder=account_state.serialize,
     decoder=account_state.deserialize,
 )
-
 
 register_arrow(
     OrderInitialized,
@@ -404,14 +399,12 @@ register_arrow(
     decoder=order_events.deserialize(OrderInitialized),
 )
 
-
 register_arrow(
     OrderFilled,
     schema=NAUTILUS_ARROW_SCHEMA[OrderFilled],
     encoder=order_events.serialize,
     decoder=order_events.deserialize(OrderFilled),
 )
-
 
 register_arrow(
     ComponentStateChanged,
@@ -420,7 +413,6 @@ register_arrow(
     decoder=component_events.deserialize(ComponentStateChanged),
 )
 
-
 register_arrow(
     ShutdownSystem,
     schema=NAUTILUS_ARROW_SCHEMA[ShutdownSystem],
@@ -428,14 +420,12 @@ register_arrow(
     decoder=component_commands.deserialize(ShutdownSystem),
 )
 
-
 register_arrow(
     TradingStateChanged,
     schema=NAUTILUS_ARROW_SCHEMA[TradingStateChanged],
     encoder=component_events.serialize,
     decoder=component_events.deserialize(TradingStateChanged),
 )
-
 
 for position_cls in PositionEvent.__subclasses__():
     register_arrow(

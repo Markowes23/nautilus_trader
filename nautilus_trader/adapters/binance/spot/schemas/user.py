@@ -249,14 +249,12 @@ class BinanceSpotOrderUpdateData(msgspec.Struct, kw_only=True):
         elif self.x in (BinanceExecutionType.TRADE, BinanceExecutionType.CALCULATED):
             if self.x == BinanceExecutionType.CALCULATED:
                 exec_client._log.info(
-                    f"Received CALCULATED (liquidation) execution for order {venue_order_id}, "
-                    f"generating OrderFilled event",
+                    f"Received CALCULATED (liquidation) execution for order {venue_order_id}, generating OrderFilled event",
                 )
 
             if Decimal(self.L) == 0:
                 exec_client._log.warning(
-                    f"Received {self.x.value} execution with L=0 for order {venue_order_id}, "
-                    f"order status={self.X.value}",
+                    f"Received {self.x.value} execution with L=0 for order {venue_order_id}, order status={self.X.value}",
                 )
 
                 # Route based on order status to ensure terminal events are generated
@@ -282,8 +280,7 @@ class BinanceSpotOrderUpdateData(msgspec.Struct, kw_only=True):
                     # Continue to generate fill with L=0 to close order
                     # Better to have bad price data than stuck order
                     exec_client._log.warning(
-                        f"Generating OrderFilled with L=0 for terminal state {self.X.value} "
-                        f"to prevent order from being stuck",
+                        f"Generating OrderFilled with L=0 for terminal state {self.X.value} to prevent order from being stuck",
                     )
                 else:
                     # Non-terminal status with L=0, skip fill generation
@@ -306,9 +303,7 @@ class BinanceSpotOrderUpdateData(msgspec.Struct, kw_only=True):
 
             # Liquidations are always taker, regular trades use the 'm' field
             liquidity_side = (
-                LiquiditySide.TAKER
-                if self.x == BinanceExecutionType.CALCULATED
-                else (LiquiditySide.MAKER if self.m else LiquiditySide.TAKER)
+                LiquiditySide.TAKER if self.x == BinanceExecutionType.CALCULATED else (LiquiditySide.MAKER if self.m else LiquiditySide.TAKER)
             )
 
             exec_client.generate_order_filled(
@@ -362,8 +357,7 @@ class BinanceSpotOrderUpdateData(msgspec.Struct, kw_only=True):
         elif self.x == BinanceExecutionType.TRADE_PREVENTION:
             # Self-trade prevention triggered - no actual trade occurred
             exec_client._log.info(
-                f"Self-trade prevention triggered for order {venue_order_id}, "
-                f"prevented qty={self.l} at price={self.L}",
+                f"Self-trade prevention triggered for order {venue_order_id}, prevented qty={self.l} at price={self.L}",
             )
         else:
             # Event not handled
