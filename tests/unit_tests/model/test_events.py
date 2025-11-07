@@ -202,10 +202,7 @@ class TestModelEvents:
         # Act, Assert
         assert event.reason == reason
         assert OrderDenied.from_dict(OrderDenied.to_dict(event)) == event
-        assert (
-            str(event)
-            == "OrderDenied(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, reason='Exceeded MAX_ORDER_SUBMIT_RATE')"
-        )
+        assert str(event) == "OrderDenied(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, reason='Exceeded MAX_ORDER_SUBMIT_RATE')"
         assert (
             repr(event)
             == f"OrderDenied(trader_id=TRADER-001, strategy_id=SCALPER-001, instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, reason='Exceeded MAX_ORDER_SUBMIT_RATE', event_id={uuid}, ts_init=0)"  # noqa
@@ -226,10 +223,7 @@ class TestModelEvents:
 
         # Act, Assert
         assert OrderEmulated.from_dict(OrderEmulated.to_dict(event)) == event
-        assert (
-            str(event)
-            == "OrderEmulated(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423)"
-        )
+        assert str(event) == "OrderEmulated(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423)"
         assert (
             repr(event)
             == f"OrderEmulated(trader_id=TRADER-001, strategy_id=SCALPER-001, instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, event_id={uuid}, ts_init=0)"  # noqa
@@ -251,10 +245,7 @@ class TestModelEvents:
 
         # Act, Assert
         assert OrderReleased.from_dict(OrderReleased.to_dict(event)) == event
-        assert (
-            str(event)
-            == "OrderReleased(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, released_price=50200.10)"
-        )
+        assert str(event) == "OrderReleased(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, released_price=50200.10)"
         assert (
             repr(event)
             == f"OrderReleased(trader_id=TRADER-001, strategy_id=SCALPER-001, instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, released_price=50200.10, event_id={uuid}, ts_init=0)"  # noqa
@@ -277,10 +268,7 @@ class TestModelEvents:
 
         # Act, Assert
         assert OrderSubmitted.from_dict(OrderSubmitted.to_dict(event)) == event
-        assert (
-            str(event)
-            == "OrderSubmitted(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, account_id=SIM-000, ts_event=0)"
-        )
+        assert str(event) == "OrderSubmitted(instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, account_id=SIM-000, ts_event=0)"
         assert (
             repr(event)
             == f"OrderSubmitted(trader_id=TRADER-001, strategy_id=SCALPER-001, instrument_id=BTCUSDT.BINANCE, client_order_id=O-2020872378423, account_id=SIM-000, event_id={uuid}, ts_event=0, ts_init=0)"  # noqa

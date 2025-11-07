@@ -20,7 +20,9 @@ import uuid
 from asyncio import Queue
 from collections import Counter
 from decimal import Decimal
-from typing import Any, Final, cast
+from typing import Any
+from typing import Final
+from typing import cast
 
 import pandas as pd
 
@@ -167,9 +169,7 @@ class LiveExecutionEngine(ExecutionEngine):
         # Configuration
         self._reconciliation: bool = config.reconciliation
         self.reconciliation_lookback_mins: int = config.reconciliation_lookback_mins or 0
-        self.reconciliation_instrument_ids: list[InstrumentId] = (
-            config.reconciliation_instrument_ids or []
-        )
+        self.reconciliation_instrument_ids: list[InstrumentId] = config.reconciliation_instrument_ids or []
         self.filter_unclaimed_external_orders: bool = config.filter_unclaimed_external_orders
         self.filter_position_reports: bool = config.filter_position_reports
         self.filtered_client_order_ids: list[ClientOrderId] = config.filtered_client_order_ids or []
@@ -478,9 +478,7 @@ class LiveExecutionEngine(ExecutionEngine):
         self._log.debug(f"Scheduled task '{self._evt_queue_task.get_name()}'")
 
         # Start reconciliation task if any check is configured
-        if (
-            self.inflight_check_interval_ms > 0 or self.open_check_interval_secs
-        ) and not self._reconciliation_task:
+        if (self.inflight_check_interval_ms > 0 or self.open_check_interval_secs) and not self._reconciliation_task:
             self._reconciliation_task = self._loop.create_task(
                 self._continuous_reconciliation_loop(),
                 name="continuous_reconciliation",
@@ -737,16 +735,14 @@ class LiveExecutionEngine(ExecutionEngine):
                 )
             else:
                 self._log.warning(
-                    f"Order {order.client_order_id!r} is already closed as {order.status_string()}, "
-                    "skipping missing-order resolution",
+                    f"Order {order.client_order_id!r} is already closed as {order.status_string()}, skipping missing-order resolution",
                 )
             self._clear_recon_tracking(order.client_order_id)
             self._order_local_activity_ns.pop(order.client_order_id, None)
             return
 
         self._log.warning(
-            f"Unexpected order status {order.status_string()} "
-            f"for order not found at venue: {order.client_order_id!r}",
+            f"Unexpected order status {order.status_string()} for order not found at venue: {order.client_order_id!r}",
         )
         self._clear_recon_tracking(order.client_order_id)
         self._order_local_activity_ns.pop(order.client_order_id, None)
@@ -771,14 +767,8 @@ class LiveExecutionEngine(ExecutionEngine):
             ts_last_consistency_check = 0
 
             # Convert intervals to nanoseconds (handle None values)
-            inflight_check_interval_ns = (
-                millis_to_nanos(self.inflight_check_interval_ms)
-                if self.inflight_check_interval_ms > 0
-                else 0
-            )
-            consistency_check_interval_ns = (
-                secs_to_nanos(self.open_check_interval_secs) if self.open_check_interval_secs else 0
-            )
+            inflight_check_interval_ns = millis_to_nanos(self.inflight_check_interval_ms) if self.inflight_check_interval_ms > 0 else 0
+            consistency_check_interval_ns = secs_to_nanos(self.open_check_interval_secs) if self.open_check_interval_secs else 0
 
             # Determine minimum sleep interval (in seconds)
             intervals_secs: list[float] = []
@@ -809,8 +799,7 @@ class LiveExecutionEngine(ExecutionEngine):
                 # Apply additional startup delay AFTER reconciliation completes
                 if self.reconciliation_startup_delay_secs > 0:
                     self._log.info(
-                        f"Applying post-reconciliation startup delay "
-                        f"({self.reconciliation_startup_delay_secs}s)",
+                        f"Applying post-reconciliation startup delay ({self.reconciliation_startup_delay_secs}s)",
                         LogColor.BLUE,
                     )
                     await asyncio.sleep(self.reconciliation_startup_delay_secs)
@@ -828,10 +817,7 @@ class LiveExecutionEngine(ExecutionEngine):
                 ts_now = self._clock.timestamp_ns()
 
                 # Higher-frequency in-flight check (if configured)
-                if (
-                    inflight_check_interval_ns > 0
-                    and ts_now - ts_last_inflight_check >= inflight_check_interval_ns
-                ):
+                if inflight_check_interval_ns > 0 and ts_now - ts_last_inflight_check >= inflight_check_interval_ns:
                     # Check stop signal before starting check
                     if self._is_shutting_down:
                         break
@@ -842,10 +828,7 @@ class LiveExecutionEngine(ExecutionEngine):
                         self._log.exception("Failed in check_inflight_orders", e)
 
                 # Lower-frequency consistency check (if configured)
-                if (
-                    consistency_check_interval_ns > 0
-                    and ts_now - ts_last_consistency_check >= consistency_check_interval_ns
-                ):
+                if consistency_check_interval_ns > 0 and ts_now - ts_last_consistency_check >= consistency_check_interval_ns:
                     # Check stop signal before starting check
                     if self._is_shutting_down:
                         break
@@ -877,8 +860,7 @@ class LiveExecutionEngine(ExecutionEngine):
 
         if delayed_orders:
             self._log.debug(
-                f"Detected {len(delayed_orders)} delayed in-flight "
-                f"order{'' if len(delayed_orders) == 1 else 's'}",
+                f"Detected {len(delayed_orders)} delayed in-flight order{'' if len(delayed_orders) == 1 else 's'}",
             )
 
         # Query and potentially resolve each inconsistent order
@@ -904,8 +886,7 @@ class LiveExecutionEngine(ExecutionEngine):
                     continue
 
                 self._log.warning(
-                    f"Order {order.client_order_id!r} exceeded max inflight retries ({retries}), "
-                    f"resolving as failed",
+                    f"Order {order.client_order_id!r} exceeded max inflight retries ({retries}), resolving as failed",
                     LogColor.YELLOW,
                 )
                 self._resolve_inflight_order(order)
@@ -937,9 +918,7 @@ class LiveExecutionEngine(ExecutionEngine):
             open_orders: list[Order] = self._cache.orders_open()
 
             if self.reconciliation_instrument_ids:
-                open_orders = [
-                    o for o in open_orders if o.instrument_id in self.reconciliation_instrument_ids
-                ]
+                open_orders = [o for o in open_orders if o.instrument_id in self.reconciliation_instrument_ids]
                 open_order_ids = {o.client_order_id for o in open_orders}
 
             open_len = len(open_orders)
@@ -985,11 +964,7 @@ class LiveExecutionEngine(ExecutionEngine):
                 all_order_reports.extend(reports)
 
             # Build set of client order IDs reported by venue
-            venue_reported_ids: set[ClientOrderId] = {
-                report.client_order_id
-                for report in all_order_reports
-                if report.client_order_id is not None
-            }
+            venue_reported_ids: set[ClientOrderId] = {report.client_order_id for report in all_order_reports if report.client_order_id is not None}
 
             # Reconcile each report against cache state
             for report in all_order_reports:
@@ -1015,11 +990,7 @@ class LiveExecutionEngine(ExecutionEngine):
                     order = self._cache.order(report.client_order_id)
                     if order:
                         # Check filled_qty mismatch, treating None as zero
-                        report_filled = (
-                            report.filled_qty
-                            if report.filled_qty is not None
-                            else Quantity.zero(order.quantity.precision)
-                        )
+                        report_filled = report.filled_qty if report.filled_qty is not None else Quantity.zero(order.quantity.precision)
                         if order.filled_qty != report_filled:
                             should_reconcile = True
                             reconcile_reason = f"filled_qty mismatch: venue={report_filled}, cache={order.filled_qty}"
@@ -1028,8 +999,7 @@ class LiveExecutionEngine(ExecutionEngine):
                     # Apply include filter before reconciling
                     if not self._consider_for_reconciliation(report.instrument_id):
                         self._log.debug(
-                            f"Skipping reconciliation for {report.client_order_id!r}: "
-                            f"instrument {report.instrument_id} not in include list",
+                            f"Skipping reconciliation for {report.client_order_id!r}: instrument {report.instrument_id} not in include list",
                         )
                         continue
 
@@ -1095,12 +1065,7 @@ class LiveExecutionEngine(ExecutionEngine):
                         if not logged_limit_warning:
                             # Count how many orders at threshold are being deferred
                             orders_at_threshold_remaining = (
-                                sum(
-                                    1
-                                    for cid in missing_at_venue
-                                    if self._recon_check_retries.get(cid, 0)
-                                    >= self.open_check_missing_retries
-                                )
+                                sum(1 for cid in missing_at_venue if self._recon_check_retries.get(cid, 0) >= self.open_check_missing_retries)
                                 - targeted_queries_count
                             )
                             self._log.warning(
@@ -1121,10 +1086,7 @@ class LiveExecutionEngine(ExecutionEngine):
                     targeted_queries_count += 1
 
                     # Add delay between single-order queries (skip after final query)
-                    if (
-                        targeted_queries_count < self.max_single_order_queries_per_cycle
-                        and self.single_order_query_delay_ms > 0
-                    ):
+                    if targeted_queries_count < self.max_single_order_queries_per_cycle and self.single_order_query_delay_ms > 0:
                         await asyncio.sleep(self.single_order_query_delay_ms / 1000.0)
                 else:
                     self._recon_check_retries[client_order_id] = retries + 1
@@ -1211,15 +1173,13 @@ class LiveExecutionEngine(ExecutionEngine):
 
     def _log_skipping_reconciliation_on_instrument_id(self, report: ExecutionReport) -> None:
         self._log.debug(
-            f"Skipping {type(report).__name__} reconciliation for {report.instrument_id}: "
-            f"not in `reconciliation_instrument_ids` include list",
+            f"Skipping {type(report).__name__} reconciliation for {report.instrument_id}: not in `reconciliation_instrument_ids` include list",
             LogColor.MAGENTA,
         )
 
     def _log_skipping_reconciliation_on_client_order_id(self, report: ExecutionReport) -> None:
         self._log.debug(
-            f"Skipping {type(report).__name__} reconciliation for {report.client_order_id!r}: "
-            f"in `filtered_client_order_ids` list",
+            f"Skipping {type(report).__name__} reconciliation for {report.client_order_id!r}: in `filtered_client_order_ids` list",
             LogColor.MAGENTA,
         )
 
@@ -1279,12 +1239,8 @@ class LiveExecutionEngine(ExecutionEngine):
             results: list[bool] = []
 
             # Request execution mass status report from clients
-            reconciliation_lookback_mins: int | None = (
-                self.reconciliation_lookback_mins if self.reconciliation_lookback_mins > 0 else None
-            )
-            mass_status_coros = [
-                c.generate_mass_status(reconciliation_lookback_mins) for c in self._clients.values()
-            ]
+            reconciliation_lookback_mins: int | None = self.reconciliation_lookback_mins if self.reconciliation_lookback_mins > 0 else None
+            mass_status_coros = [c.generate_mass_status(reconciliation_lookback_mins) for c in self._clients.values()]
             mass_status_all = await asyncio.gather(*mass_status_coros, return_exceptions=True)
 
             # Reconcile each mass status with the execution engine
@@ -1296,8 +1252,7 @@ class LiveExecutionEngine(ExecutionEngine):
 
                 if mass_status_or_exception is None:
                     self._log.warning(
-                        "No execution mass status available for reconciliation "
-                        "(likely due to an adapter client error when generating reports)",
+                        "No execution mass status available for reconciliation (likely due to an adapter client error when generating reports)",
                     )
                     results.append(False)
                     continue
@@ -1416,9 +1371,7 @@ class LiveExecutionEngine(ExecutionEngine):
             return False
 
         self._msgbus.publish(
-            topic=f"reports.execution"
-            f".{report.instrument_id.venue}"
-            f".{report.instrument_id.symbol}",
+            topic=f"reports.execution.{report.instrument_id.venue}.{report.instrument_id.symbol}",
             msg=report,
         )
 
@@ -1519,7 +1472,6 @@ class LiveExecutionEngine(ExecutionEngine):
         trades: list[FillReport],
         is_external: bool = True,
     ) -> bool:
-
         client_order_id: ClientOrderId = report.client_order_id
 
         if client_order_id is None:
@@ -1542,8 +1494,7 @@ class LiveExecutionEngine(ExecutionEngine):
             instrument = self._cache.instrument(report.instrument_id)
             if instrument is None:
                 self._log.debug(
-                    f"Cannot reconcile order for {client_order_id!r}: "
-                    f"instrument {report.instrument_id} not found",
+                    f"Cannot reconcile order for {client_order_id!r}: instrument {report.instrument_id} not found",
                 )
                 return True  # Filtered instrument not loaded
 
@@ -1564,8 +1515,7 @@ class LiveExecutionEngine(ExecutionEngine):
             instrument = self._cache.instrument(order.instrument_id)
             if instrument is None:
                 self._log.debug(
-                    f"Cannot reconcile order for {order.client_order_id!r}: "
-                    f"instrument {order.instrument_id} not found",
+                    f"Cannot reconcile order for {order.client_order_id!r}: instrument {order.instrument_id} not found",
                 )
                 return True  # Filtered instrument not loaded
 
@@ -1654,16 +1604,11 @@ class LiveExecutionEngine(ExecutionEngine):
                 self._handle_event_with_tracking(fill)
             except ValueError as e:
                 self._log.error(
-                    f"Cannot generate inferred fill for {order.client_order_id}: {e}. "
-                    f"Reconciliation for this order failed.",
+                    f"Cannot generate inferred fill for {order.client_order_id}: {e}. Reconciliation for this order failed.",
                 )
                 return False  # Failed
 
-            if (
-                report.avg_px is not None
-                and order.avg_px is not None
-                and not math.isclose(float(report.avg_px), float(order.avg_px))
-            ):
+            if report.avg_px is not None and order.avg_px is not None and not math.isclose(float(report.avg_px), float(order.avg_px)):
                 self._log.warning(
                     f"report.avg_px {report.avg_px} != order.avg_px {order.avg_px}, "
                     "this could potentially be caused by information loss due to inferred fills",
@@ -1690,16 +1635,14 @@ class LiveExecutionEngine(ExecutionEngine):
 
         if order is None:
             self._log.warning(
-                f"FillReport received before order cached for {client_order_id!r}, "
-                "deferring reconciliation",
+                f"FillReport received before order cached for {client_order_id!r}, deferring reconciliation",
             )
             return False  # Failed
 
         instrument: Instrument | None = self._cache.instrument(order.instrument_id)
         if instrument is None:
             self._log.debug(
-                f"Cannot reconcile order for {order.client_order_id!r}: "
-                f"instrument {order.instrument_id} not found",
+                f"Cannot reconcile order for {order.client_order_id!r}: instrument {order.instrument_id} not found",
             )
             return True  # Filtered instrument not loaded
 
@@ -1825,10 +1768,7 @@ class LiveExecutionEngine(ExecutionEngine):
         elif cached_fill.commission is None or report.commission is None:
             commissions_equal = False
         else:
-            commissions_equal = (
-                cached_fill.commission.currency == report.commission.currency
-                and cached_fill.commission == report.commission
-            )
+            commissions_equal = cached_fill.commission.currency == report.commission.currency and cached_fill.commission == report.commission
 
         return (
             cached_fill.last_qty == report.last_qty
@@ -1903,8 +1843,7 @@ class LiveExecutionEngine(ExecutionEngine):
         if position_signed_decimal_qty != report.signed_decimal_qty:
             if not self.generate_missing_orders:
                 self._log.warning(
-                    f"Discrepancy for {report.instrument_id} position "
-                    "when `generate_missing_orders` disabled, skipping further reconciliation",
+                    f"Discrepancy for {report.instrument_id} position when `generate_missing_orders` disabled, skipping further reconciliation",
                 )
                 return True
 
@@ -1967,9 +1906,7 @@ class LiveExecutionEngine(ExecutionEngine):
                 else:
                     quote = self._cache.quote_tick(report.instrument_id)
                     if quote:
-                        close_price = (
-                            quote.ask_price if close_side == OrderSide.BUY else quote.bid_price
-                        )
+                        close_price = quote.ask_price if close_side == OrderSide.BUY else quote.bid_price
 
                 close_result = False
                 if close_price:
@@ -2008,9 +1945,7 @@ class LiveExecutionEngine(ExecutionEngine):
                 else:
                     quote = self._cache.quote_tick(report.instrument_id)
                     if quote:
-                        open_price = (
-                            quote.ask_price if open_side == OrderSide.BUY else quote.bid_price
-                        )
+                        open_price = quote.ask_price if open_side == OrderSide.BUY else quote.bid_price
 
                 open_result = False
                 if open_price:
@@ -2040,18 +1975,13 @@ class LiveExecutionEngine(ExecutionEngine):
                 # Check both fills succeeded
                 if not (close_result and open_result):
                     self._log.error(
-                        f"Failed to reconcile cross-zero position for {report.instrument_id}: "
-                        f"close={close_result}, open={open_result}",
+                        f"Failed to reconcile cross-zero position for {report.instrument_id}: close={close_result}, open={open_result}",
                     )
                     return False
 
                 return True  # Reconciliation complete via split fills
 
-            order_side = (
-                OrderSide.BUY
-                if report.signed_decimal_qty > position_signed_decimal_qty
-                else OrderSide.SELL
-            )
+            order_side = OrderSide.BUY if report.signed_decimal_qty > position_signed_decimal_qty else OrderSide.SELL
 
             # Calculate reconciliation price
             reconciliation_price = calculate_reconciliation_price(
@@ -2186,9 +2116,7 @@ class LiveExecutionEngine(ExecutionEngine):
         if report.display_qty is not None:
             options["display_qty"] = str(report.display_qty)
 
-        options["expire_time_ns"] = (
-            0 if report.expire_time is None else dt_to_unix_nanos(report.expire_time)
-        )
+        options["expire_time_ns"] = 0 if report.expire_time is None else dt_to_unix_nanos(report.expire_time)
         strategy_id = self.get_external_order_claim(report.instrument_id)
 
         if strategy_id is None:
@@ -2333,10 +2261,7 @@ class LiveExecutionEngine(ExecutionEngine):
         if order.order_type == OrderType.LIMIT and report.price != order.price:
             return True
 
-        if (
-            order.order_type in [OrderType.STOP_MARKET, OrderType.TRAILING_STOP_MARKET]
-            and report.trigger_price != order.trigger_price
-        ):
+        if order.order_type in [OrderType.STOP_MARKET, OrderType.TRAILING_STOP_MARKET] and report.trigger_price != order.trigger_price:
             return True
 
         if order.order_type in [OrderType.STOP_LIMIT, OrderType.TRAILING_STOP_LIMIT] and (

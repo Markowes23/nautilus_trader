@@ -171,7 +171,8 @@ class DYDXDataClient(LiveMarketDataClient):
         self._topic_bar_type: dict[str, BarType] = {}
 
         self._update_instruments_interval_mins: int | None = config.update_instruments_interval_mins
-        self._update_orderbook_interval_secs: int = 60  # Once every 60 seconds (hardcoded for now)
+        # Once every 60 seconds (hardcoded for now)
+        self._update_orderbook_interval_secs: int = 60
         self._update_instruments_task: asyncio.Task | None = None
         self._fetch_orderbook_task: asyncio.Task | None = None
         self._last_quotes: dict[InstrumentId, QuoteTick] = {}
@@ -1011,11 +1012,7 @@ class DYDXDataClient(LiveMarketDataClient):
         all_bars = []
 
         # Check if we need to partition the request
-        if (
-            request.start is not None
-            and request.end is not None
-            and self._should_partition_bars_request(request, max_bars)
-        ):
+        if request.start is not None and request.end is not None and self._should_partition_bars_request(request, max_bars):
             # Partition into multiple requests
             self._log.info(
                 f"Expected bars exceed limit of {max_bars}, partitioning into multiple requests",

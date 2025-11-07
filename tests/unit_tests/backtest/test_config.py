@@ -139,9 +139,7 @@ class TestBacktestConfig:
         result = BacktestNode.load_data_config(config)
 
         # Assert
-        assert (
-            len(result.data) == 210
-        )  # Reduced from 2745 for faster testing (CHF events in first 5k rows)
+        assert len(result.data) == 210  # Reduced from 2745 for faster testing (CHF events in first 5k rows)
 
     def test_backtest_data_config_status_updates(self):
         # Arrange

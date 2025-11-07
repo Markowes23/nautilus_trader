@@ -90,14 +90,8 @@ class TestBarBuilder:
         builder = BarBuilder(BTCUSDT_BINANCE, bar_type)
 
         # Act, Assert
-        assert (
-            str(builder)
-            == "BarBuilder(BTCUSDT.BINANCE-100-TICK-LAST-EXTERNAL,None,None,None,None,0.000000)"
-        )
-        assert (
-            repr(builder)
-            == "BarBuilder(BTCUSDT.BINANCE-100-TICK-LAST-EXTERNAL,None,None,None,None,0.000000)"
-        )
+        assert str(builder) == "BarBuilder(BTCUSDT.BINANCE-100-TICK-LAST-EXTERNAL,None,None,None,None,0.000000)"
+        assert repr(builder) == "BarBuilder(BTCUSDT.BINANCE-100-TICK-LAST-EXTERNAL,None,None,None,None,0.000000)"
 
     @staticmethod
     def test_single_update_results_in_expected_properties():
@@ -226,7 +220,7 @@ class TestBarBuilder:
                 open=Price.from_str(f"1.0000{i}"),
                 high=Price.from_str(f"1.0001{i}"),
                 low=Price.from_str(f"1.0000{i}"),
-                close=Price.from_str(f"1.0000{i+1}"),
+                close=Price.from_str(f"1.0000{i + 1}"),
                 volume=Quantity.from_int(1),
                 ts_event=1_000 * (i + 1),
                 ts_init=1_000 * (i + 1),
@@ -1557,10 +1551,7 @@ class TestTestValueBarAggregator:
         assert handler[1].close == Price.from_str("20.00015")
         assert handler[1].volume == Quantity.from_str("5000.00")
         expected = Decimal("40001.11")
-        assert (
-            aggregator.get_cumulative_value().quantize(expected, rounding=ROUND_HALF_EVEN)
-            == expected
-        )
+        assert aggregator.get_cumulative_value().quantize(expected, rounding=ROUND_HALF_EVEN) == expected
 
     @staticmethod
     def test_run_quote_ticks_through_aggregator_results_in_expected_bars():
@@ -2372,8 +2363,7 @@ class TestTimeBarAggregator:
         assert aggregator.next_close_ns == 360_000_000_000
 
     @staticmethod
-    def test_update_timer_with_test_clock_sends_no_bar_to_handler_with_skip_first_non_full_bar(
-        ):
+    def test_update_timer_with_test_clock_sends_no_bar_to_handler_with_skip_first_non_full_bar():
         # Arrange
         clock = TestClock()
         handler = []
@@ -2601,8 +2591,7 @@ class TestTimeBarAggregator:
         assert handler[0].volume == Quantity.from_int(300000)
 
     @staticmethod
-    def test_update_timer_with_test_clock_sends_single_bar_to_handler_with_bars_and_time_origin(
-        ):
+    def test_update_timer_with_test_clock_sends_single_bar_to_handler_with_bars_and_time_origin():
         # Arrange
         clock = TestClock()
         clock.set_time((30 * 60 + 30) * NANOSECONDS_IN_SECOND + 10_000)
@@ -3509,7 +3498,8 @@ class TestSpreadQuoteAggregator:
         # bid_ask_spread = spread_vega * vega_multiplier = 0.07 * 0.287 = 0.02
 
         spread_bid_ask = spread_quote.ask_price.as_double() - spread_quote.bid_price.as_double()
-        assert 0.01 <= spread_bid_ask <= 0.5  # Should be much smaller than component spreads
+        # Should be much smaller than component spreads
+        assert 0.01 <= spread_bid_ask <= 0.5
 
         # Verify the spread quote is reasonable
         # For a put spread (long higher strike, short lower strike), the spread value is negative
@@ -3562,9 +3552,7 @@ class TestSpreadQuoteAggregator:
 
         # Assert - quotes are still generated because GreeksCalculator can calculate from option prices
         # when cached greeks are not available (it falls back to calculation)
-        assert (
-            len(self.handler) >= 0
-        )  # May or may not generate quotes depending on underlying price availability
+        assert len(self.handler) >= 0  # May or may not generate quotes depending on underlying price availability
 
     def test_spread_quote_with_ratio_spread(self):
         """
@@ -3711,7 +3699,8 @@ class TestSpreadQuoteAggregator:
         # Assert - verify timer fires at correct intervals
         # Timer fires immediately (fire_immediately=True), then at 2s intervals (0, 2, 4 seconds)
         assert quotes_after_1s == 1  # One quote from immediate firing (at 0s)
-        assert quotes_after_2_5s == 1  # Still one quote (2s timer hasn't fired yet)
+        # Still one quote (2s timer hasn't fired yet)
+        assert quotes_after_2_5s == 1
         assert quotes_after_4_5s == 2  # Two quotes (at 0s + 4s)
 
     def test_simple_spread_quote_debug(self):

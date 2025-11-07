@@ -541,8 +541,7 @@ class TestCashAccount:
         assert result == [Money(100.000000, ADA), Money(-0.00410000, BTC)]
 
     @staticmethod
-    def test_calculate_commission_when_given_liquidity_side_none_raises_value_error(
-        ):
+    def test_calculate_commission_when_given_liquidity_side_none_raises_value_error():
         # Arrange
         account = TestExecStubs.cash_account()
         instrument = TestInstrumentProvider.xbtusd_bitmex()

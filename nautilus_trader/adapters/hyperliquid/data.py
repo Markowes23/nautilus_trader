@@ -56,7 +56,6 @@ from nautilus_trader.model.identifiers import ClientId
 if TYPE_CHECKING:
     from typing import Any
 
-
 # -------------------------------------------------------------------------------------------------
 # Helper Functions
 # -------------------------------------------------------------------------------------------------

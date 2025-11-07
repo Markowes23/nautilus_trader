@@ -60,18 +60,28 @@ from nautilus_trader.adapters.betfair.parsing.core import BetfairParser
 from nautilus_trader.adapters.betfair.parsing.requests import betfair_account_to_account_state
 from nautilus_trader.adapters.betfair.parsing.requests import determine_order_status
 from nautilus_trader.adapters.betfair.parsing.requests import make_customer_order_ref
-from nautilus_trader.adapters.betfair.parsing.requests import nautilus_limit_on_close_to_place_instructions
+from nautilus_trader.adapters.betfair.parsing.requests import (
+    nautilus_limit_on_close_to_place_instructions,
+)
 from nautilus_trader.adapters.betfair.parsing.requests import nautilus_limit_to_place_instructions
-from nautilus_trader.adapters.betfair.parsing.requests import nautilus_market_on_close_to_place_instructions
+from nautilus_trader.adapters.betfair.parsing.requests import (
+    nautilus_market_on_close_to_place_instructions,
+)
 from nautilus_trader.adapters.betfair.parsing.requests import nautilus_market_to_place_instructions
 from nautilus_trader.adapters.betfair.parsing.requests import nautilus_order_to_place_instructions
 from nautilus_trader.adapters.betfair.parsing.requests import order_cancel_to_cancel_order_params
 from nautilus_trader.adapters.betfair.parsing.requests import order_submit_to_place_order_params
 from nautilus_trader.adapters.betfair.parsing.requests import order_update_to_replace_order_params
 from nautilus_trader.adapters.betfair.parsing.streaming import market_change_to_updates
-from nautilus_trader.adapters.betfair.parsing.streaming import market_definition_to_betfair_starting_prices
-from nautilus_trader.adapters.betfair.parsing.streaming import market_definition_to_instrument_closes
-from nautilus_trader.adapters.betfair.parsing.streaming import market_definition_to_instrument_status
+from nautilus_trader.adapters.betfair.parsing.streaming import (
+    market_definition_to_betfair_starting_prices,
+)
+from nautilus_trader.adapters.betfair.parsing.streaming import (
+    market_definition_to_instrument_closes,
+)
+from nautilus_trader.adapters.betfair.parsing.streaming import (
+    market_definition_to_instrument_status,
+)
 from nautilus_trader.common.component import LiveClock
 from nautilus_trader.core.data import Data
 from nautilus_trader.core.uuid import UUID4
@@ -132,11 +142,7 @@ class TestBetfairParsingStreaming:
         )
 
         # Assert
-        result = [
-            upd
-            for upd in updates
-            if isinstance(upd, InstrumentStatus) and upd.action == MarketStatusAction.PRE_OPEN
-        ]
+        result = [upd for upd in updates if isinstance(upd, InstrumentStatus) and upd.action == MarketStatusAction.PRE_OPEN]
         assert len(result) == 17
 
     @staticmethod
@@ -175,11 +181,7 @@ class TestBetfairParsingStreaming:
         )
 
         # Assert
-        result = [
-            upd
-            for upd in updates
-            if isinstance(upd, CustomData) and upd.data_type.type == BetfairStartingPrice
-        ]
+        result = [upd for upd in updates if isinstance(upd, CustomData) and upd.data_type.type == BetfairStartingPrice]
         assert len(result) == 14
 
     def test_market_definition_to_instrument_updates(self):
@@ -262,10 +264,7 @@ class TestBetfairParsingStreaming:
         mcms = BetfairDataProvider.read_mcm("1-206064380.bz2")
         updates = [x for mcm in mcms for x in self.parser.parse(mcm)]
         counts = Counter(
-            [
-                x.__class__.__name__ if not isinstance(x, CustomData) else x.data.__class__.__name__
-                for x in updates
-            ],
+            [x.__class__.__name__ if not isinstance(x, CustomData) else x.data.__class__.__name__ for x in updates],
         )
         expected = Counter(
             {
@@ -334,11 +333,7 @@ class TestBetfairParsingStreaming:
                 instrument_id = next(ins for ins in trade_ticks if f"-{selection_id}-" in ins.value)
                 betfair_volume = betfair_tv[selection_id][price]
                 trade_volume = sum(
-                    [
-                        tick.size
-                        for tick in trade_ticks[instrument_id]
-                        if tick.price.as_double() == price
-                    ],
+                    [tick.size for tick in trade_ticks[instrument_id] if tick.price.as_double() == price],
                 )
                 assert betfair_volume == float(trade_volume)
 
@@ -361,13 +356,8 @@ class TestBetfairParsing:
 
     @staticmethod
     def test_order_side_parser_round_trip():
-        assert (
-            OrderSideParser.to_nautilus(OrderSideParser.to_betfair(OrderSide.BUY)) == OrderSide.BUY
-        )
-        assert (
-            OrderSideParser.to_nautilus(OrderSideParser.to_betfair(OrderSide.SELL))
-            == OrderSide.SELL
-        )
+        assert OrderSideParser.to_nautilus(OrderSideParser.to_betfair(OrderSide.BUY)) == OrderSide.BUY
+        assert OrderSideParser.to_nautilus(OrderSideParser.to_betfair(OrderSide.SELL)) == OrderSide.SELL
 
     def test_order_submit_to_betfair(self):
         command = TestCommandStubs.submit_order_command(
@@ -702,11 +692,7 @@ class TestBetfairParsing:
         r = b'{"op":"mcm","id":1,"clk":"ANjxBACiiQQAlpQD","pt":1672131753550,"mc":[{"id":"1.208011084","marketDefinition":{"bspMarket":true,"turnInPlayEnabled":false,"persistenceEnabled":false,"marketBaseRate":7,"eventId":"31987078","eventTypeId":"4339","numberOfWinners":1,"bettingType":"ODDS","marketType":"WIN","marketTime":"2022-12-27T09:00:00.000Z","suspendTime":"2022-12-27T09:00:00.000Z","bspReconciled":true,"complete":true,"inPlay":false,"crossMatching":false,"runnersVoidable":false,"numberOfActiveRunners":0,"betDelay":0,"status":"CLOSED","settledTime":"2022-12-27T09:02:21.000Z","runners":[{"status":"WINNER","sortPriority":1,"bsp":2.0008034621107256,"id":45967562},{"status":"LOSER","sortPriority":2,"bsp":5.5,"id":45565847},{"status":"LOSER","sortPriority":3,"bsp":9.2,"id":47727833},{"status":"LOSER","sortPriority":4,"bsp":166.61668896346615,"id":47179469},{"status":"LOSER","sortPriority":5,"bsp":44,"id":51247493},{"status":"LOSER","sortPriority":6,"bsp":32,"id":42324350},{"status":"LOSER","sortPriority":7,"bsp":7.4,"id":51247494},{"status":"LOSER","sortPriority":8,"bsp":32.28604557164013,"id":48516342}],"regulators":["MR_INT"],"venue":"Warragul","countryCode":"AU","discountAllowed":true,"timezone":"Australia/Sydney","openDate":"2022-12-27T07:46:00.000Z","version":4968605121,"priceLadderDefinition":{"type":"CLASSIC"}}}]}'  # noqa
         mcm = stream_decode(r)
         updates = self.parser.parse(mcm)
-        starting_prices = [
-            upd.data
-            for upd in updates
-            if isinstance(upd, CustomData) and isinstance(upd.data, BetfairStartingPrice)
-        ]
+        starting_prices = [upd.data for upd in updates if isinstance(upd, CustomData) and isinstance(upd.data, BetfairStartingPrice)]
         assert len(starting_prices) == 8
         assert starting_prices[0].instrument_id == InstrumentId.from_str(
             "1-208011084-45967562-None.BETFAIR",

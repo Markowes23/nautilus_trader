@@ -19,7 +19,8 @@ from collections import defaultdict
 from collections.abc import Callable
 from decimal import Decimal
 from inspect import iscoroutinefunction
-from typing import Any, ClassVar
+from typing import Any
+from typing import ClassVar
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -41,7 +42,9 @@ from nautilus_trader.adapters.interactive_brokers.parsing.data import bar_spec_t
 from nautilus_trader.adapters.interactive_brokers.parsing.data import generate_trade_id
 from nautilus_trader.adapters.interactive_brokers.parsing.data import timedelta_to_duration_str
 from nautilus_trader.adapters.interactive_brokers.parsing.data import what_to_show
-from nautilus_trader.adapters.interactive_brokers.parsing.price_conversion import ib_price_to_nautilus_price
+from nautilus_trader.adapters.interactive_brokers.parsing.price_conversion import (
+    ib_price_to_nautilus_price,
+)
 from nautilus_trader.core.data import Data
 from nautilus_trader.model.data import Bar
 from nautilus_trader.model.data import BarType
@@ -474,10 +477,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         )
 
         # In order to get missed bars after a disconnection
-        if (
-            self._last_disconnection_ns is not None
-            and self._last_disconnection_ns > params["first_start_ns"]
-        ):
+        if self._last_disconnection_ns is not None and self._last_disconnection_ns > params["first_start_ns"]:
             start = self._last_disconnection_ns
 
         # Store start time separately for bar filtering (not part of resubscription handle)
@@ -554,9 +554,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         else:
             end_date_time = end_date_time.astimezone(ZoneInfo("UTC"))
 
-        end_date_time_str = (
-            end_date_time.strftime("%Y%m%d %H:%M:%S %Z") if contract.secType != "CONTFUT" else ""
-        )
+        end_date_time_str = end_date_time.strftime("%Y%m%d %H:%M:%S %Z") if contract.secType != "CONTFUT" else ""
         name = (bar_type, end_date_time_str)
 
         if not (request := self._requests.get(name=name)):
@@ -700,11 +698,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         instrument = self._cache.instrument(instrument_id)
         ts_event = pd.Timestamp.fromtimestamp(time, tz=pytz.utc).value
 
-        price_magnifier = (
-            self._instrument_provider.get_price_magnifier(instrument_id)
-            if self._instrument_provider
-            else 1
-        )
+        price_magnifier = self._instrument_provider.get_price_magnifier(instrument_id) if self._instrument_provider else 1
         converted_bid_price = ib_price_to_nautilus_price(bid_price, price_magnifier)
         converted_ask_price = ib_price_to_nautilus_price(ask_price, price_magnifier)
 
@@ -746,11 +740,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         instrument = self._cache.instrument(instrument_id)
         ts_event = pd.Timestamp.fromtimestamp(time, tz=pytz.utc).value
 
-        price_magnifier = (
-            self._instrument_provider.get_price_magnifier(instrument_id)
-            if self._instrument_provider
-            else 1
-        )
+        price_magnifier = self._instrument_provider.get_price_magnifier(instrument_id) if self._instrument_provider else 1
         converted_price = ib_price_to_nautilus_price(price, price_magnifier)
 
         trade_tick = TradeTick(
@@ -836,11 +826,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
             instrument_id = InstrumentId.from_str(subscription.name[0])
             instrument = self._cache.instrument(instrument_id)
             ts_event = self._clock.timestamp_ns()
-            price_magnifier = (
-                self._instrument_provider.get_price_magnifier(instrument_id)
-                if self._instrument_provider
-                else 1
-            )
+            price_magnifier = self._instrument_provider.get_price_magnifier(instrument_id) if self._instrument_provider else 1
             converted_bid_price = ib_price_to_nautilus_price(bid_price, price_magnifier)
             converted_ask_price = ib_price_to_nautilus_price(ask_price, price_magnifier)
 
@@ -878,11 +864,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         bar_type = BarType.from_str(subscription.name)
         instrument = self._cache.instrument(bar_type.instrument_id)
 
-        price_magnifier = (
-            self._instrument_provider.get_price_magnifier(bar_type.instrument_id)
-            if self._instrument_provider
-            else 1
-        )
+        price_magnifier = self._instrument_provider.get_price_magnifier(bar_type.instrument_id) if self._instrument_provider else 1
         converted_open = ib_price_to_nautilus_price(open_, price_magnifier)
         converted_high = ib_price_to_nautilus_price(high, price_magnifier)
         converted_low = ib_price_to_nautilus_price(low, price_magnifier)
@@ -982,11 +964,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         if request := self._requests.get(req_id=req_id):
             instrument_id = InstrumentId.from_str(request.name[0])
             instrument = self._cache.instrument(instrument_id)
-            price_magnifier = (
-                self._instrument_provider.get_price_magnifier(instrument_id)
-                if self._instrument_provider
-                else 1
-            )
+            price_magnifier = self._instrument_provider.get_price_magnifier(instrument_id) if self._instrument_provider else 1
 
             for tick in ticks:
                 ts_event = pd.Timestamp.fromtimestamp(tick.time, tz=pytz.utc).value
@@ -1115,9 +1093,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
                     )
 
                     # Handle the bar
-                    if nautilus_bar and not (
-                        nautilus_bar.is_single_price() and nautilus_bar.open.as_double() == 0
-                    ):
+                    if nautilus_bar and not (nautilus_bar.is_single_price() and nautilus_bar.open.as_double() == 0):
                         await self._handle_data(nautilus_bar)
 
             except asyncio.CancelledError:
@@ -1226,11 +1202,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
             instrument_id = InstrumentId.from_str(request.name[0])
             instrument = self._cache.instrument(instrument_id)
 
-            price_magnifier = (
-                self._instrument_provider.get_price_magnifier(instrument_id)
-                if self._instrument_provider
-                else 1
-            )
+            price_magnifier = self._instrument_provider.get_price_magnifier(instrument_id) if self._instrument_provider else 1
 
             for tick in ticks:
                 ts_event = pd.Timestamp.fromtimestamp(tick.time, tz=pytz.utc).value
@@ -1302,11 +1274,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         # used to be _convert_ib_bar_date_to_unix_nanos
 
         # Apply price magnifier conversion
-        price_magnifier = (
-            self._instrument_provider.get_price_magnifier(bar_type.instrument_id)
-            if self._instrument_provider
-            else 1
-        )
+        price_magnifier = self._instrument_provider.get_price_magnifier(bar_type.instrument_id) if self._instrument_provider else 1
         converted_open = ib_price_to_nautilus_price(bar.open, price_magnifier)
         converted_high = ib_price_to_nautilus_price(bar.high, price_magnifier)
         converted_low = ib_price_to_nautilus_price(bar.low, price_magnifier)
@@ -1483,9 +1451,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
 
         # Select bid or ask side to update
         order_side = IB_SIDE[side]
-        levels: dict[int, IBKRBookLevel] = (
-            book["bids"] if order_side == OrderSide.BUY else book["asks"]
-        )
+        levels: dict[int, IBKRBookLevel] = book["bids"] if order_side == OrderSide.BUY else book["asks"]
 
         # Update order book based on operation type
         action = MKT_DEPTH_OPERATIONS[operation]
@@ -1513,11 +1479,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
         # Convert to OrderBookDeltas
         aggregated_book = self._aggregate_order_book_by_price(book)
 
-        price_magnifier = (
-            self._instrument_provider.get_price_magnifier(instrument_id)
-            if self._instrument_provider
-            else 1
-        )
+        price_magnifier = self._instrument_provider.get_price_magnifier(instrument_id) if self._instrument_provider else 1
 
         deltas: list[OrderBookDelta] = [
             OrderBookDelta.clear(
@@ -1600,8 +1562,7 @@ class InteractiveBrokersClientMarketDataMixin(BaseMixin):
                 price_aggregates[level.price] += level.size
 
             aggregated_book[side] = {
-                price: IBKRBookLevel(price=price, size=size, side=order_side, market_maker="")
-                for price, size in price_aggregates.items()
+                price: IBKRBookLevel(price=price, size=size, side=order_side, market_maker="") for price, size in price_aggregates.items()
             }
 
         return aggregated_book

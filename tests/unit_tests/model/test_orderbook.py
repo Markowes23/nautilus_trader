@@ -282,13 +282,9 @@ class TestOrderBook:
         assert book.midpoint() == 10.5
         assert len(book.bids()) == 1
         assert len(book.asks()) == 1
+        assert repr(book.bids()) == f"[BookLevel(price=10.0, orders=[BookOrder(side=BUY, price=10.0, size=5, order_id={convert_to_raw_int(10, 0)})])]"
         assert (
-            repr(book.bids())
-            == f"[BookLevel(price=10.0, orders=[BookOrder(side=BUY, price=10.0, size=5, order_id={convert_to_raw_int(10, 0)})])]"
-        )
-        assert (
-            repr(book.asks())
-            == f"[BookLevel(price=11.0, orders=[BookOrder(side=SELL, price=11.0, size=6, order_id={convert_to_raw_int(11, 0)})])]"
+            repr(book.asks()) == f"[BookLevel(price=11.0, orders=[BookOrder(side=SELL, price=11.0, size=6, order_id={convert_to_raw_int(11, 0)})])]"
         )
         bid_level = book.bids()[0]
         ask_level = book.asks()[0]

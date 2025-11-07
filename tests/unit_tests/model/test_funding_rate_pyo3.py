@@ -29,10 +29,7 @@ class TestFundingRateUpdate:
     @staticmethod
     def test_fully_qualified_name():
         # Arrange, Act, Assert
-        assert (
-            FundingRateUpdate.fully_qualified_name()
-            == "nautilus_trader.core.nautilus_pyo3.model:FundingRateUpdate"
-        )
+        assert FundingRateUpdate.fully_qualified_name() == "nautilus_trader.core.nautilus_pyo3.model:FundingRateUpdate"
 
     @staticmethod
     def test_funding_rate_update_new_minimal():
@@ -81,10 +78,7 @@ class TestFundingRateUpdate:
 
         # Act, Assert
         assert isinstance(hash(funding_rate), int)
-        assert (
-            str(funding_rate)
-            == "BTCUSDT-PERP.BINANCE,0.0001,None,1640000000000000000,1640000000000000000"
-        )
+        assert str(funding_rate) == "BTCUSDT-PERP.BINANCE,0.0001,None,1640000000000000000,1640000000000000000"
         assert (
             repr(funding_rate)
             == 'FundingRateUpdate { instrument_id: "BTCUSDT-PERP.BINANCE", rate: 0.0001, next_funding_ns: None, ts_event: UnixNanos(1640000000000000000), ts_init: UnixNanos(1640000000000000000) }'  # noqa: E501

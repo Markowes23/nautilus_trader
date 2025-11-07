@@ -23,19 +23,24 @@ from unittest.mock import MagicMock
 # ruff: noqa: I001
 from nautilus_trader.adapters.interactive_brokers.execution import InteractiveBrokersExecutionClient
 from nautilus_trader.core.uuid import UUID4
-from nautilus_trader.model.enums import LiquiditySide, OrderSide, OrderType
+from nautilus_trader.model.enums import LiquiditySide
+from nautilus_trader.model.enums import OrderSide
+from nautilus_trader.model.enums import OrderType
 from nautilus_trader.model.events import OrderFilled
-from nautilus_trader.model.identifiers import (
-    AccountId,
-    ClientOrderId,
-    InstrumentId,
-    PositionId,
-    StrategyId,
-    TradeId,
-    TraderId,
-    VenueOrderId,
-)
-from nautilus_trader.model.objects import Currency, Money, Price, Quantity
+from nautilus_trader.model.identifiers import AccountId
+from nautilus_trader.model.identifiers import ClientOrderId
+from nautilus_trader.model.identifiers import InstrumentId
+from nautilus_trader.model.identifiers import PositionId
+from nautilus_trader.model.identifiers import StrategyId
+from nautilus_trader.model.identifiers import TradeId
+from nautilus_trader.model.identifiers import TraderId
+from nautilus_trader.model.identifiers import VenueOrderId
+from nautilus_trader.model.objects import Currency
+from nautilus_trader.model.objects import Money
+from nautilus_trader.model.objects import Price
+from nautilus_trader.model.objects import Quantity
+
+
 # fmt: on
 
 
@@ -62,9 +67,7 @@ class TestSpreadExecutionDetection:
         for instrument_id_str, expected in test_cases:
             instrument_id = InstrumentId.from_str(instrument_id_str)
             result = self._is_spread_instrument(instrument_id)
-            assert (
-                result == expected
-            ), f"Failed for {instrument_id_str}: expected {expected}, was {result}"
+            assert result == expected, f"Failed for {instrument_id_str}: expected {expected}, was {result}"
 
     def test_is_spread_instrument_edge_cases(self):
         """
@@ -81,9 +84,7 @@ class TestSpreadExecutionDetection:
         for instrument_id_str, expected in edge_cases:
             instrument_id = InstrumentId.from_str(instrument_id_str)
             result = self._is_spread_instrument(instrument_id)
-            assert (
-                result == expected
-            ), f"Failed for {instrument_id_str}: expected {expected}, was {result}"
+            assert result == expected, f"Failed for {instrument_id_str}: expected {expected}, was {result}"
 
     @staticmethod
     def _is_spread_instrument(instrument_id):
@@ -320,11 +321,7 @@ class TestSpreadFillCreation:
                 except Exception:
                     ratio = 1
 
-            combo_quantity_value = (
-                leg_fill.last_qty.as_double() / abs(ratio)
-                if ratio != 0
-                else leg_fill.last_qty.as_double()
-            )
+            combo_quantity_value = leg_fill.last_qty.as_double() / abs(ratio) if ratio != 0 else leg_fill.last_qty.as_double()
             combo_quantity = Quantity.from_int(int(combo_quantity_value))
 
             return OrderFilled(

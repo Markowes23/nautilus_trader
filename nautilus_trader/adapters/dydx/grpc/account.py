@@ -71,7 +71,6 @@ DEFAULT_FEE = Fee(
     gas_limit=1000000,
 )
 
-
 from_string = partial(ecdsa.SigningKey.from_string, curve=ecdsa.SECP256k1, hashfunc=hashlib.sha256)
 
 

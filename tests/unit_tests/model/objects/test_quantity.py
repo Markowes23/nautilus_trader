@@ -727,7 +727,6 @@ class TestQuantity:
 
     @staticmethod
     def test_from_str_precision_preservation():
-
         # Whole numbers should have precision 0
         assert Quantity.from_str("100").precision == 0
         assert Quantity.from_str("1000000").precision == 0

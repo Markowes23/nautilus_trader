@@ -19,7 +19,8 @@ import asyncio
 from collections import defaultdict
 from decimal import Decimal
 from functools import partial
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
 import msgspec
 
@@ -349,9 +350,7 @@ class BybitDataClient(LiveMarketDataClient):
     async def _subscribe_order_book_deltas(self, command: SubscribeOrderBook) -> None:
         if command.book_type == BookType.L3_MBO:
             self._log.error(
-                "Cannot subscribe to order book deltas: "
-                "L3_MBO data is not published by Bybit. "
-                "Valid book types are L1_MBP, L2_MBP",
+                "Cannot subscribe to order book deltas: L3_MBO data is not published by Bybit. Valid book types are L1_MBP, L2_MBP",
             )
             return
 
@@ -380,9 +379,7 @@ class BybitDataClient(LiveMarketDataClient):
 
         if depth not in depths_available:
             self._log.error(
-                f"Cannot subscribe to order book depth {depth} "
-                f"for Bybit {product_type.value} products, "
-                f"available depths are {depths_available}",
+                f"Cannot subscribe to order book depth {depth} for Bybit {product_type.value} products, available depths are {depths_available}",
             )
             return
 
@@ -433,8 +430,7 @@ class BybitDataClient(LiveMarketDataClient):
         # Only perpetual swaps have funding rates
         if bybit_symbol.product_type not in [BybitProductType.LINEAR, BybitProductType.INVERSE]:
             self._log.warning(
-                f"Cannot subscribe to funding rates for {command.instrument_id} - "
-                f"only LINEAR and INVERSE perpetual swaps support funding rates",
+                f"Cannot subscribe to funding rates for {command.instrument_id} - only LINEAR and INVERSE perpetual swaps support funding rates",
             )
             return
 
@@ -456,9 +452,7 @@ class BybitDataClient(LiveMarketDataClient):
         # Check if we can unsubscribe from tickers
         # (only if no other subscription needs them)
         # Need to check if quotes are subscribed via ticker (not TOB)
-        quotes_via_ticker = (
-            command.instrument_id in self._depths and command.instrument_id not in self._tob_quotes
-        )
+        quotes_via_ticker = command.instrument_id in self._depths and command.instrument_id not in self._tob_quotes
         if command.instrument_id in self._subscribed_tickers and not quotes_via_ticker:
             bybit_symbol = BybitSymbol(command.instrument_id.symbol.value)
             ws_client = self._ws_clients[bybit_symbol.product_type]
@@ -492,10 +486,7 @@ class BybitDataClient(LiveMarketDataClient):
         else:
             # Check if we can unsubscribe from tickers
             # (only if funding rates are not also subscribed)
-            if (
-                command.instrument_id in self._subscribed_tickers
-                and command.instrument_id not in self._subscribed_funding_rates
-            ):
+            if command.instrument_id in self._subscribed_tickers and command.instrument_id not in self._subscribed_funding_rates:
                 await ws_client.unsubscribe_tickers(bybit_symbol.raw_symbol)
                 self._subscribed_tickers.discard(command.instrument_id)
 
@@ -612,8 +603,7 @@ class BybitDataClient(LiveMarketDataClient):
     async def _request_bars(self, request: RequestBars) -> None:
         if request.bar_type.is_internally_aggregated():
             self._log.error(
-                f"Cannot request {request.bar_type} bars: "
-                f"only historical bars with EXTERNAL aggregation available from Bybit",
+                f"Cannot request {request.bar_type} bars: only historical bars with EXTERNAL aggregation available from Bybit",
             )
             return
 
@@ -625,8 +615,7 @@ class BybitDataClient(LiveMarketDataClient):
 
         if request.bar_type.spec.price_type != PriceType.LAST:
             self._log.error(
-                f"Cannot request {request.bar_type} bars: "
-                f"only historical bars for LAST price type available from Bybit",
+                f"Cannot request {request.bar_type} bars: only historical bars for LAST price type available from Bybit",
             )
             return
 
@@ -783,9 +772,7 @@ class BybitDataClient(LiveMarketDataClient):
 
                 # Only emit if this is new or changed (uses custom __eq__ comparing rate and next_funding_ns)
                 if cached_rate is None or cached_rate != funding_rate_update:
-                    self._funding_rate_cache[funding_rate_update.instrument_id] = (
-                        funding_rate_update
-                    )
+                    self._funding_rate_cache[funding_rate_update.instrument_id] = funding_rate_update
                     self._handle_data(funding_rate_update)
 
     def _parse_ticker_data(self, raw: bytes, product_type: BybitProductType) -> Any:

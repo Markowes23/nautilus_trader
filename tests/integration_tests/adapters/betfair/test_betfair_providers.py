@@ -83,9 +83,7 @@ class TestBetfairInstrumentProvider:
 
         # Act
         instruments = [
-            instrument
-            for metadata in list_market_catalogue_data
-            for instrument in make_instruments(metadata, currency="GBP", ts_event=0, ts_init=0)
+            instrument for metadata in list_market_catalogue_data for instrument in make_instruments(metadata, currency="GBP", ts_event=0, ts_init=0)
         ]
 
         # Assert

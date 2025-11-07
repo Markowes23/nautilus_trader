@@ -421,21 +421,9 @@ class BitmexExecutionClient(LiveExecutionClient):
         pyo3_quantity = nautilus_pyo3.Quantity.from_str(str(order.quantity))
         pyo3_time_in_force = time_in_force_to_pyo3(order.time_in_force)
         pyo3_price = nautilus_pyo3.Price.from_str(str(order.price)) if order.has_price else None
-        pyo3_trigger_price = (
-            nautilus_pyo3.Price.from_str(str(order.trigger_price))
-            if order.has_trigger_price
-            else None
-        )
-        pyo3_trigger_type = (
-            trigger_type_to_pyo3(order.trigger_type)
-            if order.has_trigger_price and hasattr(order, "trigger_type")
-            else None
-        )
-        pyo3_display_qty = (
-            nautilus_pyo3.Quantity.from_str(str(order.display_qty))
-            if hasattr(order, "display_qty") and order.display_qty
-            else None
-        )
+        pyo3_trigger_price = nautilus_pyo3.Price.from_str(str(order.trigger_price)) if order.has_trigger_price else None
+        pyo3_trigger_type = trigger_type_to_pyo3(order.trigger_type) if order.has_trigger_price and hasattr(order, "trigger_type") else None
+        pyo3_display_qty = nautilus_pyo3.Quantity.from_str(str(order.display_qty)) if hasattr(order, "display_qty") and order.display_qty else None
 
         pyo3_contingency_type = None
         pyo3_order_list_id = None
@@ -494,31 +482,16 @@ class BitmexExecutionClient(LiveExecutionClient):
 
         if order.is_closed:
             self._log.warning(
-                f"`ModifyOrder` command for {command.client_order_id!r} when order already {order.status_string()} "
-                "(will not send to exchange)",
+                f"`ModifyOrder` command for {command.client_order_id!r} when order already {order.status_string()} (will not send to exchange)",
             )
             return
 
         pyo3_instrument_id = nautilus_pyo3.InstrumentId.from_str(order.instrument_id.value)
-        pyo3_client_order_id = (
-            nautilus_pyo3.ClientOrderId(command.client_order_id.value)
-            if command.client_order_id
-            else None
-        )
-        pyo3_venue_order_id = (
-            nautilus_pyo3.VenueOrderId(command.venue_order_id.value)
-            if command.venue_order_id
-            else None
-        )
-        pyo3_quantity = (
-            nautilus_pyo3.Quantity.from_str(str(command.quantity)) if command.quantity else None
-        )
+        pyo3_client_order_id = nautilus_pyo3.ClientOrderId(command.client_order_id.value) if command.client_order_id else None
+        pyo3_venue_order_id = nautilus_pyo3.VenueOrderId(command.venue_order_id.value) if command.venue_order_id else None
+        pyo3_quantity = nautilus_pyo3.Quantity.from_str(str(command.quantity)) if command.quantity else None
         pyo3_price = nautilus_pyo3.Price.from_str(str(command.price)) if command.price else None
-        pyo3_trigger_price = (
-            nautilus_pyo3.Price.from_str(str(command.trigger_price))
-            if command.trigger_price
-            else None
-        )
+        pyo3_trigger_price = nautilus_pyo3.Price.from_str(str(command.trigger_price)) if command.trigger_price else None
 
         try:
             await self._http_client.modify_order(
@@ -547,21 +520,12 @@ class BitmexExecutionClient(LiveExecutionClient):
 
         if order.is_closed:
             self._log.warning(
-                f"`CancelOrder` command for {command.client_order_id!r} when order already {order.status_string()} "
-                "(will not send to exchange)",
+                f"`CancelOrder` command for {command.client_order_id!r} when order already {order.status_string()} (will not send to exchange)",
             )
             return
 
-        pyo3_client_order_id = (
-            nautilus_pyo3.ClientOrderId(command.client_order_id.value)
-            if command.client_order_id
-            else None
-        )
-        pyo3_venue_order_id = (
-            nautilus_pyo3.VenueOrderId(command.venue_order_id.value)
-            if command.venue_order_id
-            else None
-        )
+        pyo3_client_order_id = nautilus_pyo3.ClientOrderId(command.client_order_id.value) if command.client_order_id else None
+        pyo3_venue_order_id = nautilus_pyo3.VenueOrderId(command.venue_order_id.value) if command.venue_order_id else None
         pyo3_instrument_id = nautilus_pyo3.InstrumentId.from_str(order.instrument_id.value)
 
         try:
@@ -631,9 +595,7 @@ class BitmexExecutionClient(LiveExecutionClient):
             return
 
         pyo3_instrument_id = nautilus_pyo3.InstrumentId.from_str(command.instrument_id.value)
-        pyo3_client_order_ids = [
-            nautilus_pyo3.ClientOrderId.from_str(cid.value) for cid in client_order_ids
-        ]
+        pyo3_client_order_ids = [nautilus_pyo3.ClientOrderId.from_str(cid.value) for cid in client_order_ids]
 
         try:
             await self._canceller.broadcast_batch_cancel(
@@ -655,16 +617,8 @@ class BitmexExecutionClient(LiveExecutionClient):
 
     async def _query_order(self, command: QueryOrder) -> None:
         pyo3_instrument_id = nautilus_pyo3.InstrumentId.from_str(command.instrument_id.value)
-        pyo3_client_order_id = (
-            nautilus_pyo3.ClientOrderId(command.client_order_id.value)
-            if command.client_order_id
-            else None
-        )
-        pyo3_venue_order_id = (
-            nautilus_pyo3.VenueOrderId(command.venue_order_id.value)
-            if command.venue_order_id
-            else None
-        )
+        pyo3_client_order_id = nautilus_pyo3.ClientOrderId(command.client_order_id.value) if command.client_order_id else None
+        pyo3_venue_order_id = nautilus_pyo3.VenueOrderId(command.venue_order_id.value) if command.venue_order_id else None
 
         try:
             pyo3_report = await self._http_client.query_order(
@@ -675,8 +629,7 @@ class BitmexExecutionClient(LiveExecutionClient):
 
             if pyo3_report is None:
                 self._log.warning(
-                    f"Order not found: client_order_id={command.client_order_id}, "
-                    f"venue_order_id={command.venue_order_id}",
+                    f"Order not found: client_order_id={command.client_order_id}, venue_order_id={command.venue_order_id}",
                 )
                 return
 
@@ -745,8 +698,7 @@ class BitmexExecutionClient(LiveExecutionClient):
         order = self._cache.order(client_order_id)
         if not order:
             self._log.warning(
-                f"Cannot find order for client_order_id {client_order_id} with "
-                f"venue_order_id {pyo3_event.venue_order_id}, ignoring update",
+                f"Cannot find order for client_order_id {client_order_id} with venue_order_id {pyo3_event.venue_order_id}, ignoring update",
             )
             return
 
@@ -807,21 +759,17 @@ class BitmexExecutionClient(LiveExecutionClient):
         elif report.order_status == OrderStatus.PENDING_CANCEL:
             if order.status == OrderStatus.PENDING_CANCEL:
                 self._log.debug(
-                    f"Received PENDING_CANCEL status for {report.client_order_id!r} - "
-                    "order already in pending cancel state locally",
+                    f"Received PENDING_CANCEL status for {report.client_order_id!r} - order already in pending cancel state locally",
                 )
             else:
                 self._log.warning(
-                    f"Received PENDING_CANCEL status for {report.client_order_id!r} - "
-                    f"order status {order.status_string()}",
+                    f"Received PENDING_CANCEL status for {report.client_order_id!r} - order status {order.status_string()}",
                 )
         elif report.order_status == OrderStatus.CANCELED:
             # Check if this is a post-only order that was canceled (BitMEX specific behavior)
             # BitMEX cancels post-only orders instead of rejecting them when they would cross the spread
             # The specific message is "Order had execInst of ParticipateDoNotInitiate"
-            is_post_only_rejection = (
-                report.cancel_reason and "ParticipateDoNotInitiate" in report.cancel_reason
-            )
+            is_post_only_rejection = report.cancel_reason and "ParticipateDoNotInitiate" in report.cancel_reason
 
             if is_post_only_rejection:
                 self.generate_order_rejected(
@@ -912,11 +860,7 @@ def is_order_updated(order: Order, report: OrderStatusReport) -> bool:
     if order.has_price and report.price and order.price != report.price:
         return True
 
-    if (
-        order.has_trigger_price
-        and report.trigger_price
-        and order.trigger_price != report.trigger_price
-    ):
+    if order.has_trigger_price and report.trigger_price and order.trigger_price != report.trigger_price:
         return True
 
     return order.quantity != report.quantity

@@ -27,10 +27,7 @@ class TestFundingRateUpdate:
     @staticmethod
     def test_fully_qualified_name():
         # Arrange, Act, Assert
-        assert (
-            FundingRateUpdate.fully_qualified_name()
-            == "nautilus_trader.model.data:FundingRateUpdate"
-        )
+        assert FundingRateUpdate.fully_qualified_name() == "nautilus_trader.model.data:FundingRateUpdate"
 
     @staticmethod
     def test_instantiation_with_required_fields_only():

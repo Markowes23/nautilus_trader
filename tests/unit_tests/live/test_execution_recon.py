@@ -650,11 +650,7 @@ class TestLiveExecutionReconciliation:
 
         # The cached fill data should remain unchanged (not updated with broker data)
         # This ensures we don't corrupt the order state
-        fill_events = [
-            event
-            for event in cached_order.events
-            if hasattr(event, "trade_id") and event.trade_id == TradeId("TRADE-1")
-        ]
+        fill_events = [event for event in cached_order.events if hasattr(event, "trade_id") and event.trade_id == TradeId("TRADE-1")]
         assert len(fill_events) == 1
         cached_fill_event = fill_events[0]
 
@@ -2605,7 +2601,8 @@ class TestReconciliationEdgeCases:
         result = live_exec_engine._reconcile_fill_report(order, historical_fill_report, instrument)
 
         # Assert
-        assert result is True  # Returns True (success) but doesn't apply the fill
+        # Returns True (success) but doesn't apply the fill
+        assert result is True
         # Order should still have only 50 filled (from inferred fill), not 60
         assert order.filled_qty == Quantity.from_int(50)
         # Historical fill trade_id should NOT be in order's trade_ids

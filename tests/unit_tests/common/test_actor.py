@@ -1547,10 +1547,7 @@ class TestActor:
 
         # Assert
         assert self.data_engine.command_count == 0
-        assert (
-            actor.msgbus.subscriptions()[4].topic
-            == "data.NewsEvent.type=NEWS_WIRE.topic=Earthquake"
-        )
+        assert actor.msgbus.subscriptions()[4].topic == "data.NewsEvent.type=NEWS_WIRE.topic=Earthquake"
 
     def test_subscribe_custom_data_with_client_id(self) -> None:
         # Arrange
@@ -1569,10 +1566,7 @@ class TestActor:
 
         # Assert
         assert self.data_engine.command_count == 1
-        assert (
-            actor.msgbus.subscriptions()[4].topic
-            == "data.NewsEvent.type=NEWS_WIRE.topic=Earthquake"
-        )
+        assert actor.msgbus.subscriptions()[4].topic == "data.NewsEvent.type=NEWS_WIRE.topic=Earthquake"
 
     def test_unsubscribe_custom_data(self) -> None:
         # Arrange
@@ -2133,18 +2127,12 @@ class TestActor:
         """
         method_info = f" for method '{method_name}'"
         assert request_id is not None, f"Request ID should not be None{method_info}"
-        assert (
-            self.data_engine.request_count == 1
-        ), f"Expected 1 request in data engine{method_info}, was {self.data_engine.request_count}"
-        assert (
-            not actor.has_pending_requests()
-        ), f"Actor should not have pending requests{method_info}"
+        assert self.data_engine.request_count == 1, f"Expected 1 request in data engine{method_info}, was {self.data_engine.request_count}"
+        assert not actor.has_pending_requests(), f"Actor should not have pending requests{method_info}"
         assert not actor.is_pending_request(
             request_id,
         ), f"Request {request_id} should not be pending{method_info}"
-        assert (
-            request_id not in actor.pending_requests()
-        ), f"Request {request_id} should not be in pending requests list{method_info}"
+        assert request_id not in actor.pending_requests(), f"Request {request_id} should not be in pending requests list{method_info}"
 
     def test_request_data_sends_request_to_data_engine(self) -> None:
         # Arrange

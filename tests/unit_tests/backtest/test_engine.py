@@ -1277,9 +1277,7 @@ class TestBacktestEngineStreaming:
 
         # Run 3 iterations with different data patterns (reduced for efficiency)
         for iteration in range(3):
-            start_ts = base_start_ts + (
-                iteration * 86_400_000_000_000
-            )  # Each iteration is 1 day later
+            start_ts = base_start_ts + (iteration * 86_400_000_000_000)  # Each iteration is 1 day later
 
             # Create different data patterns for each iteration
             if iteration % 2 == 0:
@@ -1362,9 +1360,7 @@ class TestBacktestEngineStreaming:
             def ultra_sparse_generator():
                 for chunk in range(chunks):
                     chunk_data = []
-                    base_ts = start_ts + (
-                        chunk * chunk_size * 3_600_000_000_000
-                    )  # 1 hour per chunk
+                    base_ts = start_ts + (chunk * chunk_size * 3_600_000_000_000)  # 1 hour per chunk
                     for i in range(chunk_size):
                         chunk_data.append(
                             MyData(

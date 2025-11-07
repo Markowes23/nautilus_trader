@@ -137,10 +137,7 @@ class TestCurrency:
         assert str(currency) == "AUD"
         assert currency.code == "AUD"
         assert currency.name == "Australian dollar"
-        assert (
-            repr(currency)
-            == "Currency(code='AUD', precision=2, iso4217=36, name='Australian dollar', currency_type=FIAT)"
-        )
+        assert repr(currency) == "Currency(code='AUD', precision=2, iso4217=36, name='Australian dollar', currency_type=FIAT)"
 
     @staticmethod
     def test_currency_pickle():
@@ -159,10 +156,7 @@ class TestCurrency:
 
         # Assert
         assert unpickled == currency
-        assert (
-            repr(unpickled)
-            == "Currency(code='AUD', precision=2, iso4217=36, name='Australian dollar', currency_type=FIAT)"
-        )
+        assert repr(unpickled) == "Currency(code='AUD', precision=2, iso4217=36, name='Australian dollar', currency_type=FIAT)"
 
     @staticmethod
     def test_register_adds_currency_to_internal_currency_map():

@@ -18,19 +18,23 @@ Comprehensive tests for Interactive Brokers instrument parsing, especially sprea
 instruments.
 """
 
-
 import pytest
 
 # fmt: off
 # ruff: noqa: I001
-from nautilus_trader.adapters.interactive_brokers.common import IBContract, IBContractDetails
+from nautilus_trader.adapters.interactive_brokers.common import IBContract
+from nautilus_trader.adapters.interactive_brokers.common import IBContractDetails
+from nautilus_trader.adapters.interactive_brokers.parsing.instruments import parse_option_spread
 from nautilus_trader.adapters.interactive_brokers.parsing.instruments import (
-    parse_option_spread,
     parse_spread_instrument_id,
 )
 from nautilus_trader.model.identifiers import InstrumentId
 from nautilus_trader.model.instruments import OptionSpread
-from nautilus_trader.model.objects import Currency, Price, Quantity
+from nautilus_trader.model.objects import Currency
+from nautilus_trader.model.objects import Price
+from nautilus_trader.model.objects import Quantity
+
+
 # fmt: on
 
 

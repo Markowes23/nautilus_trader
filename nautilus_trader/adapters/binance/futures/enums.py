@@ -21,7 +21,6 @@ https://binance-docs.github.io/apidocs/futures/en/#public-endpoints-info
 
 """
 
-
 from decimal import Decimal
 from enum import Enum
 from enum import unique
@@ -47,7 +46,8 @@ class BinanceFuturesContractType(Enum):
     CURRENT_QUARTER = "CURRENT_QUARTER"
     NEXT_QUARTER = "NEXT_QUARTER"
     PERPETUAL_DELIVERING = "PERPETUAL_DELIVERING"
-    CURRENT_QUARTER_DELIVERING = "CURRENT_QUARTER DELIVERING"  # Underscore omission intentional
+    # Underscore omission intentional
+    CURRENT_QUARTER_DELIVERING = "CURRENT_QUARTER DELIVERING"
 
 
 @unique
@@ -145,9 +145,7 @@ class BinanceFuturesEnumParser(BinanceEnumParser):
             BinanceOrderType.TAKE_PROFIT_MARKET: OrderType.MARKET_IF_TOUCHED,
             BinanceOrderType.TRAILING_STOP_MARKET: OrderType.TRAILING_STOP_MARKET,
         }
-        self.futures_int_to_ext_order_type = {
-            b: a for a, b in self.futures_ext_to_int_order_type.items()
-        }
+        self.futures_int_to_ext_order_type = {b: a for a, b in self.futures_ext_to_int_order_type.items()}
 
         self.futures_valid_time_in_force = {
             TimeInForce.GTC,

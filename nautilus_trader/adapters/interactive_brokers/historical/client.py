@@ -25,9 +25,15 @@ from ibapi.common import MarketDataTypeEnum
 # fmt: off
 from nautilus_trader.adapters.interactive_brokers.client import InteractiveBrokersClient
 from nautilus_trader.adapters.interactive_brokers.common import IBContract
-from nautilus_trader.adapters.interactive_brokers.config import InteractiveBrokersInstrumentProviderConfig
-from nautilus_trader.adapters.interactive_brokers.parsing.instruments import ib_contract_to_instrument_id
-from nautilus_trader.adapters.interactive_brokers.providers import InteractiveBrokersInstrumentProvider
+from nautilus_trader.adapters.interactive_brokers.config import (
+    InteractiveBrokersInstrumentProviderConfig,
+)
+from nautilus_trader.adapters.interactive_brokers.parsing.instruments import (
+    ib_contract_to_instrument_id,
+)
+from nautilus_trader.adapters.interactive_brokers.providers import (
+    InteractiveBrokersInstrumentProvider,
+)
 
 # fmt: on
 from nautilus_trader.cache.cache import Cache
@@ -422,9 +428,7 @@ class HistoricInteractiveBrokersClient:
 
                 if not should_continue:
                     # Filter out ticks that are after the end_date_time
-                    ticks = [
-                        tick for tick in ticks if tick.ts_event <= dt_to_unix_nanos(end_date_time)
-                    ]
+                    ticks = [tick for tick in ticks if tick.ts_event <= dt_to_unix_nanos(end_date_time)]
                     data.extend(ticks)
                     self.log.info(f"Total number of {tick_type} ticks in data: {len(data)}")
                     break
@@ -568,19 +572,8 @@ class HistoricInteractiveBrokersClient:
 
         # Calculate remaining time in seconds
         delta = minus_days_date - start_date
-        subsecond = (
-            1
-            if delta.components.milliseconds > 0
-            or delta.components.microseconds > 0
-            or delta.components.nanoseconds > 0
-            else 0
-        )
-        seconds = (
-            delta.components.hours * 3600
-            + delta.components.minutes * 60
-            + delta.components.seconds
-            + subsecond
-        )
+        subsecond = 1 if delta.components.milliseconds > 0 or delta.components.microseconds > 0 or delta.components.nanoseconds > 0 else 0
+        seconds = delta.components.hours * 3600 + delta.components.minutes * 60 + delta.components.seconds + subsecond
 
         results = []
 

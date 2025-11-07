@@ -207,12 +207,8 @@ def test_catalog_custom_data(catalog: ParquetDataCatalog) -> None:
     # Assert
     assert data_usd is not None
     assert data_chf is not None
-    assert (
-        len(data_usd) == 1258
-    )  # Reduced from 22941 for faster testing (USD events in first 5k rows)
-    assert (
-        len(data_chf) == 210
-    )  # Reduced from 2745 for faster testing (CHF events in first 5k rows)
+    assert len(data_usd) == 1258  # Reduced from 22941 for faster testing (USD events in first 5k rows)
+    assert len(data_chf) == 210  # Reduced from 2745 for faster testing (CHF events in first 5k rows)
     assert isinstance(data_chf[0], CustomData)
 
 
@@ -543,11 +539,7 @@ class TestConsolidateDataByPeriod:
         quotes = []
         for ts in timestamps:
             quote = TestDataStubs.quote_tick(
-                instrument=(
-                    TestInstrumentProvider.ethusdt_binance()
-                    if "BINANCE" in instrument_id
-                    else self.audusd_sim
-                ),
+                instrument=(TestInstrumentProvider.ethusdt_binance() if "BINANCE" in instrument_id else self.audusd_sim),
                 bid_price=1987.0,
                 ask_price=1988.0,
                 ts_event=ts,
@@ -751,9 +743,7 @@ class TestConsolidateDataByPeriod:
         # Check split queries and consolidation queries
         # Split queries are those that preserve data outside the consolidation range
         split_queries = [q for q in queries if q["query_start"] in [1000, request_end.value + 1]]
-        consolidation_queries = [
-            q for q in queries if q["query_start"] not in [1000, request_end.value + 1]
-        ]
+        consolidation_queries = [q for q in queries if q["query_start"] not in [1000, request_end.value + 1]]
 
         assert len(split_queries) == 2, "Should have 2 split queries"
         assert len(consolidation_queries) == 1, "Should have 1 consolidation query"
@@ -1686,9 +1676,7 @@ def test_delete_data_range_cross_file_split(catalog: ParquetDataCatalog) -> None
     remaining_timestamps.sort()
 
     expected_remaining = [1_000_000_000, 2_000_000_000, 3_000_000_000]
-    assert (
-        remaining_timestamps == expected_remaining
-    ), f"Expected {expected_remaining}, was {remaining_timestamps}"
+    assert remaining_timestamps == expected_remaining, f"Expected {expected_remaining}, was {remaining_timestamps}"
 
     # Verify file structure - should have 1 file remaining
     final_intervals = catalog.get_intervals(QuoteTick, "AUD/USD.SIM")
@@ -1696,13 +1684,10 @@ def test_delete_data_range_cross_file_split(catalog: ParquetDataCatalog) -> None
 
     # Verify the remaining file covers the correct range (should end just before deletion start)
     expected_start = 1_000_000_000
-    expected_end = 4_000_000_000 - 1  # Just before deletion range starts (one nanosecond before)
-    assert (
-        final_intervals[0][0] == expected_start
-    ), f"Expected start {expected_start}, was {final_intervals[0][0]}"
-    assert (
-        final_intervals[0][1] == expected_end
-    ), f"Expected end {expected_end}, was {final_intervals[0][1]}"
+    # Just before deletion range starts (one nanosecond before)
+    expected_end = 4_000_000_000 - 1
+    assert final_intervals[0][0] == expected_start, f"Expected start {expected_start}, was {final_intervals[0][0]}"
+    assert final_intervals[0][1] == expected_end, f"Expected end {expected_end}, was {final_intervals[0][1]}"
 
     # Verify we can query the remaining data correctly
     queried_quotes = catalog.query(
@@ -1714,9 +1699,7 @@ def test_delete_data_range_cross_file_split(catalog: ParquetDataCatalog) -> None
     queried_timestamps = [q.ts_init for q in queried_quotes]
     queried_timestamps.sort()
 
-    assert (
-        queried_timestamps == expected_remaining
-    ), f"Query result should be {expected_remaining}, was {queried_timestamps}"
+    assert queried_timestamps == expected_remaining, f"Query result should be {expected_remaining}, was {queried_timestamps}"
 
 
 def test_delete_data_range_cross_file_split_keep_end(catalog: ParquetDataCatalog) -> None:
@@ -1782,9 +1765,7 @@ def test_delete_data_range_cross_file_split_keep_end(catalog: ParquetDataCatalog
     remaining_timestamps.sort()
 
     expected_remaining = [8_000_000_000, 9_000_000_000, 10_000_000_000]
-    assert (
-        remaining_timestamps == expected_remaining
-    ), f"Expected {expected_remaining}, was {remaining_timestamps}"
+    assert remaining_timestamps == expected_remaining, f"Expected {expected_remaining}, was {remaining_timestamps}"
 
     # Verify file structure - should have 2 files remaining (split file 2 + intact file 3)
     final_intervals = catalog.get_intervals(QuoteTick, "AUD/USD.SIM")
@@ -1800,9 +1781,7 @@ def test_delete_data_range_cross_file_split_keep_end(catalog: ParquetDataCatalog
     queried_timestamps = [q.ts_init for q in queried_quotes]
     queried_timestamps.sort()
 
-    assert (
-        queried_timestamps == expected_remaining
-    ), f"Query result should be {expected_remaining}, was {queried_timestamps}"
+    assert queried_timestamps == expected_remaining, f"Query result should be {expected_remaining}, was {queried_timestamps}"
 
 
 def test_delete_catalog_range_partial_overlap(catalog: ParquetDataCatalog) -> None:
@@ -2153,9 +2132,7 @@ def test_backend_session_table_naming_multiple_instruments(catalog: ParquetDataC
         "ADABTC-1m-2021-11-27.csv",
         bar_type1,
         instrument1,
-    )[
-        :5
-    ]  # Use fewer bars for faster test
+    )[:5]  # Use fewer bars for faster test
 
     bar_type2 = TestDataStubs.bartype_btcusdt_binance_100tick_last()
     instrument2 = TestInstrumentProvider.btcusdt_binance()
@@ -2163,9 +2140,7 @@ def test_backend_session_table_naming_multiple_instruments(catalog: ParquetDataC
         "ADABTC-1m-2021-11-27.csv",  # Reuse same CSV data but with different bar_type
         bar_type2,
         instrument2,
-    )[
-        :5
-    ]  # Use fewer bars for faster test
+    )[:5]  # Use fewer bars for faster test
 
     # Write data for both instruments
     catalog.write_data(bars1)

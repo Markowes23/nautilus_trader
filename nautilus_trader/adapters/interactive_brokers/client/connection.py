@@ -199,8 +199,7 @@ class InteractiveBrokersClientConnectionMixin(BaseMixin):
 
             retries_remaining -= 1
             self._log.warning(
-                "Failed to receive server version information, "
-                f"retries remaining: {retries_remaining}",
+                f"Failed to receive server version information, retries remaining: {retries_remaining}",
             )
             await asyncio.sleep(1)
 

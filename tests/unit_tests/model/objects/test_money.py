@@ -407,14 +407,8 @@ class TestAccountBalance:
         )
 
         # Assert
-        assert (
-            str(balance)
-            == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
-        )
-        assert (
-            repr(balance)
-            == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
-        )
+        assert str(balance) == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
+        assert repr(balance) == "AccountBalance(total=1_525_000.00 USD, locked=25_000.00 USD, free=1_500_000.00 USD)"
 
 
 class TestMarginBalance:
@@ -449,14 +443,8 @@ class TestMarginBalance:
         )
 
         # Assert
-        assert (
-            str(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
-        )
-        assert (
-            repr(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
-        )
+        assert str(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
+        assert repr(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=AUD/USD.IDEALPRO)"
 
     @staticmethod
     def test_instantiate_str_repr_without_instrument_id():
@@ -467,11 +455,5 @@ class TestMarginBalance:
         )
 
         # Assert
-        assert (
-            str(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
-        )
-        assert (
-            repr(margin)
-            == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
-        )
+        assert str(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
+        assert repr(margin) == "MarginBalance(initial=5_000.00 USD, maintenance=25_000.00 USD, instrument_id=None)"
