@@ -427,7 +427,7 @@ class BinanceFuturesOrderData(msgspec.Struct, kw_only=True, frozen=True):
                 venue_order_id=venue_order_id,
                 ts_event=ts_event,
             )
-        elif self.x == BinanceExecutionType.TRADE or self.x == BinanceExecutionType.CALCULATED:
+        elif self.x in (BinanceExecutionType.TRADE, BinanceExecutionType.CALCULATED):
             if self.x == BinanceExecutionType.CALCULATED:
                 exec_client._log.info(
                     f"Received CALCULATED (liquidation) execution for order {venue_order_id}, "

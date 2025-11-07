@@ -21,10 +21,7 @@ def get_http_base_url(account_type: BinanceAccountType, is_testnet: bool, is_us:
     if is_testnet:
         if account_type.is_spot_or_margin:
             return "https://testnet.binance.vision"
-        elif (
-            account_type == BinanceAccountType.USDT_FUTURES
-            or account_type == BinanceAccountType.COIN_FUTURES
-        ):
+        elif account_type in (BinanceAccountType.USDT_FUTURES, BinanceAccountType.COIN_FUTURES):
             return "https://testnet.binancefuture.com"
         else:
             raise RuntimeError(  # pragma: no cover (design-time error)

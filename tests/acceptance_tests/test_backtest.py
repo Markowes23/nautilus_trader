@@ -1306,10 +1306,7 @@ class OptionStrategy(Strategy):
                 f"(Order: {event.client_order_id}, Trade: {event.trade_id})",
                 color=LogColor.GREEN,
             )
-        elif (
-            event.instrument_id == self.config.option_id
-            or event.instrument_id == self.config.option_id2
-        ):
+        elif event.instrument_id in (self.config.option_id, self.config.option_id2):
             # This is a leg fill
             self.leg_fills.append(event)
             self.user_log(
